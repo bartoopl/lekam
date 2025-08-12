@@ -1,0 +1,113 @@
+<?php
+
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\CourseController;
+use App\Http\Controllers\QuizController;
+use App\Http\Controllers\CertificateController;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\InstructorController;
+use App\Http\Controllers\LessonController;
+use App\Http\Controllers\ChapterController;
+use App\Http\Controllers\DashboardController;
+use Illuminate\Support\Facades\Route;
+
+// Public routes
+Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/about', [HomeController::class, 'about'])->name('about');
+Route::get('/contact', [HomeController::class, 'contact'])->name('contact');
+Route::get('/terms', [HomeController::class, 'terms'])->name('terms');
+Route::get('/privacy', [HomeController::class, 'privacy'])->name('privacy');
+Route::get('/courses', [HomeController::class, 'courses'])->name('courses');
+
+// Course routes (require authentication)
+Route::middleware(['auth'])->group(function () {
+    Route::get('/courses/{course}', [CourseController::class, 'show'])->name('courses.show');
+    Route::get('/courses/{course}/lesson/{lesson}', [CourseController::class, 'loadLesson'])->name('courses.load-lesson');
+    Route::post('/courses/{course}/lesson/{lesson}/complete', [CourseController::class, 'completeLesson'])->name('courses.complete-lesson');
+    Route::post('/courses/{course}/lesson/{lesson}/save-video-position', [CourseController::class, 'saveVideoPosition'])->name('courses.save-video-position');
+    Route::get('/courses/{course}/lesson/{lesson}/download', [CourseController::class, 'downloadFile'])->name('courses.download-file');
+    Route::post('/courses/{course}/lesson/{lesson}/download', [CourseController::class, 'downloadFile'])->name('courses.download-file.post');
+    Route::get('/courses/{course}/lesson/{lesson}/video/download', [CourseController::class, 'downloadVideo'])->name('courses.download-video');
+});
+Route::get('/courses/{course}/progress', [CourseController::class, 'progress'])->name('courses.progress');
+
+// Quiz routes (require authentication)
+Route::middleware(['auth'])->group(function () {
+    Route::get('/courses/{course}/quiz', [QuizController::class, 'show'])->name('quizzes.show');
+    Route::get('/courses/{course}/quiz/content', [QuizController::class, 'loadContent'])->name('quizzes.load-content');
+    Route::post('/courses/{course}/quiz/start', [QuizController::class, 'start'])->name('quizzes.start');
+    Route::get('/courses/{course}/quiz/take/{attempt}', [QuizController::class, 'take'])->name('quizzes.take');
+    Route::get('/courses/{course}/quiz/questions/{attempt}', [QuizController::class, 'loadQuestions'])->name('quizzes.load-questions');
+    Route::post('/courses/{course}/quiz/submit/{attempt}', [QuizController::class, 'submit'])->name('quizzes.submit');
+    Route::get('/courses/{course}/quiz/result/{attempt}', [QuizController::class, 'result'])->name('quizzes.result');
+});
+
+// Certificate routes (authenticated)
+Route::middleware('auth')->group(function () {
+    Route::get('/certificates', [CertificateController::class, 'index'])->name('certificates.index');
+    Route::get('/certificates/{certificate}', [CertificateController::class, 'show'])->name('certificates.show');
+    Route::get('/certificates/{certificate}/download', [CertificateController::class, 'download'])->name('certificates.download');
+    Route::post('/courses/{course}/certificate/generate', [CertificateController::class, 'generate'])->name('certificates.generate');
+});
+
+// Admin routes (authenticated and admin access)
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/', [AdminController::class, 'dashboard'])->name('dashboard');
+    Route::get('/users', [AdminController::class, 'users'])->name('users');
+    Route::get('/courses', [AdminController::class, 'courses'])->name('courses');
+    Route::get('/courses/create', [AdminController::class, 'courseCreate'])->name('courses.create');
+    Route::post('/courses', [AdminController::class, 'courseStore'])->name('courses.store');
+    Route::get('/courses/{course}', [AdminController::class, 'courseShow'])->name('courses.show');
+    Route::get('/courses/{course}/edit', [AdminController::class, 'courseEdit'])->name('courses.edit');
+    Route::put('/courses/{course}', [AdminController::class, 'courseUpdate'])->name('courses.update');
+    Route::delete('/courses/{course}', [AdminController::class, 'courseDestroy'])->name('courses.destroy');
+    Route::delete('/courses/{course}/image', [AdminController::class, 'removeCourseImage'])->name('courses.remove-image');
+    
+    // Quiz management
+    Route::get('/courses/{course}/quiz/create', [AdminController::class, 'quizCreate'])->name('quizzes.create');
+    Route::post('/courses/{course}/quiz', [AdminController::class, 'quizStore'])->name('quizzes.store');
+    Route::get('/courses/{course}/quiz/{quiz}/edit', [AdminController::class, 'quizEdit'])->name('quizzes.edit');
+    Route::put('/courses/{course}/quiz/{quiz}', [AdminController::class, 'quizUpdate'])->name('quizzes.update');
+    Route::delete('/courses/{course}/quiz/{quiz}', [AdminController::class, 'quizDestroy'])->name('quizzes.destroy');
+    
+    // Question management
+    Route::get('/courses/{course}/quiz/{quiz}/questions/create', [AdminController::class, 'questionCreate'])->name('questions.create');
+    Route::post('/courses/{course}/quiz/{quiz}/questions', [AdminController::class, 'questionStore'])->name('questions.store');
+    Route::get('/courses/{course}/quiz/{quiz}/questions/{question}/edit', [AdminController::class, 'questionEdit'])->name('questions.edit');
+    Route::put('/courses/{course}/quiz/{quiz}/questions/{question}', [AdminController::class, 'questionUpdate'])->name('questions.update');
+    Route::delete('/courses/{course}/quiz/{quiz}/questions/{question}', [AdminController::class, 'questionDestroy'])->name('questions.destroy');
+    
+    // Chapters management
+    Route::get('/courses/{course}/chapters/create', [ChapterController::class, 'create'])->name('chapters.create');
+    Route::post('/courses/{course}/chapters', [ChapterController::class, 'store'])->name('chapters.store');
+    Route::get('/courses/{course}/chapters/{chapter}/edit', [ChapterController::class, 'edit'])->name('chapters.edit');
+    Route::put('/courses/{course}/chapters/{chapter}', [ChapterController::class, 'update'])->name('chapters.update');
+    Route::delete('/courses/{course}/chapters/{chapter}', [ChapterController::class, 'destroy'])->name('chapters.destroy');
+    
+    // Lessons management
+    Route::get('/courses/{course}/lessons/create', [LessonController::class, 'create'])->name('lessons.create');
+    Route::post('/courses/{course}/lessons', [LessonController::class, 'store'])->name('lessons.store');
+    Route::get('/courses/{course}/lessons/{lesson}/edit', [LessonController::class, 'edit'])->name('lessons.edit');
+    Route::put('/courses/{course}/lessons/{lesson}', [LessonController::class, 'update'])->name('lessons.update');
+    Route::delete('/courses/{course}/lessons/{lesson}', [LessonController::class, 'destroy'])->name('lessons.destroy');
+    Route::get('/courses/{course}/lessons/{lesson}/materials/{materialIndex}/download', [LessonController::class, 'downloadMaterial'])->name('lessons.download-material');
+    Route::get('/courses/{course}/lessons/{lesson}/video/download', [LessonController::class, 'downloadVideo'])->name('lessons.download-video');
+    
+    // Instructors management
+    Route::resource('instructors', InstructorController::class);
+    
+    Route::get('/certificates', [AdminController::class, 'certificates'])->name('certificates');
+    Route::get('/statistics', [AdminController::class, 'statistics'])->name('statistics');
+});
+
+// Default Laravel Breeze routes
+Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+require __DIR__.'/auth.php';

@@ -1,0 +1,81 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Quiz extends Model
+{
+    use HasFactory;
+
+    protected $fillable = [
+        'course_id',
+        'title',
+        'description',
+        'time_limit_minutes',
+        'passing_score',
+        'is_active',
+    ];
+
+    protected $casts = [
+        'is_active' => 'boolean',
+    ];
+
+    /**
+     * Get the course that owns the quiz
+     */
+    public function course()
+    {
+        return $this->belongsTo(Course::class);
+    }
+
+    /**
+     * Get the questions for this quiz
+     */
+    public function questions()
+    {
+        return $this->hasMany(QuizQuestion::class)->orderBy('order');
+    }
+
+    /**
+     * Get the attempts for this quiz
+     */
+    public function attempts()
+    {
+        return $this->hasMany(QuizAttempt::class);
+    }
+
+    /**
+     * Get the maximum possible score for this quiz
+     */
+    public function getMaxScore(): int
+    {
+        return $this->questions()->sum('points');
+    }
+
+    /**
+     * Check if user has passed this quiz
+     */
+    public function hasUserPassed(User $user): bool
+    {
+        $bestAttempt = $this->attempts()
+            ->where('user_id', $user->id)
+            ->where('passed', true)
+            ->orderBy('percentage', 'desc')
+            ->first();
+
+        return $bestAttempt !== null;
+    }
+
+    /**
+     * Get user's best attempt
+     */
+    public function getUserBestAttempt(User $user)
+    {
+        return $this->attempts()
+            ->where('user_id', $user->id)
+            ->orderBy('percentage', 'desc')
+            ->first();
+    }
+}

@@ -1,0 +1,60 @@
+🚀 INSTRUKCJA WDROŻENIA LARAVEL NA LH.PL
+
+1. POŁĄCZENIE FTP:
+   - Host: twoja-domena.lh.pl
+   - Użytkownik: twoj_uzytkownik
+   - Hasło: twoje_haslo
+   - Port: 21 (lub 22 dla SFTP)
+
+2. STRUKTURA NA SERWERZE:
+   
+   KATALOG GŁÓWNY (np. /home/uzytkownik/):
+   ├── app/                    # Wszystkie pliki z katalogu app/
+   ├── public_html/            # Główny katalog publiczny
+   └── .htaccess              # Reguły przepisywania URL
+
+3. KROKI WDROŻENIA:
+   
+   a) Wrzuć cały katalog 'app' do katalogu głównego na serwerze
+   b) Wrzuć cały katalog 'public_html' do katalogu głównego na serwerze
+   c) Wrzuć plik '.htaccess' do katalogu głównego na serwerze
+   
+4. KONFIGURACJA:
+   
+   a) Skopiuj .env.example na .env
+   b) Edytuj .env i ustaw:
+      - Dane bazy danych
+      - APP_URL
+      - APP_KEY (wygeneruj przez panel)
+   
+5. UPRAWNIENIA:
+   
+   Ustaw uprawnienia na:
+   - storage/: 755
+   - bootstrap/cache/: 755
+   - storage/logs/: 755
+   
+6. MIGRACJE:
+   
+   Uruchom migracje przez panel lh.pl lub przez SSH (jeśli dostępne):
+   php artisan migrate
+   
+7. CACHE:
+   
+   Wyczyść i zoptymalizuj cache:
+   php artisan config:cache
+   php artisan route:cache
+   php artisan view:cache
+
+8. SPRAWDZENIE:
+   
+   Otwórz stronę w przeglądarce i sprawdź czy działa.
+
+⚠️  WAŻNE:
+- Nie wrzucaj plików .git, node_modules, .env
+- Upewnij się że ścieżki w index.php są poprawne
+- Sprawdź czy hosting obsługuje PHP 8.2+
+- Sprawdź czy mod_rewrite jest włączony
+
+📞 WSPARCIE:
+W razie problemów sprawdź logi w storage/logs/

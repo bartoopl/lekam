@@ -1,0 +1,1011 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Global background - very aggressive override */
+html, body, #app, .min-h-screen, * {
+    background-image: url('/images/backgrounds/bg.jpg') !important;
+    background-size: cover !important;
+    background-position: center !important;
+    background-attachment: fixed !important;
+    background-repeat: no-repeat !important;
+    background-color: transparent !important;
+}
+
+html, body {
+    min-height: 100vh;
+}
+
+/* Ensure all containers are transparent */
+.min-h-screen, .bg-gray-100, .bg-white {
+    background: transparent !important;
+    background-color: transparent !important;
+}
+
+/* Admin panel specific styles - override transparency for buttons and form elements */
+.admin-container,
+.admin-header,
+.courses-container,
+.form-container,
+.form-section {
+    background: rgba(255, 255, 255, 0.95) !important;
+    background-color: rgba(255, 255, 255, 0.95) !important;
+}
+
+/* Additional admin containers */
+.certificates-container,
+.users-container,
+.content-container {
+    background: rgba(255, 255, 255, 0.95) !important;
+    background-color: rgba(255, 255, 255, 0.95) !important;
+}
+
+/* Statistics container */
+.stats-container {
+    background: rgba(255, 255, 255, 0.95) !important;
+    background-color: rgba(255, 255, 255, 0.95) !important;
+}
+
+/* Navigation buttons - ensure visibility */
+.navbar-container,
+.navbar,
+.navbar-content {
+    background: rgba(255, 255, 255, 0.95) !important;
+    background-color: rgba(255, 255, 255, 0.95) !important;
+}
+
+.nav-link,
+.account-button,
+.login-button,
+.register-button,
+.logout-button,
+.admin-button {
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+.nav-link {
+    color: #374151 !important;
+}
+
+.account-button {
+    background: linear-gradient(135deg, #21235F 0%, #3B82F6 100%) !important;
+    background-color: #21235F !important;
+    color: white !important;
+}
+
+.login-button {
+    background: transparent !important;
+    background-color: transparent !important;
+    color: #21235F !important;
+    border-color: #21235F !important;
+}
+
+.register-button {
+    background: linear-gradient(135deg, #21235F 0%, #3B82F6 100%) !important;
+    background-color: #21235F !important;
+    color: white !important;
+}
+
+.logout-button {
+    background: transparent !important;
+    background-color: transparent !important;
+    color: #DC2626 !important;
+    border-color: #DC2626 !important;
+}
+
+.admin-button {
+    background: linear-gradient(135deg, #DC2626 0%, #B91C1B 100%) !important;
+    background-color: #DC2626 !important;
+    color: white !important;
+}
+
+/* Admin buttons - ensure visibility */
+.admin-quick-action,
+.table-button,
+.form-button {
+    background: linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%) !important;
+    background-color: #3B82F6 !important;
+    color: white !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+.table-button.view {
+    background: linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%) !important;
+    background-color: #3B82F6 !important;
+}
+
+.table-button.edit {
+    background: linear-gradient(135deg, #10B981 0%, #059669 100%) !important;
+    background-color: #10B981 !important;
+}
+
+.table-button.delete {
+    background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%) !important;
+    background-color: #EF4444 !important;
+}
+
+.form-button.primary {
+    background: linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%) !important;
+    background-color: #3B82F6 !important;
+}
+
+.form-button.secondary {
+    background: linear-gradient(135deg, #6B7280 0%, #4B5563 100%) !important;
+    background-color: #6B7280 !important;
+}
+
+/* Form inputs and checkboxes - ensure visibility */
+.form-input,
+input[type="text"],
+input[type="url"],
+input[type="number"],
+textarea,
+select {
+    background: rgba(255, 255, 255, 0.9) !important;
+    background-color: rgba(255, 255, 255, 0.9) !important;
+    border: 2px solid rgba(0, 0, 0, 0.1) !important;
+    color: #1F2937 !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* Standard Tailwind form inputs - ensure visibility */
+.border-gray-300,
+input[type="text"],
+input[type="url"],
+input[type="number"],
+textarea,
+select {
+    background: white !important;
+    background-color: white !important;
+    border-color: #D1D5DB !important;
+    color: #1F2937 !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* Form labels and help text - ensure visibility */
+.form-label,
+label,
+.form-help-text,
+.form-error {
+    color: #374151 !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+.form-help-text {
+    color: #6B7280 !important;
+}
+
+.form-error {
+    color: #DC2626 !important;
+}
+
+/* Standard Tailwind labels and text - ensure visibility */
+.text-gray-700,
+.text-gray-900,
+.text-gray-500,
+.text-red-600 {
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+.text-gray-700 {
+    color: #374151 !important;
+}
+
+.text-gray-900 {
+    color: #111827 !important;
+}
+
+.text-gray-500 {
+    color: #6B7280 !important;
+}
+
+.text-red-600 {
+    color: #DC2626 !important;
+}
+
+/* Standard Tailwind buttons - ensure visibility */
+.bg-gray-300,
+.bg-blue-600,
+.bg-green-600,
+.bg-red-600 {
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+.bg-gray-300 {
+    background: #D1D5DB !important;
+    background-color: #D1D5DB !important;
+    color: #374151 !important;
+}
+
+.bg-blue-600 {
+    background: #2563EB !important;
+    background-color: #2563EB !important;
+    color: white !important;
+}
+
+.bg-green-600 {
+    background: #059669 !important;
+    background-color: #059669 !important;
+    color: white !important;
+}
+
+.bg-red-600 {
+    background: #DC2626 !important;
+    background-color: #DC2626 !important;
+    color: white !important;
+}
+
+/* Standard Tailwind containers and cards - ensure visibility */
+.bg-white,
+.overflow-hidden,
+.shadow-sm,
+.sm\:rounded-lg {
+    background: rgba(255, 255, 255, 0.95) !important;
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+.border,
+.border-gray-200 {
+    border-color: #E5E7EB !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* Colored stat cards - ensure visibility */
+.bg-blue-50,
+.bg-green-50,
+.bg-purple-50,
+.bg-orange-50,
+.bg-red-50,
+.bg-green-100,
+.bg-red-100 {
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+.bg-blue-50 {
+    background: #EFF6FF !important;
+    background-color: #EFF6FF !important;
+}
+
+.bg-green-50 {
+    background: #F0FDF4 !important;
+    background-color: #F0FDF4 !important;
+}
+
+.bg-purple-50 {
+    background: #FAF5FF !important;
+    background-color: #FAF5FF !important;
+}
+
+.bg-orange-50 {
+    background: #FFF7ED !important;
+    background-color: #FFF7ED !important;
+}
+
+.bg-red-50 {
+    background: #FEF2F2 !important;
+    background-color: #FEF2F2 !important;
+}
+
+.bg-green-100 {
+    background: #DCFCE7 !important;
+    background-color: #DCFCE7 !important;
+}
+
+.bg-red-100 {
+    background: #FEE2E2 !important;
+    background-color: #FEE2E2 !important;
+}
+
+/* Colored text in stat cards - ensure visibility */
+.text-blue-600,
+.text-green-600,
+.text-purple-600,
+.text-orange-600,
+.text-green-800,
+.text-red-800 {
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+.text-blue-600 {
+    color: #2563EB !important;
+}
+
+.text-green-600 {
+    color: #059669 !important;
+}
+
+.text-purple-600 {
+    color: #9333EA !important;
+}
+
+.text-orange-600 {
+    color: #EA580C !important;
+}
+
+.text-green-800 {
+    color: #166534 !important;
+}
+
+.text-red-800 {
+    color: #991B1B !important;
+}
+
+/* Additional colored text - ensure visibility */
+.text-blue-900,
+.text-green-900 {
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+.text-blue-900 {
+    color: #1E3A8A !important;
+}
+
+.text-green-900 {
+    color: #14532D !important;
+}
+
+/* Form section headers - ensure visibility */
+.form-section h3 {
+    color: #374151 !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* Checkboxes - ensure visibility */
+input[type="checkbox"] {
+    background: white !important;
+    background-color: white !important;
+    border: 2px solid #D1D5DB !important;
+    color: #3B82F6 !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    -webkit-appearance: auto !important;
+    appearance: auto !important;
+}
+
+input[type="checkbox"]:checked {
+    background: #3B82F6 !important;
+    background-color: #3B82F6 !important;
+    border-color: #3B82F6 !important;
+}
+
+/* Admin table styles */
+.admin-table {
+    background: rgba(255, 255, 255, 0.95) !important;
+    background-color: rgba(255, 255, 255, 0.95) !important;
+}
+
+.admin-table thead {
+    background: linear-gradient(135deg, #F3F4F6 0%, #E5E7EB) !important;
+    background-color: #F3F4F6 !important;
+}
+
+.admin-table th {
+    color: #374151 !important;
+    background: transparent !important;
+}
+
+.admin-table td {
+    color: #1F2937 !important;
+    background: transparent !important;
+}
+
+/* Admin dashboard stats and cards */
+.stat-card,
+.admin-stats-card {
+    background: rgba(255, 255, 255, 0.95) !important;
+    background-color: rgba(255, 255, 255, 0.95) !important;
+}
+
+.stat-number,
+.stat-label,
+.admin-stat-number,
+.admin-stat-label {
+    color: #21235F !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+.stat-icon {
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* Video player styles */
+#lesson-video {
+    background: #000;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Custom video controls */
+.video-controls {
+    background: rgba(0, 0, 0, 0.8);
+    padding: 12px;
+    border-radius: 8px;
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.video-controls button {
+    background: #1e3a8a !important;
+    color: white !important;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 40px;
+    min-height: 40px;
+}
+
+.video-controls button:hover {
+    background: #1e40af !important;
+    transform: translateY(-1px);
+}
+
+.video-controls button svg {
+    width: 16px;
+    height: 16px;
+    fill: currentColor;
+    pointer-events: none;
+}
+
+/* Progress bar styles - only the blue bar */
+.video-controls .flex-1 {
+    flex: 1;
+    position: relative;
+    min-width: 150px;
+    height: 12px;
+    background: rgba(255, 255, 255, 0.2);
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    border-radius: 6px;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+/* Progress fill - the blue bar */
+#progress-fill {
+    background: linear-gradient(90deg, #1e3a8a 0%, #3b82f6 100%) !important;
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.1s ease;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    box-shadow: 0 0 10px rgba(30, 58, 138, 0.5);
+}
+
+/* Time display */
+#time-display {
+    color: white !important;
+    font-weight: 600;
+    min-width: 100px;
+    text-align: center;
+    white-space: nowrap;
+    font-size: 14px;
+    background: rgba(0, 0, 0, 0.8);
+    padding: 6px 10px;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+/* Hover effect for progress bar */
+.video-controls .flex-1:hover {
+    border-color: rgba(255, 255, 255, 0.8);
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* Focus effect for progress bar */
+.video-controls .flex-1:focus {
+    border-color: #1e3a8a;
+    box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.3);
+    outline: none;
+}
+
+/* Force visibility of all elements */
+.video-controls {
+    background: rgba(0, 0, 0, 0.9) !important;
+    padding: 16px !important;
+    gap: 12px !important;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.video-controls button {
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+#time-display {
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+.video-controls .flex-1 {
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* Dodatkowe style dla wszystkich elementów dotkniętych problemem z przezroczystością */
+
+/* Formularze i pola input w różnych widokach */
+.form-group,
+.form-field,
+.form-row {
+    background: rgba(255, 255, 255, 0.95) !important;
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* Przyciski w różnych widokach */
+.btn,
+.btn-primary,
+.btn-secondary,
+.btn-success,
+.btn-danger,
+.btn-warning,
+.btn-info,
+.btn-light,
+.btn-dark {
+    background: rgba(59, 130, 246, 0.95) !important;
+    background-color: rgba(59, 130, 246, 0.95) !important;
+    color: white !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    border: 1px solid rgba(59, 130, 246, 0.8) !important;
+}
+
+.btn-primary {
+    background: rgba(59, 130, 246, 0.95) !important;
+    background-color: rgba(59, 130, 246, 0.95) !important;
+}
+
+.btn-secondary {
+    background: rgba(107, 114, 128, 0.95) !important;
+    background-color: rgba(107, 114, 128, 0.95) !important;
+}
+
+.btn-success {
+    background: rgba(34, 197, 94, 0.95) !important;
+    background-color: rgba(34, 197, 94, 0.95) !important;
+}
+
+.btn-danger {
+    background: rgba(239, 68, 68, 0.95) !important;
+    background-color: rgba(239, 68, 68, 0.95) !important;
+}
+
+.btn-warning {
+    background: rgba(245, 158, 11, 0.95) !important;
+    background-color: rgba(245, 158, 11, 0.95) !important;
+}
+
+.btn-info {
+    background: rgba(6, 182, 212, 0.95) !important;
+    background-color: rgba(6, 182, 212, 0.95) !important;
+}
+
+/* Karty i kontenery w różnych widokach */
+.card,
+.card-header,
+.card-body,
+.card-footer,
+.alert,
+.alert-success,
+.alert-danger,
+.alert-warning,
+.alert-info {
+    background: rgba(255, 255, 255, 0.95) !important;
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    border: 1px solid rgba(209, 213, 219, 0.8) !important;
+}
+
+.alert-success {
+    background: rgba(209, 250, 229, 0.95) !important;
+    background-color: rgba(209, 250, 229, 0.95) !important;
+    border-color: rgba(34, 197, 94, 0.8) !important;
+}
+
+.alert-danger {
+    background: rgba(254, 226, 226, 0.95) !important;
+    background-color: rgba(254, 226, 226, 0.95) !important;
+    border-color: rgba(239, 68, 68, 0.8) !important;
+}
+
+.alert-warning {
+    background: rgba(254, 243, 199, 0.95) !important;
+    background-color: rgba(254, 243, 199, 0.95) !important;
+    border-color: rgba(245, 158, 11, 0.8) !important;
+}
+
+.alert-info {
+    background: rgba(207, 250, 254, 0.95) !important;
+    background-color: rgba(207, 250, 254, 0.95) !important;
+    border-color: rgba(6, 182, 212, 0.8) !important;
+}
+
+/* Tabele w różnych widokach */
+.table,
+.table-striped,
+.table-bordered,
+.table-hover {
+    background: rgba(255, 255, 255, 0.95) !important;
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+.table th,
+.table td {
+    background: rgba(255, 255, 255, 0.95) !important;
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    color: rgba(17, 24, 39, 0.95) !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* Listy i elementy list */
+.list-group,
+.list-group-item {
+    background: rgba(255, 255, 255, 0.95) !important;
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    border: 1px solid rgba(209, 213, 219, 0.8) !important;
+}
+
+/* Modalne okna */
+.modal,
+.modal-header,
+.modal-body,
+.modal-footer {
+    background: rgba(255, 255, 255, 0.95) !important;
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* Dropdown menu */
+.dropdown-menu,
+.dropdown-item {
+    background: rgba(255, 255, 255, 0.95) !important;
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    border: 1px solid rgba(209, 213, 219, 0.8) !important;
+}
+
+/* Paginacja */
+.pagination,
+.page-item,
+.page-link {
+    background: rgba(255, 255, 255, 0.95) !important;
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    border: 1px solid rgba(209, 213, 219, 0.8) !important;
+}
+
+/* Breadcrumbs */
+.breadcrumb,
+.breadcrumb-item {
+    background: rgba(255, 255, 255, 0.95) !important;
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* Progress bars */
+.progress,
+.progress-bar {
+    background: rgba(209, 213, 219, 0.95) !important;
+    background-color: rgba(209, 213, 219, 0.95) !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* Badges i tagi */
+.badge,
+.tag {
+    background: rgba(59, 130, 246, 0.95) !important;
+    background-color: rgba(59, 130, 246, 0.95) !important;
+    color: white !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* Tooltips */
+.tooltip,
+.tooltip-inner {
+    background: rgba(17, 24, 39, 0.95) !important;
+    background-color: rgba(17, 24, 39, 0.95) !important;
+    color: white !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* Popovers */
+.popover,
+.popover-header,
+.popover-body {
+    background: rgba(255, 255, 255, 0.95) !important;
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    border: 1px solid rgba(209, 213, 219, 0.8) !important;
+}
+
+/* Collapse i accordion */
+.collapse,
+.accordion,
+.accordion-item,
+.accordion-header,
+.accordion-body {
+    background: rgba(255, 255, 255, 0.95) !important;
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    border: 1px solid rgba(209, 213, 219, 0.8) !important;
+}
+
+/* Tabs */
+.nav-tabs,
+.tab-content,
+.tab-pane {
+    background: rgba(255, 255, 255, 0.95) !important;
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* Navbar i nawigacja */
+.navbar,
+.navbar-brand,
+.navbar-nav,
+.navbar-toggler {
+    background: rgba(255, 255, 255, 0.95) !important;
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* Sidebar */
+.sidebar,
+.sidebar-nav {
+    background: rgba(255, 255, 255, 0.95) !important;
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* Footer */
+.footer {
+    background: rgba(17, 24, 39, 0.95) !important;
+    background-color: rgba(17, 24, 39, 0.95) !important;
+    color: white !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* Hero sections */
+.hero,
+.hero-content {
+    background: rgba(59, 130, 246, 0.95) !important;
+    background-color: rgba(59, 130, 246, 0.95) !important;
+    color: white !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* Features sections */
+.features,
+.feature-item {
+    background: rgba(255, 255, 255, 0.95) !important;
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* Testimonials */
+.testimonials,
+.testimonial-item {
+    background: rgba(255, 255, 255, 0.95) !important;
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* Pricing tables */
+.pricing,
+.pricing-item {
+    background: rgba(255, 255, 255, 0.95) !important;
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    border: 1px solid rgba(209, 213, 219, 0.8) !important;
+}
+
+/* FAQ sections */
+.faq,
+.faq-item {
+    background: rgba(255, 255, 255, 0.95) !important;
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* Contact forms */
+.contact-form,
+.contact-info {
+    background: rgba(255, 255, 255, 0.95) !important;
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* Search forms */
+.search-form,
+.search-input {
+    background: rgba(255, 255, 255, 0.95) !important;
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* Filter forms */
+.filter-form,
+.filter-input {
+    background: rgba(255, 255, 255, 0.95) !important;
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* Sort controls */
+.sort-controls,
+.sort-select {
+    background: rgba(255, 255, 255, 0.95) !important;
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* Notification systems */
+.notifications,
+.notification-item {
+    background: rgba(255, 255, 255, 0.95) !important;
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* Loading spinners */
+.spinner,
+.loading {
+    background: rgba(255, 255, 255, 0.95) !important;
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* Error pages */
+.error-page,
+.error-content {
+    background: rgba(255, 255, 255, 0.95) !important;
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* Success pages */
+.success-page,
+.success-content {
+    background: rgba(255, 255, 255, 0.95) !important;
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* Maintenance pages */
+.maintenance-page,
+.maintenance-content {
+    background: rgba(255, 255, 255, 0.95) !important;
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* Print styles */
+@media print {
+    * {
+        background: white !important;
+        background-color: white !important;
+        color: black !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+    }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    * {
+        background: white !important;
+        background-color: white !important;
+        color: black !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        border: 2px solid black !important;
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        transition: none !important;
+        animation: none !important;
+    }
+}
+
+/* Dark mode support (jeśli aplikacja obsługuje dark mode) */
+@media (prefers-color-scheme: dark) {
+    .dark-mode {
+        background: rgba(17, 24, 39, 0.95) !important;
+        background-color: rgba(17, 24, 39, 0.95) !important;
+        color: white !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+    }
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+    .mobile-optimized {
+        background: rgba(255, 255, 255, 0.95) !important;
+        background-color: rgba(255, 255, 255, 0.95) !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+    }
+}
+
+/* Tablet responsiveness */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .tablet-optimized {
+        background: rgba(255, 255, 255, 0.95) !important;
+        background-color: rgba(255, 255, 255, 0.95) !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+    }
+}
+
+/* Desktop responsiveness */
+@media (min-width: 1025px) {
+    .desktop-optimized {
+        background: rgba(255, 255, 255, 0.95) !important;
+        background-color: rgba(255, 255, 255, 0.95) !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+    }
+}
