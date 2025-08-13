@@ -340,8 +340,8 @@
                     'Content-Type': 'application/json',
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                 }
-            }).then(response => {
-                if (response.ok) {
+            }).then(response => response.json()).then(data => {
+                if (data.success) {
                     // Update UI to show lesson as completed
                     const lessonItem = document.querySelector('.lesson-item.active');
                     if (lessonItem) {
@@ -357,6 +357,16 @@
                         parent.showSuccessMessage('Lekcja została oznaczona jako ukończona!');
                     } else if (window.showSuccessMessage) {
                         showSuccessMessage('Lekcja została oznaczona jako ukończona!');
+                    }
+                    
+                    // If quiz is unlocked, update quiz status
+                    if (data.quiz_unlocked) {
+                        if (parent && parent.updateQuizStatus) {
+                            parent.updateQuizStatus();
+                        }
+                        if (parent && parent.showSuccessMessage) {
+                            parent.showSuccessMessage('🎉 Wszystkie lekcje ukończone! Test końcowy został odblokowany.');
+                        }
                     }
                     
                     // Notify parent window to refresh lessons status
@@ -884,8 +894,8 @@
                     'Content-Type': 'application/json',
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                 }
-            }).then(response => {
-                if (response.ok) {
+            }).then(response => response.json()).then(data => {
+                if (data.success) {
                     // Update UI to show lesson as completed
                     const lessonItem = document.querySelector('.lesson-item.active');
                     if (lessonItem) {
@@ -901,6 +911,16 @@
                         parent.showSuccessMessage('Lekcja została oznaczona jako ukończona!');
                     } else if (window.showSuccessMessage) {
                         showSuccessMessage('Lekcja została oznaczona jako ukończona!');
+                    }
+                    
+                    // If quiz is unlocked, update quiz status
+                    if (data.quiz_unlocked) {
+                        if (parent && parent.updateQuizStatus) {
+                            parent.updateQuizStatus();
+                        }
+                        if (parent && parent.showSuccessMessage) {
+                            parent.showSuccessMessage('🎉 Wszystkie lekcje ukończone! Test końcowy został odblokowany.');
+                        }
                     }
                     
                     // Notify parent window to refresh lessons status

@@ -52,8 +52,8 @@
                             3.4. Platforma umożliwia rejestrację dwóch typów użytkowników:
                         </p>
                         <ul>
-                            <li>Farmaceuta - otrzymuje 100% punktów za poprawne odpowiedzi w testach</li>
-                            <li>Technik farmacji - otrzymuje 80% punktów za poprawne odpowiedzi w testach</li>
+                            <li>Farmaceuta - ma pełny dostęp do wszystkich funkcji platformy</li>
+                            <li>Technik farmacji - ma pełny dostęp do wszystkich funkcji platformy</li>
                         </ul>
 
                         <h2>§4. Zasady korzystania z kursów</h2>

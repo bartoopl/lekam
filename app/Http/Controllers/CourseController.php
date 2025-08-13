@@ -132,9 +132,18 @@ class CourseController extends Controller
 
         $lesson->markAsCompleted($user);
 
+        // Check if course is now completed and quiz should be unlocked
+        $quizUnlocked = false;
+        $quiz = $course->quiz;
+        if ($quiz && $quiz->is_active && $course->isCompletedByUser($user) && !$quiz->hasUserPassed($user)) {
+            $quizUnlocked = true;
+        }
+
         return response()->json([
             'success' => true,
-            'message' => 'Lekcja została ukończona.'
+            'message' => 'Lekcja została ukończona.',
+            'quiz_unlocked' => $quizUnlocked,
+            'course_completed' => $course->isCompletedByUser($user)
         ]);
     }
 

@@ -886,8 +886,11 @@ function showSuccessMessage(message) {
     }, 3000);
 }
 
+// Global variable to track quiz availability
+let canTakeQuiz = {{ $canTakeQuiz ? 'true' : 'false' }};
+
 function navigateToQuiz() {
-    @if($canTakeQuiz)
+    if(canTakeQuiz) {
         // Update active state
         document.querySelectorAll('.lesson-item').forEach(item => {
             item.classList.remove('active');
@@ -905,9 +908,23 @@ function navigateToQuiz() {
                 // Fallback to regular navigation
                 window.location.href = '{{ route("quizzes.show", $course) }}';
             });
-    @else
+    } else {
         alert('Test jest niedostępny. Ukończ wszystkie lekcje aby przystąpić do testu.');
-    @endif
+    }
+}
+
+// Function to update quiz status when course is completed
+function updateQuizStatus() {
+    canTakeQuiz = true;
+    
+    // Update quiz lesson item status
+    const quizItem = document.querySelector('.lesson-item[onclick="navigateToQuiz()"]');
+    if (quizItem) {
+        const statusElement = quizItem.querySelector('.lesson-status');
+        if (statusElement && statusElement.textContent.includes('🔒 Zablokowany')) {
+            statusElement.textContent = '○ Dostępny';
+        }
+    }
 }
 
 // Global function to start quiz
