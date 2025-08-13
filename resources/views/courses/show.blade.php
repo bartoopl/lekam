@@ -291,14 +291,14 @@
     }
 
     .chapter-item {
-        margin-bottom: 1.5rem;
+        margin-bottom: 1rem;
         border-radius: 10px;
         overflow: hidden;
     }
 
     .chapter-header {
         background: rgba(255, 255, 255, 0.9);
-        padding: 1rem;
+        padding: 0.75rem;
         cursor: pointer;
         transition: all 0.3s ease;
         border-radius: 10px;
