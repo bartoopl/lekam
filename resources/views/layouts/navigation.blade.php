@@ -1,4 +1,4 @@
-<nav x-data="{ open: false }" class="navbar-container">
+<nav class="navbar-container">
     <!-- Primary Navigation Menu -->
     <div class="navbar">
         <div class="navbar-content">
@@ -9,14 +9,14 @@
                 </a>
             </div>
 
-            <!-- Navigation Links -->
-            <div class="navbar-links">
+            <!-- Navigation Links (Desktop) -->
+            <div class="navbar-links desktop-only">
                 <a href="{{ route('home') }}#about" class="nav-link">O nas</a>
                 <a href="{{ route('courses') }}" class="nav-link">Szkolenia</a>
             </div>
 
-            <!-- Account Buttons -->
-            <div class="navbar-actions">
+            <!-- Account Buttons (Desktop) -->
+            <div class="navbar-actions desktop-only">
                 @auth
                     <div class="auth-buttons">
                         @if(auth()->user()->isAdmin() || auth()->user()->email === 'admin@admin.com' || auth()->user()->user_type === 'admin')
@@ -43,6 +43,51 @@
                     </div>
                 @endauth
             </div>
+
+            <!-- Mobile Hamburger Button -->
+            <div class="mobile-menu-button mobile-only" onclick="toggleMobileMenu()">
+                <div class="hamburger-lines" id="hamburger-lines">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div class="mobile-menu" id="mobile-menu">
+            <div class="mobile-menu-content">
+                <!-- Navigation Links -->
+                <div class="mobile-nav-links">
+                    <a href="{{ route('home') }}#about" class="mobile-nav-link" onclick="closeMobileMenu()">O nas</a>
+                    <a href="{{ route('courses') }}" class="mobile-nav-link" onclick="closeMobileMenu()">Szkolenia</a>
+                </div>
+
+                <!-- Account Buttons -->
+                <div class="mobile-auth-buttons">
+                    @auth
+                        @if(auth()->user()->isAdmin() || auth()->user()->email === 'admin@admin.com' || auth()->user()->user_type === 'admin')
+                            <a href="{{ route('admin.dashboard') }}" class="mobile-admin-button" onclick="closeMobileMenu()">Panel Admin</a>
+                        @endif
+                        <a href="{{ route('dashboard') }}" class="mobile-account-button" onclick="closeMobileMenu()">
+                            Moje konto
+                        </a>
+                        <form method="POST" action="{{ route('logout') }}" class="mobile-logout-form">
+                            @csrf
+                            <button type="submit" class="mobile-logout-button" onclick="closeMobileMenu()">
+                                Wyloguj
+                            </button>
+                        </form>
+                    @else
+                        <a href="{{ route('login') }}" class="mobile-login-button" onclick="closeMobileMenu()">
+                            Zaloguj
+                        </a>
+                        <a href="{{ route('register') }}" class="mobile-register-button" onclick="closeMobileMenu()">
+                            Zarejestruj
+                        </a>
+                    @endauth
+                </div>
+            </div>
         </div>
     </div>
 
@@ -54,6 +99,7 @@
             right: 0;
             z-index: 1000;
             transition: all 0.3s ease;
+            width: 100%;
         }
 
         .navbar {
@@ -254,7 +300,188 @@
         }
 
         /* Mobile responsive */
+        .desktop-only {
+            display: flex;
+        }
+        
+        .mobile-only {
+            display: none;
+        }
+        
+        /* Mobile Menu Button */
+        .mobile-menu-button {
+            cursor: pointer;
+            padding: 8px;
+            z-index: 1001;
+            position: relative;
+        }
+        
+        .hamburger-lines {
+            width: 24px;
+            height: 18px;
+            position: relative;
+            transform: rotate(0deg);
+            transition: .5s ease-in-out;
+        }
+        
+        .hamburger-lines span {
+            display: block;
+            position: absolute;
+            height: 3px;
+            width: 100%;
+            background: #21235F;
+            border-radius: 2px;
+            opacity: 1;
+            left: 0;
+            transform: rotate(0deg);
+            transition: .25s ease-in-out;
+        }
+        
+        .hamburger-lines span:nth-child(1) {
+            top: 0px;
+        }
+        
+        .hamburger-lines span:nth-child(2) {
+            top: 7px;
+        }
+        
+        .hamburger-lines span:nth-child(3) {
+            top: 14px;
+        }
+        
+        .hamburger-lines.open span:nth-child(1) {
+            top: 7px;
+            transform: rotate(135deg);
+        }
+        
+        .hamburger-lines.open span:nth-child(2) {
+            opacity: 0;
+            left: -60px;
+        }
+        
+        .hamburger-lines.open span:nth-child(3) {
+            top: 7px;
+            transform: rotate(-135deg);
+        }
+        
+        /* Mobile Menu */
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 1002;
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+            visibility: hidden;
+        }
+        
+        .mobile-menu.open {
+            transform: translateX(0);
+            visibility: visible;
+        }
+        
+        .mobile-menu-content {
+            background: white;
+            width: 280px;
+            height: 100%;
+            padding: 100px 2rem 2rem 2rem;
+            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .mobile-nav-links {
+            margin-bottom: 2rem;
+        }
+        
+        .mobile-nav-link {
+            display: block;
+            padding: 1rem 0;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 500;
+            font-size: 1.1rem;
+            color: #374151;
+            text-decoration: none;
+            border-bottom: 1px solid #f3f4f6;
+            transition: color 0.3s ease;
+        }
+        
+        .mobile-nav-link:hover {
+            color: #21235F;
+        }
+        
+        .mobile-auth-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .mobile-account-button,
+        .mobile-register-button,
+        .mobile-admin-button {
+            background: linear-gradient(135deg, #21235F 0%, #3B82F6 100%);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            font-size: 1rem;
+            text-decoration: none;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+        
+        .mobile-login-button {
+            background: transparent;
+            color: #21235F;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            font-size: 1rem;
+            text-decoration: none;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 2px solid #21235F;
+        }
+        
+        .mobile-logout-button {
+            background: transparent;
+            color: #DC2626;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            font-size: 1rem;
+            text-decoration: none;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 2px solid #DC2626;
+            cursor: pointer;
+            width: 100%;
+        }
+        
+        .mobile-logout-form {
+            margin: 0;
+        }
+        
+        .mobile-admin-button {
+            background: linear-gradient(135deg, #DC2626 0%, #B91C1C 100%);
+            box-shadow: 0 4px 15px rgba(220, 38, 38, 0.3);
+        }
+
         @media (max-width: 768px) {
+            .desktop-only {
+                display: none;
+            }
+            
+            .mobile-only {
+                display: flex;
+            }
+            
             .navbar {
                 width: 95%;
                 margin: 10px auto;
@@ -278,6 +505,35 @@
                 navbar.classList.add('sticky');
             } else {
                 navbar.classList.remove('sticky');
+            }
+        });
+
+        // Mobile menu toggle functions
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            const hamburgerLines = document.getElementById('hamburger-lines');
+            
+            mobileMenu.classList.toggle('open');
+            hamburgerLines.classList.toggle('open');
+        }
+
+        function closeMobileMenu() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            const hamburgerLines = document.getElementById('hamburger-lines');
+            
+            mobileMenu.classList.remove('open');
+            hamburgerLines.classList.remove('open');
+        }
+
+        // Close menu when clicking outside
+        document.addEventListener('click', function(event) {
+            const mobileMenu = document.getElementById('mobile-menu');
+            const hamburgerButton = document.querySelector('.mobile-menu-button');
+            
+            if (mobileMenu && mobileMenu.classList.contains('open')) {
+                if (!mobileMenu.contains(event.target) && !hamburgerButton.contains(event.target)) {
+                    closeMobileMenu();
+                }
             }
         });
     </script>

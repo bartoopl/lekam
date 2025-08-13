@@ -13,6 +13,65 @@
 </div>
 
 @if($lesson->video_file)
+    <style>
+        /* Custom Video Controls Styling */
+        .video-controls {
+            display: flex !important;
+            align-items: center !important;
+            gap: 1rem !important;
+            background: rgba(0, 0, 0, 0.8) !important;
+            padding: 0.75rem 1rem !important;
+            border-radius: 8px !important;
+            margin-top: 0.5rem !important;
+            backdrop-filter: blur(10px) !important;
+        }
+        
+        .video-controls button {
+            background: transparent !important;
+            border: none !important;
+            color: white !important;
+            cursor: pointer !important;
+            padding: 0.5rem !important;
+            border-radius: 4px !important;
+            transition: all 0.2s ease !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            font-size: 16px !important;
+            min-width: 40px !important;
+            height: 40px !important;
+        }
+        
+        .video-controls button:hover {
+            background: rgba(255, 255, 255, 0.2) !important;
+            transform: scale(1.1) !important;
+        }
+        
+        .video-controls #time-display {
+            color: white !important;
+            font-size: 0.9rem !important;
+            font-family: monospace !important;
+            min-width: 100px !important;
+        }
+        
+        .video-controls .flex-1 {
+            flex: 1 !important;
+            height: 6px !important;
+            background: rgba(255, 255, 255, 0.3) !important;
+            border-radius: 3px !important;
+            position: relative !important;
+            cursor: pointer !important;
+            margin: 0 1rem !important;
+        }
+        
+        .video-controls #progress-fill {
+            height: 100% !important;
+            background: linear-gradient(90deg, #3B82F6 0%, #1D4ED8 100%) !important;
+            border-radius: 3px !important;
+            transition: width 0.1s ease !important;
+        }
+    </style>
+    
     <div class="lesson-video">
         <h3 class="materials-title">Wideo</h3>
         <div class="video-container">
@@ -182,6 +241,7 @@
             
             if (timerInfo) {
                 timerInfo.style.display = 'block';
+                timerInfo.className = 'mb-4 p-4 bg-blue-50 border border-blue-200 rounded-lg';
             }
             
             let totalSeconds = minutes * 60;
@@ -197,20 +257,66 @@
                 
                 if (totalSeconds <= 0) {
                     clearInterval(countdownInterval);
-                    completeLesson(completeUrl);
-                    if (timerInfo) {
-                        timerInfo.innerHTML = `
-                            <div class="flex items-center text-green-600">
-                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                                </svg>
-                                <span class="font-bold">Czas minął! Lekcja została ukończona.</span>
-                            </div>
-                        `;
-                    }
                     
-                    // Show success notification
-                    showSuccessMessage('Timer zakończony! Możesz przejść do kolejnej lekcji.');
+                    // Complete lesson automatically
+                    fetch(completeUrl, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        }
+                    }).then(response => {
+                        if (response.ok) {
+                            // Update timer display to show completion
+                            if (timerInfo) {
+                                timerInfo.innerHTML = `
+                                    <div class="flex items-center text-green-600">
+                                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                        </svg>
+                                        <span class="font-bold">Timer zakończony! Lekcja została ukończona.</span>
+                                    </div>
+                                    <div class="mt-2 text-sm text-green-700">
+                                        Zakończono: ${new Date().toLocaleDateString('pl-PL')} ${new Date().toLocaleTimeString('pl-PL', {hour: '2-digit', minute: '2-digit'})}
+                                    </div>
+                                `;
+                                timerInfo.className = 'mb-4 p-4 bg-green-50 border border-green-200 rounded-lg';
+                            }
+                            
+                            // Update lesson status in sidebar
+                            const lessonItem = document.querySelector('.lesson-item.active');
+                            if (lessonItem) {
+                                lessonItem.classList.add('completed');
+                                const statusElement = lessonItem.querySelector('.lesson-status');
+                                if (statusElement) {
+                                    statusElement.textContent = '✓ Ukończona';
+                                }
+                            }
+                            
+                            // Show success notification
+                            if (window.showSuccessMessage) {
+                                showSuccessMessage('Timer zakończony! Lekcja została ukończona.');
+                            }
+                            
+                            // Notify parent window to refresh lessons status
+                            if (parent && parent !== window && typeof parent.refreshLessonsAccessibility === 'function') {
+                                parent.refreshLessonsAccessibility();
+                            }
+                        } else {
+                            console.error('Failed to complete lesson');
+                            // Show error notification
+                            if (window.showSuccessMessage) {
+                                showSuccessMessage('Błąd przy ukończeniu lekcji. Odśwież stronę.');
+                            }
+                        }
+                    }).catch(error => {
+                        console.error('Error completing lesson:', error);
+                        // Show error notification
+                        if (window.showSuccessMessage) {
+                            showSuccessMessage('Błąd przy ukończeniu lekcji. Odśwież stronę.');
+                        }
+                    });
+                    
                     return;
                 }
                 
@@ -505,8 +611,62 @@
                         
                         if (remainingTime <= 0) {
                             clearInterval(countdown);
-                            // Reload page to update UI
-                            window.location.reload();
+                            
+                            // Complete lesson automatically
+                            fetch('{{ route("courses.complete-lesson", ["course" => $course, "lesson" => $lesson]) }}', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                                }
+                            }).then(response => {
+                                if (response.ok) {
+                                    // Update timer display to show completion
+                                    if (timerInfo) {
+                                        timerInfo.innerHTML = `
+                                            <div class="flex items-center text-green-600">
+                                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                                </svg>
+                                                <span class="font-bold">Timer zakończony! Lekcja została ukończona.</span>
+                                            </div>
+                                            <div class="mt-2 text-sm text-green-700">
+                                                Zakończono: ${new Date().toLocaleDateString('pl-PL')} ${new Date().toLocaleTimeString('pl-PL', {hour: '2-digit', minute: '2-digit'})}
+                                            </div>
+                                        `;
+                                        timerInfo.className = 'mt-4 p-4 bg-green-50 border border-green-200 rounded-lg';
+                                    }
+                                    
+                                    // Update lesson status in sidebar
+                                    const lessonItem = document.querySelector('.lesson-item.active');
+                                    if (lessonItem) {
+                                        lessonItem.classList.add('completed');
+                                        const statusElement = lessonItem.querySelector('.lesson-status');
+                                        if (statusElement) {
+                                            statusElement.textContent = '✓ Ukończona';
+                                        }
+                                    }
+                                    
+                                    // Show success notification
+                                    if (window.showSuccessMessage) {
+                                        showSuccessMessage('Timer zakończony! Lekcja została ukończona.');
+                                    }
+                                    
+                                    // Notify parent window to refresh lessons status
+                                    if (parent && parent !== window && typeof parent.refreshLessonsAccessibility === 'function') {
+                                        parent.refreshLessonsAccessibility();
+                                    }
+                                } else {
+                                    console.error('Failed to complete lesson');
+                                    // Fallback: reload page to update UI
+                                    window.location.reload();
+                                }
+                            }).catch(error => {
+                                console.error('Error completing lesson:', error);
+                                // Fallback: reload page to update UI
+                                window.location.reload();
+                            });
+                            
                             return;
                         }
                         remainingTime--;
@@ -605,6 +765,7 @@
             
             if (timerInfo) {
                 timerInfo.style.display = 'block';
+                timerInfo.className = 'mb-4 p-4 bg-blue-50 border border-blue-200 rounded-lg';
             }
             
             let totalSeconds = minutes * 60;
@@ -620,20 +781,66 @@
                 
                 if (totalSeconds <= 0) {
                     clearInterval(countdownInterval);
-                    completeLesson(completeUrl);
-                    if (timerInfo) {
-                        timerInfo.innerHTML = `
-                            <div class="flex items-center text-green-600">
-                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                                </svg>
-                                <span class="font-bold">Czas minął! Lekcja została ukończona.</span>
-                            </div>
-                        `;
-                    }
                     
-                    // Show success notification
-                    showSuccessMessage('Timer zakończony! Możesz przejść do kolejnej lekcji.');
+                    // Complete lesson automatically
+                    fetch(completeUrl, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        }
+                    }).then(response => {
+                        if (response.ok) {
+                            // Update timer display to show completion
+                            if (timerInfo) {
+                                timerInfo.innerHTML = `
+                                    <div class="flex items-center text-green-600">
+                                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                        </svg>
+                                        <span class="font-bold">Timer zakończony! Lekcja została ukończona.</span>
+                                    </div>
+                                    <div class="mt-2 text-sm text-green-700">
+                                        Zakończono: ${new Date().toLocaleDateString('pl-PL')} ${new Date().toLocaleTimeString('pl-PL', {hour: '2-digit', minute: '2-digit'})}
+                                    </div>
+                                `;
+                                timerInfo.className = 'mb-4 p-4 bg-green-50 border border-green-200 rounded-lg';
+                            }
+                            
+                            // Update lesson status in sidebar
+                            const lessonItem = document.querySelector('.lesson-item.active');
+                            if (lessonItem) {
+                                lessonItem.classList.add('completed');
+                                const statusElement = lessonItem.querySelector('.lesson-status');
+                                if (statusElement) {
+                                    statusElement.textContent = '✓ Ukończona';
+                                }
+                            }
+                            
+                            // Show success notification
+                            if (window.showSuccessMessage) {
+                                showSuccessMessage('Timer zakończony! Lekcja została ukończona.');
+                            }
+                            
+                            // Notify parent window to refresh lessons status
+                            if (parent && parent !== window && typeof parent.refreshLessonsAccessibility === 'function') {
+                                parent.refreshLessonsAccessibility();
+                            }
+                        } else {
+                            console.error('Failed to complete lesson');
+                            // Show error notification
+                            if (window.showSuccessMessage) {
+                                showSuccessMessage('Błąd przy ukończeniu lekcji. Odśwież stronę.');
+                            }
+                        }
+                    }).catch(error => {
+                        console.error('Error completing lesson:', error);
+                        // Show error notification
+                        if (window.showSuccessMessage) {
+                            showSuccessMessage('Błąd przy ukończeniu lekcji. Odśwież stronę.');
+                        }
+                    });
+                    
                     return;
                 }
                 
