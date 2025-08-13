@@ -378,7 +378,7 @@
     }
 
     .lesson-title {
-        font-size: 0.8rem;
+        font-size: 1rem;
         color: #21235F;
         font-weight: 500;
     }
