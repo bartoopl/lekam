@@ -56,6 +56,43 @@ window.initCustomVideoControls = function(video) {
     video.addEventListener('ended', function() {
         clearInterval(saveInterval);
         savePosition(); // Save when video ends
+        
+        // Auto-complete lesson when video ends
+        const completeUrl = video.dataset.completeLessonUrl;
+        if (completeUrl) {
+            console.log('Video ended, auto-completing lesson...');
+            if (typeof window.completeLesson === 'function') {
+                window.completeLesson(completeUrl);
+            } else {
+                // Fallback: direct AJAX call
+                fetch(completeUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    }
+                }).then(response => response.json()).then(data => {
+                    if (data.success) {
+                        console.log('Lesson completed successfully after video end');
+                        
+                        // If quiz is unlocked, notify parent window
+                        if (data.quiz_unlocked && parent && parent.updateQuizStatus) {
+                            parent.updateQuizStatus();
+                        }
+                        if (data.quiz_unlocked && parent && parent.showSuccessMessage) {
+                            parent.showSuccessMessage('🎉 Wszystkie lekcje ukończone! Test końcowy został odblokowany.');
+                        }
+                        
+                        // Notify parent window to refresh lessons status
+                        if (parent && parent !== window && typeof parent.refreshLessonsAccessibility === 'function') {
+                            parent.refreshLessonsAccessibility();
+                        }
+                    }
+                }).catch(error => {
+                    console.error('Error completing lesson after video end:', error);
+                });
+            }
+        }
     });
 
     // Save position when user leaves the page
