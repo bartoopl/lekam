@@ -137,9 +137,9 @@
                     @endif
                     
                     <button id="startQuizBtn" 
-                            class="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition duration-300 !important"
+                            class="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition duration-300"
                             onclick="startQuiz();"
-                            style="display: block !important; visibility: visible !important;">
+                            style="display: block !important; visibility: visible !important; background-color: #2563eb !important; color: white !important; opacity: 1 !important;">
                         Rozpocznij test
                     </button>
                 </div>
