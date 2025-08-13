@@ -283,7 +283,7 @@
     }
 
     .chapters-title {
-        font-size: 1.3rem;
+        font-size: 1.1rem;
         font-weight: 700;
         color: #21235F;
         margin-bottom: 1.5rem;
@@ -315,7 +315,7 @@
     .chapter-title {
         font-weight: 600;
         color: #21235F;
-        font-size: 1rem;
+        font-size: 0.9rem;
         margin-bottom: 0.5rem;
     }
 
@@ -378,7 +378,7 @@
     }
 
     .lesson-title {
-        font-size: 0.9rem;
+        font-size: 0.8rem;
         color: #21235F;
         font-weight: 500;
     }

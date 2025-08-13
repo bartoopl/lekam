@@ -87,6 +87,11 @@ window.initCustomVideoControls = function(video) {
                         if (parent && parent !== window && typeof parent.refreshLessonsAccessibility === 'function') {
                             parent.refreshLessonsAccessibility();
                         }
+                        
+                        // Update navigation buttons
+                        if (parent && parent !== window && typeof parent.updateNavigationButtons === 'function') {
+                            setTimeout(() => parent.updateNavigationButtons(), 500);
+                        }
                     }
                 }).catch(error => {
                     console.error('Error completing lesson after video end:', error);
