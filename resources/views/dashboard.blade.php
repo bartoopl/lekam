@@ -293,6 +293,35 @@
                     <div class="stat-label">Panel Administratora</div>
                 </a>
             @endif
+            
+            <!-- Certificates Section -->
+            @php
+                $certificates = $user->certificates()->with('course')->orderBy('issued_at', 'desc')->get();
+            @endphp
+            @if($certificates->count() > 0)
+                <div style="margin-top: 2rem;">
+                    <h3 style="font-size: 1.5rem; font-weight: 700; color: #21235F; margin-bottom: 1rem; text-align: center;">Moje certyfikaty</h3>
+                    <div style="space-y: 1rem;">
+                        @foreach($certificates as $certificate)
+                            <div style="display: flex; align-items: center; justify-content: space-between; padding: 1rem; background: rgba(255, 255, 255, 0.08); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 12px; margin-bottom: 1rem; transition: all 0.3s ease;">
+                                <div style="display: flex; align-items: center; gap: 1rem;">
+                                    <div style="width: 40px; height: 40px; background: linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2rem;">
+                                        📜
+                                    </div>
+                                    <div>
+                                        <div style="font-weight: 600; color: #21235F; font-size: 0.9rem;">{{ $certificate->course->title }}</div>
+                                        <div style="font-size: 0.75rem; color: #666;">{{ $certificate->issued_at->format('d.m.Y') }}</div>
+                                    </div>
+                                </div>
+                                <a href="{{ route('certificates.download', $certificate) }}" 
+                                   style="background: linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%); color: white; padding: 0.5rem 1rem; border-radius: 20px; text-decoration: none; font-size: 0.8rem; font-weight: 600; transition: all 0.3s ease; display: inline-flex; align-items: center; gap: 0.5rem;">
+                                    ⬇️ Pobierz
+                                </a>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            @endif
         </div>
 
         <!-- Right side - My Courses -->

@@ -8,7 +8,7 @@
         background-position: center;
         background-attachment: fixed;
         min-height: 100vh;
-        padding-top: 120px;
+        padding-top: 20px;
     }
 
     .course-header {
@@ -24,7 +24,7 @@
         font-size: 2.5rem;
         font-weight: 700;
         color: #21235F;
-        margin-bottom: 1rem;
+        margin-bottom: 1.5rem;
         font-family: 'Poppins', sans-serif;
     }
 
@@ -32,7 +32,7 @@
         display: flex;
         align-items: center;
         gap: 0.5rem;
-        margin-bottom: 1.5rem;
+        margin-bottom: 2rem;
         font-size: 0.9rem;
         color: #666;
     }
@@ -57,6 +57,7 @@
         border: 1px solid rgba(255, 255, 255, 0.2);
         border-radius: 15px;
         padding: 1.5rem;
+        margin-top: 1rem;
         margin-bottom: 2rem;
     }
 
@@ -64,7 +65,7 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 1rem;
+        margin-bottom: 1.5rem;
     }
 
     .progress-title {
@@ -360,9 +361,20 @@
     }
 
     .lesson-item.completed {
-        background: rgba(34, 197, 94, 0.2);
-        border-color: rgba(34, 197, 94, 0.5);
-        box-shadow: 0 2px 10px rgba(34, 197, 94, 0.2);
+        background: rgba(34, 197, 94, 0.1);
+        border-left: 4px solid #22c55e;
+    }
+
+    .lesson-item.locked {
+        background: rgba(156, 163, 175, 0.1);
+        border-left: 4px solid #9ca3af;
+        cursor: not-allowed;
+        opacity: 0.6;
+    }
+
+    .lesson-item.locked:hover {
+        background: rgba(156, 163, 175, 0.1);
+        transform: none;
     }
 
     .lesson-title {
@@ -530,6 +542,16 @@
         text-align: center;
     }
 
+    .auto-start-lesson {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 400px;
+        color: #666;
+        font-size: 1.1rem;
+        text-align: center;
+    }
+
     /* Mobile responsive */
     @media (max-width: 768px) {
         .course-content {
@@ -560,7 +582,7 @@
     }
 </style>
 
-<div class="container mx-auto px-4 py-8">
+<div class="container mx-auto px-4 py-4">
     <!-- Course Header -->
     <div class="course-header">
         <div class="breadcrumbs">
@@ -577,14 +599,32 @@
     <!-- Progress Section -->
     <div class="progress-section">
         <div class="progress-header">
-            <span class="progress-title">Postęp kursu</span>
-            <span class="progress-percentage">{{ $progressPercentage }}%</span>
+            <div class="progress-title">Postęp kursu</div>
+            <div class="progress-percentage">{{ $progressPercentage }}%</div>
         </div>
         <div class="progress-bar-container">
             <div class="progress-bar-fill" style="width: {{ $progressPercentage }}%">
                 <div class="progress-bar-circle"></div>
             </div>
         </div>
+        <div class="mt-4 text-sm text-gray-600">
+            {{ $completedLessons }} z {{ $totalLessons }} lekcji ukończonych
+        </div>
+        
+        <!-- Test Reset Button -->
+        @if(config('app.debug') || app()->environment('local'))
+            <div class="mt-4 p-3 bg-yellow-100 border border-yellow-300 rounded-md">
+                <div class="flex items-center justify-between">
+                    <div class="text-yellow-800 text-sm">
+                        <strong>🧪 Tryb testowy:</strong> Przycisk do resetowania postępu
+                    </div>
+                    <button onclick="resetCourseProgress()" 
+                            class="bg-red-600 text-white px-4 py-2 rounded text-sm hover:bg-red-700 transition duration-300">
+                        Resetuj postęp kursu
+                    </button>
+                </div>
+            </div>
+        @endif
     </div>
 
 
@@ -614,13 +654,17 @@
                                 @php
                                     $isCompleted = $lesson->userProgress->first()?->is_completed ?? false;
                                     $isActive = request()->has('lesson') && request()->get('lesson') == $lesson->id;
+                                    $isAccessible = auth()->check() ? $lesson->isAccessibleByUser(auth()->user()) : true;
                                 @endphp
-                                <div class="lesson-item {{ $isActive ? 'active' : '' }} {{ $isCompleted ? 'completed' : '' }}" 
-                                     onclick="loadLesson({{ $lesson->id }}, '{{ $lesson->title }}')">
+                                <div class="lesson-item {{ $isActive ? 'active' : '' }} {{ $isCompleted ? 'completed' : '' }} {{ !$isAccessible ? 'locked' : '' }}" 
+                                     data-lesson-id="{{ $lesson->id }}"
+                                     @if($isAccessible) onclick="loadLesson({{ $lesson->id }}, '{{ $lesson->title }}')" @endif>
                                     <div class="lesson-title">{{ $lesson->title }}</div>
                                     <div class="lesson-status">
                                         @if($isCompleted)
                                             ✓ Ukończona
+                                        @elseif(!$isAccessible)
+                                            🔒 Zablokowana
                                         @else
                                             ○ Nieukończona
                                         @endif
@@ -663,13 +707,17 @@
                     @php
                         $isCompleted = $lesson->userProgress->first()?->is_completed ?? false;
                         $isActive = request()->has('lesson') && request()->get('lesson') == $lesson->id;
+                        $isAccessible = auth()->check() ? $lesson->isAccessibleByUser(auth()->user()) : true;
                     @endphp
-                    <div class="lesson-item {{ $isActive ? 'active' : '' }} {{ $isCompleted ? 'completed' : '' }}" 
-                         onclick="loadLesson({{ $lesson->id }}, '{{ $lesson->title }}')">
+                    <div class="lesson-item {{ $isActive ? 'active' : '' }} {{ $isCompleted ? 'completed' : '' }} {{ !$isAccessible ? 'locked' : '' }}" 
+                         data-lesson-id="{{ $lesson->id }}"
+                         @if($isAccessible) onclick="loadLesson({{ $lesson->id }}, '{{ $lesson->title }}')" @endif>
                         <div class="lesson-title">{{ $lesson->title }}</div>
                         <div class="lesson-status">
                             @if($isCompleted)
                                 ✓ Ukończona
+                            @elseif(!$isAccessible)
+                                🔒 Zablokowana
                             @else
                                 ○ Nieukończona
                             @endif
@@ -681,17 +729,42 @@
 
         <!-- Lesson Content -->
         <div class="lesson-content" id="lesson-content">
-            <div class="no-lesson-selected">
-                <div>
-                    <h3>Wybierz lekcję z listy po lewej stronie</h3>
-                    <p>Aby rozpocząć naukę, kliknij na jedną z lekcji w spisie tematów.</p>
+            @if($firstAvailableLesson)
+                <div class="auto-start-lesson">
+                    <div class="text-center">
+                        <h3>Rozpoczynanie nauki...</h3>
+                        <p>Automatycznie ładuję pierwszą dostępną lekcję: <strong>{{ $firstAvailableLesson->title }}</strong></p>
+                        <div class="mt-4">
+                            <button onclick="loadLesson({{ $firstAvailableLesson->id }}, '{{ $firstAvailableLesson->title }}')" 
+                                    class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition duration-300">
+                                Rozpocznij naukę
+                            </button>
+                        </div>
+                    </div>
                 </div>
-            </div>
+            @else
+                <div class="no-lesson-selected">
+                    <div>
+                        <h3>Wybierz lekcję z listy po lewej stronie</h3>
+                        <p>Aby rozpocząć naukę, kliknij na jedną z lekcji w spisie tematów.</p>
+                    </div>
+                </div>
+            @endif
         </div>
     </div>
 </div>
 
 <script>
+// Auto-start first available lesson
+@if($firstAvailableLesson)
+document.addEventListener('DOMContentLoaded', function() {
+    // Auto-load first available lesson after a short delay
+    setTimeout(() => {
+        loadLesson({{ $firstAvailableLesson->id }}, '{{ $firstAvailableLesson->title }}');
+    }, 1000);
+});
+@endif
+
 function toggleChapter(chapterId) {
     const lessonsList = document.getElementById(`lessons-${chapterId}`);
     lessonsList.classList.toggle('expanded');
@@ -702,7 +775,14 @@ function loadLesson(lessonId, lessonTitle) {
     document.querySelectorAll('.lesson-item').forEach(item => {
         item.classList.remove('active');
     });
-    event.target.closest('.lesson-item').classList.add('active');
+    
+    // Find and activate the clicked lesson
+    const lessonItems = document.querySelectorAll('.lesson-item');
+    lessonItems.forEach(item => {
+        if (item.onclick && item.onclick.toString().includes(lessonId)) {
+            item.classList.add('active');
+        }
+    });
     
     // Load lesson content via AJAX
     fetch(`/courses/{{ $course->id }}/lesson/${lessonId}`)
@@ -713,6 +793,10 @@ function loadLesson(lessonId, lessonTitle) {
             // Initialize video controls after content is loaded
             setTimeout(() => {
                 initializeVideoControls();
+                // Give more time for navigation buttons to be rendered in lesson content
+                setTimeout(() => {
+                    updateNavigationButtons();
+                }, 200);
             }, 100);
         })
         .catch(error => {
@@ -770,6 +854,13 @@ function initializeVideoControls() {
                         
                         // Show success message
                         showSuccessMessage('Lekcja została oznaczona jako ukończona!');
+                        
+                        // Refresh lesson accessibility after a short delay
+                        console.log('Video ended, will refresh lessons accessibility in 1 second');
+                        setTimeout(() => {
+                            console.log('Calling refreshLessonsAccessibility from video end handler');
+                            refreshLessonsAccessibility();
+                        }, 1000);
                     }
                 }).catch(error => {
                     console.error('Error completing lesson:', error);
@@ -879,6 +970,219 @@ function startQuiz() {
                 startBtn.disabled = false;
                 startBtn.textContent = 'Rozpocznij test';
             }
+        });
+    }
+}
+
+function refreshLessonsAccessibility() {
+    console.log('refreshLessonsAccessibility called');
+    // Fetch updated lesson accessibility from server
+    fetch(`/courses/{{ $course->id }}/lessons-status`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        }
+    })
+    .then(response => {
+        console.log('Response status:', response.status);
+        return response.json();
+    })
+    .then(data => {
+        console.log('Received data:', data);
+        if (data.success && data.lessons) {
+            // Update each lesson's accessibility in the UI
+            data.lessons.forEach(lesson => {
+                console.log(`Processing lesson ${lesson.id}: completed=${lesson.is_completed}, accessible=${lesson.is_accessible}`);
+                
+                // Find lesson element by data-lesson-id
+                const element = document.querySelector(`[data-lesson-id="${lesson.id}"]`);
+                
+                if (element) {
+                    console.log(`Found lesson element for lesson ${lesson.id} by data-lesson-id`);
+                    const statusElement = element.querySelector('.lesson-status');
+                    
+                    // Update lesson classes and status
+                    element.classList.remove('locked', 'completed');
+                    
+                    if (lesson.is_completed) {
+                        console.log(`Marking lesson ${lesson.id} as completed`);
+                        element.classList.add('completed');
+                        if (statusElement) {
+                            statusElement.textContent = '✓ Ukończona';
+                        }
+                    } else if (!lesson.is_accessible) {
+                        console.log(`Marking lesson ${lesson.id} as locked`);
+                        element.classList.add('locked');
+                        if (statusElement) {
+                            statusElement.textContent = '🔒 Zablokowana';
+                        }
+                        // Remove onclick if locked
+                        element.removeAttribute('onclick');
+                        element.style.cursor = 'not-allowed';
+                    } else {
+                        console.log(`Marking lesson ${lesson.id} as accessible`);
+                        if (statusElement) {
+                            statusElement.textContent = '○ Nieukończona';
+                        }
+                        // Ensure onclick is present if accessible
+                        element.setAttribute('onclick', `loadLesson(${lesson.id}, '${lesson.title.replace(/'/g, "\\\'")}')`);
+                        element.style.cursor = 'pointer';
+                    }
+                } else {
+                    console.warn(`Could not find lesson element for lesson ${lesson.id} (${lesson.title})`);
+                }
+            });
+            
+            // Update progress bar if provided
+            if (data.progress_percentage !== undefined) {
+                const progressBar = document.querySelector('.progress-bar-fill');
+                const progressPercentage = document.querySelector('.progress-percentage');
+                const progressText = document.querySelector('.progress-section .text-sm');
+                
+                if (progressBar) {
+                    progressBar.style.width = data.progress_percentage + '%';
+                }
+                if (progressPercentage) {
+                    progressPercentage.textContent = data.progress_percentage + '%';
+                }
+                if (progressText && data.completed_lessons !== undefined && data.total_lessons !== undefined) {
+                    progressText.textContent = `${data.completed_lessons} z ${data.total_lessons} lekcji ukończonych`;
+                }
+            }
+            
+            // After updating all lessons, update navigation buttons
+            console.log('Lessons updated, now updating navigation buttons');
+            updateNavigationButtons();
+        }
+    })
+    .catch(error => {
+        console.error('Error refreshing lessons accessibility:', error);
+    });
+}
+
+function updateNavigationButtons() {
+    console.log('updateNavigationButtons called');
+    
+    // Try to find buttons in the lesson content (loaded via AJAX)
+    const prevBtn = document.getElementById('lesson-prev-btn');
+    const nextBtn = document.getElementById('lesson-next-btn');
+    
+    if (!prevBtn || !nextBtn) {
+        console.log('Navigation buttons not found in lesson content yet');
+        return;
+    }
+    
+    // Find current active lesson
+    const activeLesson = document.querySelector('.lesson-item.active');
+    if (!activeLesson) {
+        console.log('No active lesson found');
+        return;
+    }
+    
+    console.log('Active lesson found, updating buttons');
+    
+    // Find previous lesson
+    const prevLesson = findPreviousAccessibleLesson(activeLesson);
+    if (prevLesson) {
+        const prevOnClick = prevLesson.getAttribute('onclick');
+        if (prevOnClick) {
+            const prevIdMatch = prevOnClick.match(/loadLesson\((\d+),/);
+            const prevTitleMatch = prevOnClick.match(/loadLesson\(\d+,\s*['"]([^'"]+)['"]/);
+            
+            if (prevIdMatch && prevTitleMatch) {
+                prevBtn.disabled = false;
+                prevBtn.className = 'inline-flex items-center justify-center px-6 py-3 bg-blue-600 border-2 border-blue-600 rounded-full font-semibold text-sm text-white tracking-wide cursor-pointer transition-all duration-300 shadow-lg hover:shadow-xl hover:bg-blue-700';
+                prevBtn.style.cssText = 'background: #2563eb !important; border-color: #2563eb !important; min-width: 150px; height: 50px; color: white !important;';
+                prevBtn.innerHTML = '← Poprzednia';
+                prevBtn.onclick = () => loadLesson(parseInt(prevIdMatch[1]), prevTitleMatch[1]);
+                console.log('Previous lesson enabled:', prevTitleMatch[1]);
+            }
+        }
+    } else {
+        prevBtn.disabled = true;
+        prevBtn.className = 'inline-flex items-center justify-center px-6 py-3 bg-gray-400 border-2 border-gray-400 rounded-full font-semibold text-sm text-white tracking-wide cursor-not-allowed transition-all duration-300 shadow-lg hover:shadow-xl';
+        prevBtn.style.cssText = 'background: #9ca3af !important; border-color: #9ca3af !important; min-width: 150px; height: 50px; color: white !important;';
+        prevBtn.innerHTML = '← Poprzednia';
+        prevBtn.onclick = null;
+        console.log('Previous lesson disabled');
+    }
+    
+    // Find next lesson
+    const nextLesson = findNextAccessibleLesson(activeLesson);
+    if (nextLesson) {
+        const nextOnClick = nextLesson.getAttribute('onclick');
+        if (nextOnClick) {
+            const nextIdMatch = nextOnClick.match(/loadLesson\((\d+),/);
+            const nextTitleMatch = nextOnClick.match(/loadLesson\(\d+,\s*['"]([^'"]+)['"]/);
+            
+            if (nextIdMatch && nextTitleMatch) {
+                nextBtn.disabled = false;
+                nextBtn.className = 'inline-flex items-center justify-center px-6 py-3 bg-blue-600 border-2 border-blue-600 rounded-full font-semibold text-sm text-white tracking-wide cursor-pointer transition-all duration-300 shadow-lg hover:shadow-xl hover:bg-blue-700';
+                nextBtn.style.cssText = 'background: #2563eb !important; border-color: #2563eb !important; min-width: 150px; height: 50px; color: white !important;';
+                nextBtn.innerHTML = 'Następna →';
+                nextBtn.onclick = () => loadLesson(parseInt(nextIdMatch[1]), nextTitleMatch[1]);
+                console.log('Next lesson enabled:', nextTitleMatch[1]);
+            }
+        }
+    } else {
+        nextBtn.disabled = true;
+        nextBtn.className = 'inline-flex items-center justify-center px-6 py-3 bg-gray-400 border-2 border-gray-400 rounded-full font-semibold text-sm text-white tracking-wide cursor-not-allowed transition-all duration-300 shadow-lg hover:shadow-xl';
+        nextBtn.style.cssText = 'background: #9ca3af !important; border-color: #9ca3af !important; min-width: 150px; height: 50px; color: white !important;';
+        nextBtn.innerHTML = 'Następna →';
+        nextBtn.onclick = null;
+        console.log('Next lesson disabled');
+    }
+}
+
+function findPreviousAccessibleLesson(currentLesson) {
+    const allLessons = Array.from(document.querySelectorAll('.lesson-item'));
+    const currentIndex = allLessons.indexOf(currentLesson);
+    
+    for (let i = currentIndex - 1; i >= 0; i--) {
+        const lesson = allLessons[i];
+        if (!lesson.classList.contains('locked') && lesson.getAttribute('onclick')) {
+            return lesson;
+        }
+    }
+    return null;
+}
+
+function findNextAccessibleLesson(currentLesson) {
+    const allLessons = Array.from(document.querySelectorAll('.lesson-item'));
+    const currentIndex = allLessons.indexOf(currentLesson);
+    
+    for (let i = currentIndex + 1; i < allLessons.length; i++) {
+        const lesson = allLessons[i];
+        if (!lesson.classList.contains('locked') && lesson.getAttribute('onclick')) {
+            return lesson;
+        }
+    }
+    return null;
+}
+
+function resetCourseProgress() {
+    if (confirm('Czy na pewno chcesz usunąć wszystkie postępy w tym kursie? Ta operacja jest nieodwracalna.')) {
+        fetch(`/courses/{{ $course->id }}/reset-progress`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Postępy w kursie zostały usunięte.');
+                // Reload the page to reflect the changes
+                window.location.reload();
+            } else {
+                alert('Wystąpił błąd podczas resetowania postępów: ' + (data.message || data.error));
+            }
+        })
+        .catch(error => {
+            console.error('Error resetting progress:', error);
+            alert('Wystąpił błąd podczas resetowania postępów: ' + error.message);
         });
     }
 }

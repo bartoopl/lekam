@@ -475,6 +475,7 @@ ob_start();
     </style>
 </head>
 <body>
+    @guest
     <!-- Hero Section -->
     <section class="hero-section">
         <div class="hero-content">
@@ -487,9 +488,10 @@ ob_start();
             </div>
         </div>
     </section>
+    @endguest
     
     <!-- Courses Grid Section -->
-    <section class="courses-section">
+    <section class="courses-section" @auth style="padding-top: 120px;" @endauth>
         <div class="courses-content">
             <div class="courses-grid">
                 @foreach($courses as $course)

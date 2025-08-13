@@ -33,16 +33,24 @@
     }
 
     .success-icon {
-        width: 120px;
-        height: 120px;
-        margin: 0 auto 2rem;
-        background: linear-gradient(135deg, #10B981 0%, #059669 100%);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
-        animation: pulse 2s infinite;
+        width: 120px !important;
+        height: 120px !important;
+        margin: 0 auto 2rem !important;
+        background: linear-gradient(135deg, #10B981 0%, #059669 100%) !important;
+        border-radius: 50% !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4) !important;
+        animation: pulse 2s infinite !important;
+    }
+    
+    .success-icon svg {
+        width: 4rem !important;
+        height: 4rem !important;
+        color: white !important;
+        stroke: white !important;
+        fill: none !important;
     }
 
     @keyframes pulse {
@@ -101,52 +109,55 @@
     }
 
     .certificate-button {
-        background: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%);
-        color: white;
-        padding: 1rem 2.5rem;
-        border-radius: 15px;
-        font-family: 'Poppins', sans-serif;
-        font-weight: 700;
-        font-size: 1.1rem;
-        text-decoration: none;
-        transition: all 0.3s ease;
-        box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4);
-        border: none;
-        cursor: pointer;
-        display: inline-flex;
-        align-items: center;
-        gap: 0.75rem;
-        margin: 0 1rem;
+        background: linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%) !important;
+        color: white !important;
+        padding: 1rem 2.5rem !important;
+        border-radius: 50px !important;
+        font-family: 'Poppins', sans-serif !important;
+        font-weight: 700 !important;
+        font-size: 1.1rem !important;
+        text-decoration: none !important;
+        transition: all 0.3s ease !important;
+        box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4) !important;
+        border: none !important;
+        cursor: pointer !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 0.75rem !important;
+        margin: 0 1rem !important;
     }
 
     .certificate-button:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 15px 35px rgba(139, 92, 246, 0.6);
-        color: white;
+        transform: translateY(-3px) !important;
+        box-shadow: 0 15px 35px rgba(59, 130, 246, 0.6) !important;
+        color: white !important;
+        background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%) !important;
     }
 
     .back-button {
-        background: rgba(107, 114, 128, 0.8);
-        color: white;
-        padding: 1rem 2.5rem;
-        border-radius: 15px;
-        font-family: 'Poppins', sans-serif;
-        font-weight: 600;
-        font-size: 1rem;
-        text-decoration: none;
-        transition: all 0.3s ease;
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        display: inline-flex;
-        align-items: center;
-        gap: 0.75rem;
-        margin: 0 1rem;
+        background: rgba(107, 114, 128, 0.9) !important;
+        color: white !important;
+        padding: 1rem 2.5rem !important;
+        border-radius: 50px !important;
+        font-family: 'Poppins', sans-serif !important;
+        font-weight: 600 !important;
+        font-size: 1rem !important;
+        text-decoration: none !important;
+        transition: all 0.3s ease !important;
+        backdrop-filter: blur(10px) !important;
+        border: 2px solid rgba(107, 114, 128, 0.8) !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 0.75rem !important;
+        margin: 0 1rem !important;
+        box-shadow: 0 4px 15px rgba(107, 114, 128, 0.3) !important;
     }
 
     .back-button:hover {
-        background: rgba(75, 85, 99, 0.9);
-        transform: translateY(-2px);
-        color: white;
+        background: rgba(75, 85, 99, 1.0) !important;
+        transform: translateY(-2px) !important;
+        color: white !important;
+        box-shadow: 0 8px 25px rgba(107, 114, 128, 0.4) !important;
     }
 
     .buttons-container {
@@ -163,18 +174,29 @@
     }
 
     .failed-icon {
-        background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
-        box-shadow: 0 8px 25px rgba(239, 68, 68, 0.4);
+        background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%) !important;
+        box-shadow: 0 8px 25px rgba(239, 68, 68, 0.4) !important;
+    }
+    
+    .failed-icon svg {
+        width: 4rem !important;
+        height: 4rem !important;
+        color: white !important;
+        stroke: white !important;
+        fill: none !important;
     }
 
     .retry-button {
-        background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);
-        box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+        background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%) !important;
+        box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4) !important;
+        border-radius: 50px !important;
     }
 
     .retry-button:hover {
-        box-shadow: 0 15px 35px rgba(59, 130, 246, 0.6);
+        box-shadow: 0 15px 35px rgba(59, 130, 246, 0.6) !important;
+        color: white !important;
     }
+    
 
     /* Mobile responsive */
     @media (max-width: 768px) {
@@ -278,32 +300,19 @@
         <!-- Action Buttons -->
         <div class="buttons-container">
             <a href="{{ route('courses.show', $course) }}" class="back-button">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-                </svg>
-                Powrót do kursu
+                ← Powrót do kursu
             </a>
 
             @if($attempt->passed)
-                <form method="POST" action="{{ route('certificates.generate', $course) }}" class="inline" onsubmit="console.log('Certificate form submitted to:', this.action); return true;">
+                <form method="POST" action="/courses/{{ $course->id }}/certificate/generate" class="inline">
                     @csrf
-                    <button type="submit" class="certificate-button" onclick="console.log('Certificate button clicked. Form action URL:', this.form.action);">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                        </svg>
-                        Pobierz certyfikat
+                    <button type="submit" class="certificate-button">
+                        📜 Pobierz certyfikat
                     </button>
                 </form>
-                <!-- Debug info -->
-                <div style="font-size: 12px; color: #666; margin-top: 10px;">
-                    Debug: Form action URL = {{ route('certificates.generate', $course) }}
-                </div>
             @else
                 <a href="{{ route('quizzes.show', $course) }}" class="certificate-button retry-button">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
-                    </svg>
-                    Spróbuj ponownie
+                    🔄 Spróbuj ponownie
                 </a>
             @endif
         </div>

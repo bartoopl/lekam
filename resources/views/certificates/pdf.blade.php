@@ -4,6 +4,10 @@
     <meta charset="utf-8">
     <title>Certyfikat - {{ $certificate->course->title }}</title>
     <style>
+        @page {
+            size: A4 portrait;
+            margin: 2cm;
+        }
         body {
             font-family: 'DejaVu Sans', Arial, sans-serif;
             margin: 0;
@@ -172,16 +176,6 @@
         </div>
 
         <div class="user-name">{{ $user->name }}</div>
-        <div class="user-type">
-            @if($user->isPharmacist())
-                Farmaceuta
-            @else
-                Technik farmacji
-            @endif
-            @if($user->license_number)
-                - Licencja: {{ $user->license_number }}
-            @endif
-        </div>
 
         <div class="certificate-text">
             pomyślnie ukończył(a) szkolenie online i uzyskał(a) wymagane kompetencje w zakresie przedstawionym w programie kursu.
@@ -200,14 +194,10 @@
                 <div class="detail-label">Liczba lekcji</div>
                 <div class="detail-value">{{ $certificate->course->lessons->count() }}</div>
             </div>
-            @if($certificate->quizAttempt)
+            @if($certificate->course->duration_hours)
                 <div class="detail-item">
-                    <div class="detail-label">Wynik testu</div>
-                    <div class="detail-value">{{ $certificate->quizAttempt->percentage }}%</div>
-                </div>
-                <div class="detail-item">
-                    <div class="detail-label">Punkty uzyskane</div>
-                    <div class="detail-value">{{ $certificate->quizAttempt->score }}/{{ $certificate->quizAttempt->max_score }}</div>
+                    <div class="detail-label">Czas trwania</div>
+                    <div class="detail-value">{{ $certificate->course->duration_hours }}h</div>
                 </div>
             @endif
         </div>

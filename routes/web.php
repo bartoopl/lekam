@@ -13,7 +13,9 @@ use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 
 // Public routes
-Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/', function () {
+    return view('welcome');
+})->name('home');
 Route::get('/about', [HomeController::class, 'about'])->name('about');
 Route::get('/contact', [HomeController::class, 'contact'])->name('contact');
 Route::get('/terms', [HomeController::class, 'terms'])->name('terms');
@@ -29,6 +31,15 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/courses/{course}/lesson/{lesson}/download', [CourseController::class, 'downloadFile'])->name('courses.download-file');
     Route::post('/courses/{course}/lesson/{lesson}/download', [CourseController::class, 'downloadFile'])->name('courses.download-file.post');
     Route::get('/courses/{course}/lesson/{lesson}/video/download', [CourseController::class, 'downloadVideo'])->name('courses.download-video');
+    
+    // Route for getting lessons status (AJAX)
+    Route::get('/courses/{course}/lessons-status', [CourseController::class, 'getLessonsStatus'])->name('courses.lessons-status');
+    
+    // Route for getting lesson navigation (AJAX)
+    Route::get('/courses/{course}/lesson/{lesson}/navigation', [CourseController::class, 'getLessonNavigation'])->name('courses.lesson-navigation');
+    
+    // Test route for resetting course progress (only in debug/local mode)
+    Route::post('/courses/{course}/reset-progress', [CourseController::class, 'resetProgress'])->name('courses.reset-progress');
 });
 Route::get('/courses/{course}/progress', [CourseController::class, 'progress'])->name('courses.progress');
 

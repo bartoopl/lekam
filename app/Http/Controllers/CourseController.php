@@ -77,7 +77,18 @@ class CourseController extends Controller
             $canTakeQuiz = $course->isCompletedByUser($user) && !$quiz->hasUserPassed($user);
         }
 
-        return view('courses.show', compact('course', 'chapters', 'lessons', 'progressPercentage', 'quiz', 'quizAttempt', 'canTakeQuiz'));
+        // Get first available lesson for auto-start
+        $firstAvailableLesson = null;
+        if ($user) {
+            $firstAvailableLesson = $course->lessons()
+                ->orderBy('order')
+                ->get()
+                ->first(function($lesson) use ($user) {
+                    return $lesson->isAccessibleByUser($user);
+                });
+        }
+
+        return view('courses.show', compact('course', 'chapters', 'lessons', 'totalLessons', 'completedLessons', 'progressPercentage', 'quiz', 'quizAttempt', 'canTakeQuiz', 'firstAvailableLesson'));
     }
 
     /**
@@ -146,13 +157,13 @@ class CourseController extends Controller
 
         // Handle file download
         if ($lesson->hasDownloadableMaterials()) {
-            $materials = $lesson->getDownloadableMaterialsAttribute();
+            $materials = $lesson->downloadable_materials;
             $fileName = $request->get('file');
             
             if ($fileName && is_array($materials)) {
                 foreach ($materials as $material) {
-                    if (isset($material['name']) && $material['name'] === $fileName && isset($material['path'])) {
-                        $filePath = storage_path('app/public/' . $material['path']);
+                    if (isset($material['name']) && $material['name'] === $fileName && isset($material['file'])) {
+                        $filePath = storage_path('app/public/' . $material['file']);
                         if (file_exists($filePath)) {
                             // Mark file as downloaded
                             $lesson->markFileAsDownloaded($user);
@@ -163,8 +174,8 @@ class CourseController extends Controller
             }
             
             // Fallback: return first available material
-            if (!empty($materials) && isset($materials[0]['path'])) {
-                $filePath = storage_path('app/public/' . $materials[0]['path']);
+            if (!empty($materials) && isset($materials[0]['file'])) {
+                $filePath = storage_path('app/public/' . $materials[0]['file']);
                 if (file_exists($filePath)) {
                     // Mark file as downloaded
                     $lesson->markFileAsDownloaded($user);
@@ -289,5 +300,137 @@ class CourseController extends Controller
         }
 
         return view('courses.lesson-content', compact('course', 'lesson', 'userProgress'));
+    }
+
+    /**
+     * Get navigation info for current lesson
+     */
+    public function getLessonNavigation(Course $course, Lesson $lesson)
+    {
+        $user = Auth::user();
+        
+        if (!$user) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        try {
+            $nextLesson = $lesson->nextLesson();
+            $previousLesson = $lesson->previousLesson();
+
+            return response()->json([
+                'success' => true,
+                'current_lesson' => [
+                    'id' => $lesson->id,
+                    'title' => $lesson->title,
+                    'is_completed' => $lesson->isCompletedByUser($user)
+                ],
+                'next_lesson' => $nextLesson ? [
+                    'id' => $nextLesson->id,
+                    'title' => $nextLesson->title,
+                    'is_accessible' => $nextLesson->isAccessibleByUser($user),
+                    'url' => route('courses.lesson', ['course' => $course, 'lesson' => $nextLesson])
+                ] : null,
+                'previous_lesson' => $previousLesson ? [
+                    'id' => $previousLesson->id,
+                    'title' => $previousLesson->title,
+                    'is_accessible' => $previousLesson->isAccessibleByUser($user),
+                    'url' => route('courses.lesson', ['course' => $course, 'lesson' => $previousLesson])
+                ] : null
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'error' => 'Wystąpił błąd podczas pobierania nawigacji: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Get lessons status for AJAX updates
+     */
+    public function getLessonsStatus(Course $course)
+    {
+        $user = Auth::user();
+        
+        if (!$user) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        try {
+            // Get all lessons with their progress
+            $lessons = $course->lessons()->with(['userProgress' => function($q) use ($user) {
+                $q->where('user_id', $user->id);
+            }])->orderBy('order')->get();
+
+            $lessonsData = $lessons->map(function($lesson) use ($user) {
+                return [
+                    'id' => $lesson->id,
+                    'title' => $lesson->title,
+                    'is_completed' => $lesson->isCompletedByUser($user),
+                    'is_accessible' => $lesson->isAccessibleByUser($user)
+                ];
+            });
+
+            // Calculate progress
+            $totalLessons = $lessons->count();
+            $completedLessons = $lessons->filter(function($lesson) use ($user) {
+                return $lesson->isCompletedByUser($user);
+            })->count();
+            $progressPercentage = $totalLessons > 0 ? round(($completedLessons / $totalLessons) * 100) : 0;
+
+            return response()->json([
+                'success' => true,
+                'lessons' => $lessonsData,
+                'progress_percentage' => $progressPercentage,
+                'completed_lessons' => $completedLessons,
+                'total_lessons' => $totalLessons
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'error' => 'Wystąpił błąd podczas pobierania statusu lekcji: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Reset course progress for testing purposes
+     */
+    public function resetProgress(Request $request, Course $course)
+    {
+        $user = Auth::user();
+        
+        if (!$user) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        // Only allow in debug mode or local environment
+        if (!config('app.debug') && !app()->environment('local')) {
+            return response()->json(['error' => 'This feature is only available in debug mode'], 403);
+        }
+
+        try {
+            // Delete all user progress for this course
+            UserProgress::where('user_id', $user->id)
+                ->where('course_id', $course->id)
+                ->delete();
+
+            // Also delete quiz attempts for this course
+            if ($course->quiz) {
+                $course->quiz->attempts()
+                    ->where('user_id', $user->id)
+                    ->delete();
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Postępy w kursie oraz wyniki testów zostały usunięte.'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'error' => 'Wystąpił błąd podczas resetowania postępów: ' . $e->getMessage()
+            ], 500);
+        }
     }
 }

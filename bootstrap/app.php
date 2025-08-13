@@ -29,6 +29,7 @@ return Application::configure(basePath: $basePath)
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
             'admin' => \App\Http\Middleware\AdminMiddleware::class,
+            'auth' => \Illuminate\Auth\Middleware\Authenticate::class,
         ]);
         
         // Trust all proxies for Heroku

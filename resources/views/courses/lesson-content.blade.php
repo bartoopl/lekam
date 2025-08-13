@@ -32,6 +32,61 @@
 
 
 @if($lesson->hasDownloadableMaterials())
+    <style>
+        .material-download {
+            background: linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%) !important;
+            color: white !important;
+            border: none !important;
+            padding: 0.75rem 1.5rem !important;
+            border-radius: 12px !important;
+            font-family: 'Poppins', sans-serif !important;
+            font-weight: 600 !important;
+            font-size: 1rem !important;
+            cursor: pointer !important;
+            transition: all 0.3s ease !important;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3) !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            text-decoration: none !important;
+            min-width: 200px !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+        }
+        
+        .material-download:hover {
+            transform: translateY(-2px) !important;
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4) !important;
+            color: white !important;
+            background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%) !important;
+        }
+        
+        .material-item {
+            display: flex;
+            align-items: center;
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+        
+        .material-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1.5rem;
+            color: white;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+    </style>
+    
     <div class="lesson-materials">
         <h3 class="materials-title">Materiały do pobrania</h3>
         
@@ -64,12 +119,10 @@
             </div>
         @endif
         
-        @foreach($lesson->getDownloadableMaterialsAttribute() as $material)
+        @foreach($lesson->downloadable_materials as $material)
             <div class="material-item">
                 <div class="material-icon">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                    </svg>
+                    <span style="font-size: 24px;">📄</span>
                 </div>
                 <div class="material-info">
                     <div class="material-name">{{ $material['name'] }}</div>
@@ -82,10 +135,7 @@
                    data-course-id="{{ $course->id }}"
                    data-complete-lesson-url="{{ route('courses.complete-lesson', ['course' => $course, 'lesson' => $lesson]) }}"
                    data-download-timer="{{ $lesson->download_timer_minutes ?? 0 }}">
-                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
-                    </svg>
-                    Pobierz materiały
+                    ⬇️ POBIERZ MATERIAŁY
                 </a>
             </div>
         @endforeach
@@ -197,6 +247,11 @@
                     } else if (window.showSuccessMessage) {
                         showSuccessMessage('Lekcja została oznaczona jako ukończona!');
                     }
+                    
+                    // Notify parent window to refresh lessons status
+                    if (parent && parent !== window && typeof parent.refreshLessonsAccessibility === 'function') {
+                        parent.refreshLessonsAccessibility();
+                    }
                 }
             }).catch(error => {
                 console.error('Error completing lesson:', error);
@@ -231,37 +286,42 @@
 
 
 
-@if($lesson->requires_download_completion || stripos($lesson->title, 'materiały do pobrania') !== false || stripos($lesson->title, 'materialy do pobrania') !== false)
+@if(!$lesson->hasDownloadableMaterials() && ($lesson->requires_download_completion || stripos($lesson->title, 'materiały do pobrania') !== false || stripos($lesson->title, 'materialy do pobrania') !== false))
     <style>
         .material-download {
-            background: linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%);
-            color: white;
-            border: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: 12px;
-            font-family: 'Poppins', sans-serif;
-            font-weight: 600;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-decoration: none;
-            min-width: 200px;
+            background: linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%) !important;
+            color: white !important;
+            border: none !important;
+            padding: 0.75rem 1.5rem !important;
+            border-radius: 12px !important;
+            font-family: 'Poppins', sans-serif !important;
+            font-weight: 600 !important;
+            font-size: 1rem !important;
+            cursor: pointer !important;
+            transition: all 0.3s ease !important;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3) !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            text-decoration: none !important;
+            min-width: 200px !important;
+            opacity: 1 !important;
+            visibility: visible !important;
         }
         
         .material-download:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
-            color: white;
+            transform: translateY(-2px) !important;
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4) !important;
+            color: white !important;
+            background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%) !important;
         }
         
         .material-download:disabled {
-            opacity: 0.7;
-            cursor: not-allowed;
-            transform: none;
+            opacity: 0.7 !important;
+            cursor: not-allowed !important;
+            transform: none !important;
+            background: #9ca3af !important;
+            color: white !important;
         }
         
         .material-item {
@@ -338,69 +398,48 @@
         
         <!-- Download button (show only if not downloaded yet) -->
         @if(!$userProgress || !$userProgress->file_downloaded_at)
-            <div class="material-item">
-            <div class="material-icon">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                </svg>
-            </div>
-            <div class="material-info">
-                <div class="material-name">📁 Materiały szkoleniowe</div>
-                <div class="material-size">⏱️ Timer: {{ $lesson->download_timer_minutes ?? 2 }} min | 📊 Demo dla testów</div>
-            </div>
-            <button class="material-download" onclick="
-                event.preventDefault();
-                const button = event.target.closest('.material-download');
-                
-                // Show loading state
-                button.disabled = true;
-                button.innerHTML = '<svg class=\'w-4 h-4 mr-2 animate-spin\' fill=\'none\' stroke=\'currentColor\' viewBox=\'0 0 24 24\'><path stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15\'></path></svg>Pobieranie...';
-                
-                // Create temporary link for download
-                const downloadLink = document.createElement('a');
-                downloadLink.href = '{{ route('courses.download-file', ['course' => $course, 'lesson' => $lesson]) }}';
-                downloadLink.download = 'materialy-szkoleniowe.pdf';
-                downloadLink.style.display = 'none';
-                document.body.appendChild(downloadLink);
-                downloadLink.click();
-                document.body.removeChild(downloadLink);
-                
-                // Mark file as downloaded via API
-                fetch('{{ route('courses.download-file', ['course' => $course, 'lesson' => $lesson]) }}', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').getAttribute('content')
-                    },
-                    body: JSON.stringify({
-                        action: 'mark_downloaded'
-                    })
-                }).then(response => {
-                    if (response.ok) {
-                        // Reload page to show updated timer
-                        setTimeout(() => window.location.reload(), 1000);
-                    } else {
-                        alert('Wystąpił błąd podczas oznaczania pliku jako pobrany.');
-                        button.disabled = false;
-                        button.innerHTML = '<svg class=\'w-5 h-5 mr-2\' fill=\'none\' stroke=\'currentColor\' viewBox=\'0 0 24 24\'><path stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4\'></path></svg>POBIERZ MATERIAŁY';
-                    }
-                }).catch(error => {
-                    console.error('Error:', error);
-                    alert('Wystąpił błąd podczas oznaczania pliku jako pobrany.');
-                    button.disabled = false;
-                    button.innerHTML = '<svg class=\'w-5 h-5 mr-2\' fill=\'none\' stroke=\'currentColor\' viewBox=\'0 0 24 24\'><path stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4\'></path></svg>POBIERZ MATERIAŁY';
-                });
-                "
-                   data-lesson-id="{{ $lesson->id }}"
-                   data-course-id="{{ $course->id }}"
-                   data-complete-lesson-url="{{ route('courses.complete-lesson', ['course' => $course, 'lesson' => $lesson]) }}"
-                   data-download-timer="{{ $lesson->download_timer_minutes ?? 2 }}">
-                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
-                </svg>
-                POBIERZ MATERIAŁY
-            </button>
-        </div>
+            @if($lesson->hasDownloadableMaterials())
+                @foreach($lesson->downloadable_materials as $material)
+                    <div class="material-item">
+                        <div class="material-icon">
+                            <span style="font-size: 24px;">📄</span>
+                        </div>
+                        <div class="material-info">
+                            <div class="material-name">{{ $material['name'] }}</div>
+                            <div class="material-size">{{ $material['size'] ?? 'Nieznany rozmiar' }}</div>
+                        </div>
+                        <a href="{{ route('courses.download-file', ['course' => $course, 'lesson' => $lesson]) }}?file={{ urlencode($material['name']) }}" 
+                           class="material-download" 
+                           onclick="handleMaterialDownload(event)"
+                           data-lesson-id="{{ $lesson->id }}"
+                           data-course-id="{{ $course->id }}"
+                           data-complete-lesson-url="{{ route('courses.complete-lesson', ['course' => $course, 'lesson' => $lesson]) }}"
+                           data-download-timer="{{ $lesson->download_timer_minutes ?? 0 }}">
+                            ⬇️ POBIERZ MATERIAŁY
+                        </a>
+                    </div>
+                @endforeach
+            @else
+                {{-- Fallback for lessons without real materials but with timer --}}
+                <div class="material-item">
+                    <div class="material-icon">
+                        <span style="font-size: 24px;">📄</span>
+                    </div>
+                    <div class="material-info">
+                        <div class="material-name">📁 Materiały szkoleniowe</div>
+                        <div class="material-size">⏱️ Timer: {{ $lesson->download_timer_minutes ?? 2 }} min</div>
+                    </div>
+                    <a href="{{ route('courses.download-file', ['course' => $course, 'lesson' => $lesson]) }}" 
+                       class="material-download" 
+                       onclick="handleMaterialDownload(event)"
+                       data-lesson-id="{{ $lesson->id }}"
+                       data-course-id="{{ $course->id }}"
+                       data-complete-lesson-url="{{ route('courses.complete-lesson', ['course' => $course, 'lesson' => $lesson]) }}"
+                       data-download-timer="{{ $lesson->download_timer_minutes ?? 0 }}">
+                        ⬇️ POBIERZ MATERIAŁY
+                    </a>
+                </div>
+            @endif
         @else
             <!-- Materials already downloaded -->
             <div class="material-item">
@@ -411,7 +450,7 @@
                 </div>
                 <div class="material-info">
                     <div class="material-name">✅ Materiały zostały pobrane</div>
-                    <div class="material-size">📅 {{ $userProgress->file_downloaded_at->setTimezone(config('app.timezone', 'Europe/Warsaw'))->format('d.m.Y H:i') }}</div>
+                    <div class="material-size">📅 {{ $userProgress->file_downloaded_at->format('d.m.Y H:i') }}</div>
                 </div>
                 <div class="text-green-600 font-semibold px-4">
                     Pobrano
@@ -445,7 +484,7 @@
                         <span class="text-blue-800">Czas do ukończenia lekcji: <span id="timer-display" class="font-bold">{{ sprintf('%d:%02d', $remainingMinutes, $remainingSecondsOnly) }}</span></span>
                     </div>
                     <div class="mt-2 text-sm text-blue-700">
-                        Materiały pobrane: {{ $userProgress->file_downloaded_at->setTimezone(config('app.timezone', 'Europe/Warsaw'))->format('d.m.Y H:i') }}
+                        Materiały pobrane: {{ $userProgress->file_downloaded_at->format('d.m.Y H:i') }}
                     </div>
                 </div>
                 
@@ -483,7 +522,7 @@
                         <span class="font-bold">Timer zakończony! Lekcja została ukończona.</span>
                     </div>
                     <div class="mt-2 text-sm text-green-700">
-                        Zakończono: {{ $userProgress->can_proceed_after->setTimezone(config('app.timezone', 'Europe/Warsaw'))->format('d.m.Y H:i') }}
+                        Zakończono: {{ $userProgress->can_proceed_after->format('d.m.Y H:i') }}
                     </div>
                 </div>
                 
@@ -631,6 +670,11 @@
                     } else if (window.showSuccessMessage) {
                         showSuccessMessage('Lekcja została oznaczona jako ukończona!');
                     }
+                    
+                    // Notify parent window to refresh lessons status
+                    if (parent && parent !== window && typeof parent.refreshLessonsAccessibility === 'function') {
+                        parent.refreshLessonsAccessibility();
+                    }
                 }
             }).catch(error => {
                 console.error('Error completing lesson:', error);
@@ -662,6 +706,25 @@
         }
     </script>
 @endif
+
+<!-- Navigation Buttons -->
+<div class="lesson-navigation-buttons mt-6">
+    <div class="flex items-center justify-between gap-4">
+        <button id="lesson-prev-btn" 
+                class="inline-flex items-center justify-center px-6 py-3 bg-gray-400 border-2 border-gray-400 rounded-full font-semibold text-sm text-white tracking-wide cursor-not-allowed transition-all duration-300 shadow-lg hover:shadow-xl" 
+                style="background: #9ca3af !important; border-color: #9ca3af !important; min-width: 150px; height: 50px; color: white !important;"
+                disabled>
+            ← Poprzednia
+        </button>
+        
+        <button id="lesson-next-btn" 
+                class="inline-flex items-center justify-center px-6 py-3 bg-gray-400 border-2 border-gray-400 rounded-full font-semibold text-sm text-white tracking-wide cursor-not-allowed transition-all duration-300 shadow-lg hover:shadow-xl" 
+                style="background: #9ca3af !important; border-color: #9ca3af !important; min-width: 150px; height: 50px; color: white !important;"
+                disabled>
+            Następna →
+        </button>
+    </div>
+</div>
 
 @if($lesson->instructor)
     <div class="instructor-info">

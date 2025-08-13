@@ -13,9 +13,6 @@
             <div class="navbar-links">
                 <a href="{{ route('home') }}#about" class="nav-link">O nas</a>
                 <a href="{{ route('courses') }}" class="nav-link">Szkolenia</a>
-                @auth
-                    <a href="{{ route('dashboard') }}" class="nav-link">Moje Kursy</a>
-                @endauth
             </div>
 
             <!-- Account Buttons -->
@@ -101,6 +98,8 @@
             display: flex;
             align-items: center;
             gap: 2rem;
+            margin-left: auto;
+            margin-right: 2rem;
         }
 
         .nav-link {

@@ -12,7 +12,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $featuredCourses = Course::with(['instructor', 'chapters'])->latest()->take(6)->get();
+        $featuredCourses = Course::with(['chapters'])->latest()->take(6)->get();
         return view('home', compact('featuredCourses'));
     }
 

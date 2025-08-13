@@ -47,9 +47,8 @@ class CertificateController extends Controller
             ->first();
 
         if ($existingCertificate) {
-            \Log::info('Certificate already exists, redirecting to show', ['certificate_id' => $existingCertificate->id]);
-            return redirect()->route('certificates.show', $existingCertificate)
-                ->with('info', 'Certyfikat już istnieje.');
+            \Log::info('Certificate already exists, downloading directly', ['certificate_id' => $existingCertificate->id]);
+            return $this->download($existingCertificate);
         }
 
         // Get best quiz attempt
@@ -83,8 +82,8 @@ class CertificateController extends Controller
                 ->with('error', 'Błąd podczas generowania certyfikatu: ' . $e->getMessage());
         }
 
-        return redirect()->route('certificates.show', $certificate)
-            ->with('success', 'Certyfikat został wygenerowany.');
+        \Log::info('Certificate generated, downloading directly', ['certificate_id' => $certificate->id]);
+        return $this->download($certificate);
     }
 
     /**

@@ -218,6 +218,95 @@ label,
     visibility: visible !important;
 }
 
+/* Dodatkowe style dla przycisków w widoku kursów */
+.bg-green-600.text-white,
+.bg-blue-600.text-white,
+.bg-red-600.text-white {
+    background: inherit !important;
+    background-color: inherit !important;
+    color: white !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* Przyciski w sekcji lekcji */
+.lesson-actions .bg-green-600,
+.lesson-actions .bg-blue-600,
+.lesson-actions .bg-red-600 {
+    background: inherit !important;
+    background-color: inherit !important;
+    color: white !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* Linki nawigacji między lekcjami */
+.lesson-actions a.text-blue-600,
+.lesson-actions a.hover\:text-blue-800 {
+    color: #2563EB !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    text-decoration: none !important;
+}
+
+.lesson-actions a.text-blue-600:hover,
+.lesson-actions a.hover\:text-blue-800:hover {
+    color: #1D4ED8 !important;
+    text-decoration: underline !important;
+}
+
+/* Przyciski w sekcji materiałów */
+.material-item .material-download,
+.material-item a[href*="download-file"] {
+    background: #3B82F6 !important;
+    background-color: #3B82F6 !important;
+    color: white !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    border: none !important;
+    padding: 0.5rem 1rem !important;
+    border-radius: 6px !important;
+    text-decoration: none !important;
+    display: inline-flex !important;
+    align-items: center !important;
+}
+
+/* Dodatkowe style dla sekcji materiałów */
+.lesson-materials,
+.material-item {
+    background: rgba(255, 255, 255, 0.95) !important;
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    border: 1px solid rgba(209, 213, 219, 0.8) !important;
+    border-radius: 8px !important;
+    padding: 1rem !important;
+    margin-bottom: 1rem !important;
+}
+
+.material-item {
+    display: flex !important;
+    align-items: center !important;
+    gap: 1rem !important;
+    padding: 1rem !important;
+    border-radius: 8px !important;
+    transition: all 0.3s ease !important;
+}
+
+.material-item:hover {
+    background: #F8FAFC !important;
+    background-color: #F8FAFC !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+}
+
+.material-item .material-download:hover,
+.material-item a[href*="download-file"]:hover {
+    background: #2563EB !important;
+    background-color: #2563EB !important;
+    color: white !important;
+}
+
 .bg-gray-300 {
     background: #D1D5DB !important;
     background-color: #D1D5DB !important;
@@ -548,6 +637,145 @@ input[type="checkbox"]:checked {
 
 /* Dodatkowe style dla wszystkich elementów dotkniętych problemem z przezroczystością */
 
+/* SPECYFICZNE STYLE DLA PRZYCISKÓW W LEKCJACH - NADPISUJĄ PRZEZROCZYSTOŚĆ */
+/* Przyciski w lekcjach - ukończ lekcję */
+#completeLessonBtn,
+button[id="completeLessonBtn"],
+.bg-green-600,
+.hover\:bg-green-700 {
+    background: #059669 !important;
+    background-color: #059669 !important;
+    color: white !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    border: none !important;
+}
+
+#completeLessonBtn:hover,
+button[id="completeLessonBtn"]:hover,
+.hover\:bg-green-700:hover {
+    background: #047857 !important;
+    background-color: #047857 !important;
+    color: white !important;
+}
+
+/* Przyciski w quizach - submit */
+#submitBtn,
+button[type="submit"],
+.bg-green-600.text-white {
+    background: #059669 !important;
+    background-color: #059669 !important;
+    color: white !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* Przyciski nawigacji między lekcjami */
+.text-blue-600,
+.hover\:text-blue-800 {
+    color: #2563EB !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+.text-blue-600:hover,
+.hover\:text-blue-800:hover {
+    color: #1D4ED8 !important;
+}
+
+/* Przyciski pobierania materiałów */
+.material-download {
+    background: #3B82F6 !important;
+    background-color: #3B82F6 !important;
+    color: white !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    border: none !important;
+}
+
+.material-download:hover {
+    background: #2563EB !important;
+    background-color: #2563EB !important;
+    color: white !important;
+}
+
+/* Przyciski w kursach */
+.course-button {
+    background: #21235F !important;
+    background-color: #21235F !important;
+    color: white !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* Dodatkowe style dla przycisków w widoku kursów */
+.courses-grid .course-button,
+.course-card .course-button {
+    background: #21235F !important;
+    background-color: #21235F !important;
+    color: white !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    border: none !important;
+    padding: 1rem 1.5rem !important;
+    border-radius: 12px !important;
+    font-weight: 600 !important;
+    text-decoration: none !important;
+    display: inline-block !important;
+}
+
+/* Dodatkowe style dla sekcji kursów */
+.courses-grid,
+.course-card {
+    background: rgba(255, 255, 255, 0.95) !important;
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    border: 1px solid rgba(209, 213, 219, 0.8) !important;
+    border-radius: 12px !important;
+    padding: 1.5rem !important;
+    margin-bottom: 1.5rem !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+}
+
+.course-title {
+    color: #21235F !important;
+    font-size: 1.4rem !important;
+    font-weight: 600 !important;
+    margin-bottom: 1rem !important;
+    line-height: 1.3 !important;
+}
+
+.course-description {
+    color: #6B7280 !important;
+    line-height: 1.6 !important;
+    margin-bottom: 2rem !important;
+}
+
+.courses-grid .course-button:hover,
+.course-card .course-button:hover {
+    background: #1A1D4A !important;
+    background-color: #1A1D4A !important;
+    color: white !important;
+    text-decoration: none !important;
+}
+
+.course-button:hover {
+    background: #1A1D4A !important;
+    background-color: #1A1D4A !important;
+    color: white !important;
+}
+
+.course-button.continue {
+    background: #059669 !important;
+    background-color: #059669 !important;
+}
+
+.course-button.continue:hover {
+    background: #047857 !important;
+    background-color: #047857 !important;
+}
+
 /* Formularze i pola input w różnych widokach */
 .form-group,
 .form-field,
@@ -574,6 +802,262 @@ input[type="checkbox"]:checked {
     opacity: 1 !important;
     visibility: visible !important;
     border: 1px solid rgba(59, 130, 246, 0.8) !important;
+}
+
+/* Dodatkowe style dla przycisków w quizach i lekcjach */
+.quiz-button,
+.quiz-actions button,
+.lesson-actions button,
+.course-actions button {
+    background: #3B82F6 !important;
+    background-color: #3B82F6 !important;
+    color: white !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    border: none !important;
+}
+
+/* Specyficzne style dla przycisków w lekcjach */
+.lesson-actions,
+.lesson-actions button,
+.lesson-actions .bg-green-600,
+.lesson-actions .bg-blue-600,
+.lesson-actions .bg-red-600 {
+    background: transparent !important;
+    background-color: transparent !important;
+}
+
+/* Dodatkowe style dla sekcji lekcji */
+.lesson-header,
+.lesson-content,
+.lesson-actions {
+    background: rgba(255, 255, 255, 0.95) !important;
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    border: 1px solid rgba(209, 213, 219, 0.8) !important;
+    border-radius: 8px !important;
+    padding: 1.5rem !important;
+    margin-bottom: 1.5rem !important;
+}
+
+.lesson-title {
+    color: #21235F !important;
+    font-size: 1.5rem !important;
+    font-weight: 700 !important;
+    margin-bottom: 1rem !important;
+}
+
+.lesson-order,
+.lesson-status {
+    color: #6B7280 !important;
+    font-size: 0.9rem !important;
+    margin-bottom: 0.5rem !important;
+}
+
+.lesson-actions button.bg-green-600,
+.lesson-actions button.bg-blue-600,
+.lesson-actions button.bg-red-600 {
+    background: inherit !important;
+    background-color: inherit !important;
+    color: white !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    border: none !important;
+    padding: 0.5rem 1.5rem !important;
+    border-radius: 6px !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+}
+
+.quiz-button:hover,
+.quiz-actions button:hover,
+.lesson-actions button:hover,
+.course-actions button:hover {
+    background: #2563EB !important;
+    background-color: #2563EB !important;
+    color: white !important;
+}
+
+/* Przyciski w formularzach quizów */
+input[type="radio"],
+input[type="checkbox"] {
+    background: white !important;
+    background-color: white !important;
+    border: 2px solid #D1D5DB !important;
+    color: #3B82F6 !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* Przyciski w quizach - submit i nawigacja */
+.quiz-container button[type="submit"],
+.quiz-container .bg-green-600,
+.quiz-container .bg-blue-600 {
+    background: inherit !important;
+    background-color: inherit !important;
+    color: white !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    border: none !important;
+}
+
+/* Dodatkowe style dla sekcji quizów */
+.quiz-section,
+.quiz-container {
+    background: rgba(255, 255, 255, 0.95) !important;
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    border: 1px solid rgba(209, 213, 219, 0.8) !important;
+    border-radius: 15px !important;
+    padding: 1.5rem !important;
+    margin-bottom: 2rem !important;
+}
+
+/* Dodatkowe style dla przycisków w quizach */
+.quiz-actions button,
+.quiz-actions .bg-green-600,
+.quiz-actions .bg-blue-600 {
+    background: inherit !important;
+    background-color: inherit !important;
+    color: white !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    border: none !important;
+    padding: 0.75rem 1.5rem !important;
+    border-radius: 12px !important;
+    font-weight: 600 !important;
+    font-size: 1rem !important;
+    text-decoration: none !important;
+    transition: all 0.3s ease !important;
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3) !important;
+    text-align: center !important;
+    min-width: 160px !important;
+}
+
+/* Dodatkowe style dla przycisków w quizach - hover */
+.quiz-actions button:hover,
+.quiz-actions .bg-green-600:hover,
+.quiz-actions .bg-blue-600:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4) !important;
+    color: white !important;
+}
+
+/* Dodatkowe style dla przycisków w quizach - submit */
+.quiz-container button[type="submit"],
+.quiz-container .bg-green-600.text-white {
+    background: #059669 !important;
+    background-color: #059669 !important;
+    color: white !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    border: none !important;
+    padding: 0.75rem 1.5rem !important;
+    border-radius: 12px !important;
+    font-weight: 600 !important;
+    font-size: 1rem !important;
+    text-decoration: none !important;
+    transition: all 0.3s ease !important;
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3) !important;
+    text-align: center !important;
+    min-width: 160px !important;
+}
+
+/* Dodatkowe style dla przycisków w quizach - submit */
+.quiz-container button[type="submit"],
+.quiz-container .bg-green-600.text-white {
+    background: #059669 !important;
+    background-color: #059669 !important;
+    color: white !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    border: none !important;
+    padding: 0.75rem 1.5rem !important;
+    border-radius: 12px !important;
+    font-weight: 600 !important;
+    font-size: 1rem !important;
+    text-decoration: none !important;
+    transition: all 0.3s ease !important;
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3) !important;
+    text-align: center !important;
+    min-width: 160px !important;
+}
+
+.quiz-container button[type="submit"]:hover,
+.quiz-container .bg-green-600.text-white:hover {
+    background: #047857 !important;
+    background-color: #047857 !important;
+    color: white !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4) !important;
+}
+
+.quiz-header,
+.quiz-info,
+.quiz-actions {
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+.quiz-title {
+    color: #21235F !important;
+    font-size: 1.4rem !important;
+    font-weight: 700 !important;
+    margin-bottom: 0.5rem !important;
+}
+
+.quiz-description {
+    color: #666 !important;
+    line-height: 1.5 !important;
+    margin-bottom: 1rem !important;
+}
+
+/* Przyciski w pytaniach quizów */
+.question-container label {
+    background: white !important;
+    background-color: white !important;
+    border: 1px solid #E5E7EB !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* Dodatkowe style dla sekcji pytań quizów */
+.question-container {
+    background: rgba(255, 255, 255, 0.95) !important;
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    border: 1px solid rgba(209, 213, 219, 0.8) !important;
+    border-radius: 8px !important;
+    padding: 1.5rem !important;
+    margin-bottom: 1.5rem !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+}
+
+.question-container h3 {
+    color: #21235F !important;
+    font-size: 1.1rem !important;
+    font-weight: 600 !important;
+    margin-bottom: 1rem !important;
+}
+
+.question-container .text-sm {
+    color: #6B7280 !important;
+    font-size: 0.9rem !important;
+}
+
+.question-container label:hover {
+    background: #F9FAFB !important;
+    background-color: #F9FAFB !important;
+}
+
+input[type="radio"]:checked,
+input[type="checkbox"]:checked {
+    background: #3B82F6 !important;
+    background-color: #3B82F6 !important;
+    border-color: #3B82F6 !important;
 }
 
 .btn-primary {

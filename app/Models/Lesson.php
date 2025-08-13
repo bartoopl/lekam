@@ -68,6 +68,29 @@ class Lesson extends Model
      */
     public function nextLesson()
     {
+        // If we have chapters, we need to consider the global order across all chapters
+        if ($this->chapter_id) {
+            // Get all lessons in this course with their chapter order to determine the global sequence
+            $allLessons = $this->course->lessons()
+                ->leftJoin('chapters', 'lessons.chapter_id', '=', 'chapters.id')
+                ->orderBy('chapters.order', 'asc')
+                ->orderBy('lessons.order', 'asc')
+                ->select('lessons.*')
+                ->get();
+            
+            $found = false;
+            foreach ($allLessons as $lesson) {
+                if ($found) {
+                    return $lesson;
+                }
+                if ($lesson->id == $this->id) {
+                    $found = true;
+                }
+            }
+            return null;
+        }
+        
+        // For lessons without chapters, use the original approach
         return $this->course->lessons()
             ->where('order', '>', $this->order)
             ->orderBy('order')
@@ -79,6 +102,27 @@ class Lesson extends Model
      */
     public function previousLesson()
     {
+        // If we have chapters, we need to consider the global order across all chapters
+        if ($this->chapter_id) {
+            // Get all lessons in this course with their chapter order to determine the global sequence
+            $allLessons = $this->course->lessons()
+                ->leftJoin('chapters', 'lessons.chapter_id', '=', 'chapters.id')
+                ->orderBy('chapters.order', 'asc')
+                ->orderBy('lessons.order', 'asc')
+                ->select('lessons.*')
+                ->get();
+            
+            $previous = null;
+            foreach ($allLessons as $lesson) {
+                if ($lesson->id == $this->id) {
+                    return $previous;
+                }
+                $previous = $lesson;
+            }
+            return null;
+        }
+        
+        // For lessons without chapters, use the original approach
         return $this->course->lessons()
             ->where('order', '<', $this->order)
             ->orderBy('order', 'desc')

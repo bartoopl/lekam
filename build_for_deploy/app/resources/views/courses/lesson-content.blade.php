@@ -411,7 +411,7 @@
                 </div>
                 <div class="material-info">
                     <div class="material-name">✅ Materiały zostały pobrane</div>
-                    <div class="material-size">📅 {{ $userProgress->file_downloaded_at->setTimezone(config('app.timezone', 'Europe/Warsaw'))->format('d.m.Y H:i') }}</div>
+                    <div class="material-size">📅 {{ $userProgress->file_downloaded_at->format('d.m.Y H:i') }}</div>
                 </div>
                 <div class="text-green-600 font-semibold px-4">
                     Pobrano
@@ -445,7 +445,7 @@
                         <span class="text-blue-800">Czas do ukończenia lekcji: <span id="timer-display" class="font-bold">{{ sprintf('%d:%02d', $remainingMinutes, $remainingSecondsOnly) }}</span></span>
                     </div>
                     <div class="mt-2 text-sm text-blue-700">
-                        Materiały pobrane: {{ $userProgress->file_downloaded_at->setTimezone(config('app.timezone', 'Europe/Warsaw'))->format('d.m.Y H:i') }}
+                        Materiały pobrane: {{ $userProgress->file_downloaded_at->format('d.m.Y H:i') }}
                     </div>
                 </div>
                 
@@ -483,7 +483,7 @@
                         <span class="font-bold">Timer zakończony! Lekcja została ukończona.</span>
                     </div>
                     <div class="mt-2 text-sm text-green-700">
-                        Zakończono: {{ $userProgress->can_proceed_after->setTimezone(config('app.timezone', 'Europe/Warsaw'))->format('d.m.Y H:i') }}
+                        Zakończono: {{ $userProgress->can_proceed_after->format('d.m.Y H:i') }}
                     </div>
                 </div>
                 

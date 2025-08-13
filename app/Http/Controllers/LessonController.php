@@ -70,21 +70,38 @@ class LessonController extends Controller
 
             // Handle downloadable materials
             $downloadableMaterials = [];
-            if ($request->hasFile('downloadable_materials')) {
-                foreach ($request->file('downloadable_materials') as $index => $file) {
-                    if ($file && $file->isValid()) {
-                        // Generate unique filename
-                        $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-                        $path = $file->storeAs('lessons/materials', $filename, 'public');
-                        
-                        $downloadableMaterials[] = [
-                            'name' => $request->input("downloadable_materials.{$index}.name"),
-                            'file' => $path,
-                            'original_name' => $file->getClientOriginalName(),
-                            'size' => $file->getSize(),
-                            'type' => $file->getMimeType(),
-                            'extension' => $file->getClientOriginalExtension(),
-                        ];
+            // Check all form inputs for debugging
+            \Log::info('All request data', [
+                'all' => $request->all(),
+                'files' => $request->allFiles(),
+            ]);
+            
+            // Process downloadable materials with nested structure
+            if ($request->has('downloadable_materials')) {
+                $materialInputs = $request->input('downloadable_materials', []);
+                foreach ($materialInputs as $index => $materialData) {
+                    if (isset($materialData['name']) && $request->hasFile("downloadable_materials.{$index}.file")) {
+                        $file = $request->file("downloadable_materials.{$index}.file");
+                        if ($file && $file->isValid()) {
+                            // Generate unique filename
+                            $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+                            $path = $file->storeAs('lessons/materials', $filename, 'public');
+                            
+                            $downloadableMaterials[] = [
+                                'name' => $materialData['name'],
+                                'file' => $path,
+                                'original_name' => $file->getClientOriginalName(),
+                                'size' => $file->getSize(),
+                                'type' => $file->getMimeType(),
+                                'extension' => $file->getClientOriginalExtension(),
+                            ];
+                            
+                            \Log::info('Successfully processed material', [
+                                'name' => $materialData['name'],
+                                'path' => $path,
+                                'size' => $file->getSize()
+                            ]);
+                        }
                     }
                 }
             }
@@ -182,21 +199,39 @@ class LessonController extends Controller
 
         // Handle downloadable materials
         $downloadableMaterials = $lesson->downloadable_materials ?? [];
-        if ($request->hasFile('downloadable_materials')) {
-            foreach ($request->file('downloadable_materials') as $index => $file) {
-                if ($file && $file->isValid()) {
-                    // Generate unique filename
-                    $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-                    $path = $file->storeAs('lessons/materials', $filename, 'public');
-                    
-                    $downloadableMaterials[] = [
-                        'name' => $request->input("downloadable_materials.{$index}.name"),
-                        'file' => $path,
-                        'original_name' => $file->getClientOriginalName(),
-                        'size' => $file->getSize(),
-                        'type' => $file->getMimeType(),
-                        'extension' => $file->getClientOriginalExtension(),
-                    ];
+        
+        // Check all form inputs for debugging
+        \Log::info('Update request data', [
+            'all' => $request->all(),
+            'files' => $request->allFiles(),
+        ]);
+        
+        // Process new downloadable materials with nested structure
+        if ($request->has('downloadable_materials')) {
+            $materialInputs = $request->input('downloadable_materials', []);
+            foreach ($materialInputs as $index => $materialData) {
+                if (isset($materialData['name']) && $request->hasFile("downloadable_materials.{$index}.file")) {
+                    $file = $request->file("downloadable_materials.{$index}.file");
+                    if ($file && $file->isValid()) {
+                        // Generate unique filename
+                        $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+                        $path = $file->storeAs('lessons/materials', $filename, 'public');
+                        
+                        $downloadableMaterials[] = [
+                            'name' => $materialData['name'],
+                            'file' => $path,
+                            'original_name' => $file->getClientOriginalName(),
+                            'size' => $file->getSize(),
+                            'type' => $file->getMimeType(),
+                            'extension' => $file->getClientOriginalExtension(),
+                        ];
+                        
+                        \Log::info('Successfully processed material in update', [
+                            'name' => $materialData['name'],
+                            'path' => $path,
+                            'size' => $file->getSize()
+                        ]);
+                    }
                 }
             }
         }

@@ -90,6 +90,66 @@
     </div>
 </form>
 
+<style>
+    /* Enhanced radio button and checkbox styling */
+    input[type="radio"], input[type="checkbox"] {
+        width: 20px !important;
+        height: 20px !important;
+        appearance: none !important;
+        border: 2px solid #d1d5db !important;
+        border-radius: 50% !important;
+        background-color: white !important;
+        cursor: pointer !important;
+        position: relative !important;
+        transition: all 0.2s ease !important;
+    }
+    
+    input[type="checkbox"] {
+        border-radius: 4px !important;
+    }
+    
+    input[type="radio"]:checked, input[type="checkbox"]:checked {
+        background-color: #3b82f6 !important;
+        border-color: #3b82f6 !important;
+    }
+    
+    input[type="radio"]:checked::after {
+        content: '' !important;
+        position: absolute !important;
+        top: 50% !important;
+        left: 50% !important;
+        transform: translate(-50%, -50%) !important;
+        width: 8px !important;
+        height: 8px !important;
+        border-radius: 50% !important;
+        background-color: white !important;
+    }
+    
+    input[type="checkbox"]:checked::after {
+        content: '✓' !important;
+        position: absolute !important;
+        top: 50% !important;
+        left: 50% !important;
+        transform: translate(-50%, -50%) !important;
+        color: white !important;
+        font-size: 14px !important;
+        font-weight: bold !important;
+        line-height: 1 !important;
+    }
+    
+    input[type="radio"]:hover, input[type="checkbox"]:hover {
+        border-color: #3b82f6 !important;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+    }
+    
+    /* Enhanced label styling */
+    label:has(input:checked) {
+        background-color: #eff6ff !important;
+        border-color: #3b82f6 !important;
+        color: #1e40af !important;
+    }
+</style>
+
 <script>
     let answeredQuestions = 0;
     const totalQuestions = {{ $questions->count() }};
