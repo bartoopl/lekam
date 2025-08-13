@@ -333,7 +333,7 @@
     }
 
     .lessons-list.expanded {
-        max-height: 500px;
+        max-height: 2000px;
         padding: 1rem;
     }
 
