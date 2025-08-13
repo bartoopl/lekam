@@ -181,7 +181,9 @@
         @foreach($lesson->downloadable_materials as $material)
             <div class="material-item">
                 <div class="material-icon">
-                    <span style="font-size: 24px;">📄</span>
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
                 </div>
                 <div class="material-info">
                     <div class="material-name">{{ $material['name'] }}</div>
@@ -194,7 +196,10 @@
                    data-course-id="{{ $course->id }}"
                    data-complete-lesson-url="{{ route('courses.complete-lesson', ['course' => $course, 'lesson' => $lesson]) }}"
                    data-download-timer="{{ $lesson->download_timer_minutes ?? 0 }}">
-                    ⬇️ POBIERZ MATERIAŁY
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    POBIERZ MATERIAŁY
                 </a>
             </div>
         @endforeach
@@ -508,7 +513,9 @@
                 @foreach($lesson->downloadable_materials as $material)
                     <div class="material-item">
                         <div class="material-icon">
-                            <span style="font-size: 24px;">📄</span>
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
                         </div>
                         <div class="material-info">
                             <div class="material-name">{{ $material['name'] }}</div>
@@ -521,7 +528,10 @@
                            data-course-id="{{ $course->id }}"
                            data-complete-lesson-url="{{ route('courses.complete-lesson', ['course' => $course, 'lesson' => $lesson]) }}"
                            data-download-timer="{{ $lesson->download_timer_minutes ?? 0 }}">
-                            ⬇️ POBIERZ MATERIAŁY
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    POBIERZ MATERIAŁY
                         </a>
                     </div>
                 @endforeach
@@ -529,11 +539,23 @@
                 {{-- Fallback for lessons without real materials but with timer --}}
                 <div class="material-item">
                     <div class="material-icon">
-                        <span style="font-size: 24px;">📄</span>
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
                     </div>
                     <div class="material-info">
-                        <div class="material-name">📁 Materiały szkoleniowe</div>
-                        <div class="material-size">⏱️ Timer: {{ $lesson->download_timer_minutes ?? 2 }} min</div>
+                        <div class="material-name">
+                            <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
+                            </svg>
+                            Materiały szkoleniowe
+                        </div>
+                        <div class="material-size">
+                            <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            Timer: {{ $lesson->download_timer_minutes ?? 2 }} min
+                        </div>
                     </div>
                     <a href="{{ route('courses.download-file', ['course' => $course, 'lesson' => $lesson]) }}" 
                        class="material-download" 
@@ -542,7 +564,10 @@
                        data-course-id="{{ $course->id }}"
                        data-complete-lesson-url="{{ route('courses.complete-lesson', ['course' => $course, 'lesson' => $lesson]) }}"
                        data-download-timer="{{ $lesson->download_timer_minutes ?? 0 }}">
-                        ⬇️ POBIERZ MATERIAŁY
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    POBIERZ MATERIAŁY
                     </a>
                 </div>
             @endif

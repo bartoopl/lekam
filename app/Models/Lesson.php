@@ -20,6 +20,8 @@ class Lesson extends Model
         'download_timer_minutes',
         'requires_download_completion',
         'video_file',
+        'is_first_lesson',
+        'is_last_lesson',
     ];
 
     protected $casts = [
@@ -139,7 +141,27 @@ class Lesson extends Model
             return true;
         }
 
-        // Check if previous lesson is completed
+        // If this is the last lesson, check if ALL other lessons are completed
+        if ($this->is_last_lesson) {
+            $allOtherLessons = $this->course->lessons()->where('id', '!=', $this->id)->get();
+            foreach ($allOtherLessons as $lesson) {
+                if (!$lesson->isCompletedByUser($user)) {
+                    return false; // All other lessons must be completed before last lesson
+                }
+            }
+            return true; // Last lesson is accessible when all other lessons are completed
+        }
+
+        // For middle lessons (neither first nor last), check if first lesson is completed
+        if (!$this->is_first_lesson && !$this->is_last_lesson) {
+            $firstLesson = $this->course->lessons()->where('is_first_lesson', true)->first();
+            if ($firstLesson && !$firstLesson->isCompletedByUser($user)) {
+                return false; // First lesson must be completed to access middle lessons
+            }
+            return true; // Middle lessons are accessible after first lesson is completed
+        }
+
+        // Fallback: check if previous lesson is completed (old sequential logic)
         $previousLesson = $this->previousLesson();
         if (!$previousLesson) {
             return true;

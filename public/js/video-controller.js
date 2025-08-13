@@ -126,7 +126,7 @@ window.initCustomVideoControls = function(video) {
         controlsContainer.className = 'video-controls';
         controlsContainer.innerHTML = `
             <button id="play-pause" style="font-size: 16px;">
-                ▶️
+                ▶
             </button>
             <span id="time-display">0:00 / 0:00</span>
             <div class="flex-1">
@@ -147,10 +147,10 @@ window.initCustomVideoControls = function(video) {
         playPauseBtn.addEventListener('click', function() {
             if (video.paused) {
                 video.play();
-                playPauseBtn.innerHTML = '⏸️';
+                playPauseBtn.innerHTML = '⏸';
             } else {
                 video.pause();
-                playPauseBtn.innerHTML = '▶️';
+                playPauseBtn.innerHTML = '▶';
             }
         });
         

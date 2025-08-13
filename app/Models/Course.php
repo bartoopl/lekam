@@ -87,6 +87,13 @@ class Course extends Model
      */
     public function isCompletedByUser(User $user): bool
     {
+        // If course has first/last lesson structure, check if last lesson is completed
+        $lastLesson = $this->lessons()->where('is_last_lesson', true)->first();
+        if ($lastLesson) {
+            return $lastLesson->isCompletedByUser($user);
+        }
+
+        // Fallback to traditional logic for courses without first/last structure
         $lessons = $this->lessons;
         $totalLessons = $lessons->count();
         
@@ -110,6 +117,14 @@ class Course extends Model
         }
 
         return $totalLessons === $completedLessons;
+    }
+
+    /**
+     * Check if user can access quiz and materials (after last lesson completion)
+     */
+    public function canUserAccessQuizAndMaterials(User $user): bool
+    {
+        return $this->isCompletedByUser($user);
     }
 
     /**
