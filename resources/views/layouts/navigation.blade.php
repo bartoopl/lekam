@@ -243,8 +243,11 @@
             box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
         }
         
-        .logout-button {
+        .logout-button,
+        button.logout-button,
+        form.logout-form button.logout-button {
             background: transparent !important;
+            background-color: transparent !important;
             color: #DC2626 !important;
             padding: 0.75rem 1.5rem;
             border-radius: 20px;
@@ -257,9 +260,12 @@
             cursor: pointer;
         }
         
-        .logout-button:hover {
-            background: #DC2626;
-            color: white;
+        .logout-button:hover,
+        button.logout-button:hover,
+        form.logout-form button.logout-button:hover {
+            background: #DC2626 !important;
+            background-color: #DC2626 !important;
+            color: white !important;
             transform: translateY(-2px);
         }
         

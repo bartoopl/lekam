@@ -119,10 +119,11 @@
         top: 50% !important;
         left: 50% !important;
         transform: translate(-50%, -50%) !important;
-        width: 8px !important;
-        height: 8px !important;
+        width: 10px !important;
+        height: 10px !important;
         border-radius: 50% !important;
         background-color: white !important;
+        display: block !important;
     }
     
     input[type="checkbox"]:checked::after {

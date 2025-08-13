@@ -402,7 +402,7 @@
     }
 
     .lesson-title-main {
-        font-size: 1.8rem;
+        font-size: 1.3rem;
         font-weight: 700;
         color: #21235F;
         margin-bottom: 1rem;
