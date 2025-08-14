@@ -566,17 +566,25 @@ ob_start();
                 <h3 class="footer-section-title">Linki</h3>
                 <ul class="footer-links">
                     <li><a href="{{ route('courses') }}" class="footer-link">Szkolenia</a></li>
-                    <li><a href="#" class="footer-link">Kontakt</a></li>
+                    <li><a href="{{ route('contact') }}" class="footer-link">Kontakt</a></li>
                 </ul>
             </div>
         </div>
         
         <div class="footer-bottom">
             <div class="footer-bottom-left">
-                <p>&copy; 2025 Wszelkie Prawa zastrzeżone lekam.pl</p>
+                <div style="display: flex; align-items: center;">
+                    <span>&copy; 2025 Wszelkie Prawa zastrzeżone</span>
+                    <img src="/images/icons/lekam.png" alt="Lekam" style="height: 24px; margin-left: 8px;">
+                </div>
             </div>
             <div class="footer-bottom-right">
-                <p>Administrator serwisu: <a href="https://neoart.pl" target="_blank" class="footer-admin-link">neoart.pl</a></p>
+                <div style="display: flex; align-items: center; justify-content: flex-end;">
+                    <span>Administrator serwisu:</span>
+                    <a href="https://neoart.pl" target="_blank" class="footer-admin-link" style="margin-left: 8px;">
+                        <img src="/images/icons/neoart.png" alt="Neoart" style="height: 24px;">
+                    </a>
+                </div>
             </div>
         </div>
     </footer>

@@ -58,6 +58,14 @@
         <!-- Mobile Menu -->
         <div class="mobile-menu" id="mobile-menu">
             <div class="mobile-menu-content">
+                <!-- Close Button -->
+                <div class="mobile-menu-close">
+                    <button onclick="closeMobileMenu()" class="mobile-close-button">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M18.3 5.71c-.39-.39-1.02-.39-1.41 0L12 10.59 7.11 5.7c-.39-.39-1.02-.39-1.41 0s-.39 1.02 0 1.41L10.59 12 5.7 16.89c-.39.39-.39 1.02 0 1.41s1.02.39 1.41 0L12 13.41l4.89 4.88c.39.39 1.02.39 1.41 0s.39-1.02 0-1.41L13.41 12l4.88-4.89c.39-.39.39-1.02.01-1.4z"/>
+                        </svg>
+                    </button>
+                </div>
                 <!-- Navigation Links -->
                 <div class="mobile-nav-links">
                     <a href="{{ route('home') }}#about" class="mobile-nav-link" onclick="closeMobileMenu()">O nas</a>
@@ -145,7 +153,7 @@
         .navbar-links {
             display: flex;
             align-items: center;
-            gap: 2rem;
+            gap: 1rem;
             margin-left: auto;
             margin-right: 2rem;
         }
@@ -156,27 +164,17 @@
             font-size: 1rem;
             color: #374151 !important;
             text-decoration: none;
-            transition: color 0.3s ease;
+            transition: all 0.3s ease;
             position: relative;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            border: 2px solid transparent;
         }
 
         .nav-link:hover {
             color: #21235F !important;
-        }
-
-        .nav-link::after {
-            content: '';
-            position: absolute;
-            bottom: -4px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: #21235F;
-            transition: width 0.3s ease;
-        }
-
-        .nav-link:hover::after {
-            width: 100%;
+            border: 2px solid #21235F;
+            background: rgba(33, 35, 95, 0.05);
         }
 
         .navbar-actions {
@@ -396,8 +394,27 @@
             background: white;
             width: 280px;
             height: 100%;
-            padding: 100px 2rem 2rem 2rem;
+            padding: 2rem;
             box-shadow: 4px 0 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .mobile-menu-close {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 2rem;
+        }
+        
+        .mobile-close-button {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            color: #374151;
+            transition: color 0.3s ease;
+            padding: 0.5rem;
+        }
+        
+        .mobile-close-button:hover {
+            color: #21235F;
         }
         
         .mobile-nav-links {
@@ -406,18 +423,24 @@
         
         .mobile-nav-link {
             display: block;
-            padding: 1rem 0;
+            padding: 0.7rem;
             font-family: 'Poppins', sans-serif;
             font-weight: 500;
             font-size: 1.1rem;
             color: #374151;
             text-decoration: none;
             border-bottom: 1px solid #f3f4f6;
-            transition: color 0.3s ease;
+            transition: all 0.3s ease;
+            margin: 0.3rem 0;
+            border-radius: 20px;
+            border: 2px solid transparent;
         }
         
         .mobile-nav-link:hover {
             color: #21235F;
+            border: 2px solid #21235F;
+            background: rgba(33, 35, 95, 0.05);
+            border-bottom: 2px solid #21235F;
         }
         
         .mobile-auth-buttons {
