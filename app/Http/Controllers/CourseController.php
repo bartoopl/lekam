@@ -74,7 +74,7 @@ class CourseController extends Controller
         if ($user && $quiz && $quiz->is_active) {
             $quiz->load('questions');
             $quizAttempt = $quiz->getUserBestAttempt($user);
-            $canTakeQuiz = $course->isCompletedByUser($user) && !$quiz->hasUserPassed($user);
+            $canTakeQuiz = $course->canUserAccessQuiz($user) && !$quiz->hasUserPassed($user);
         }
 
         // Get first available lesson for auto-start
@@ -135,7 +135,7 @@ class CourseController extends Controller
         // Check if course is now completed and quiz should be unlocked
         $quizUnlocked = false;
         $quiz = $course->quiz;
-        if ($quiz && $quiz->is_active && $course->isCompletedByUser($user) && !$quiz->hasUserPassed($user)) {
+        if ($quiz && $quiz->is_active && $course->canUserAccessQuiz($user) && !$quiz->hasUserPassed($user)) {
             $quizUnlocked = true;
         }
 
@@ -156,6 +156,11 @@ class CourseController extends Controller
         
         if (!$user) {
             return redirect()->route('login');
+        }
+
+        // Check if user can access materials
+        if (!$course->canUserAccessMaterials($user)) {
+            return back()->with('error', 'Materiały do pobrania są zablokowane. Ukończ wszystkie lekcje aby je odblokować.');
         }
 
         // Handle POST request for marking file as downloaded
@@ -308,7 +313,13 @@ class CourseController extends Controller
             $userProgress = $lesson->userProgress()->where('user_id', $user->id)->first();
         }
 
-        return view('courses.lesson-content', compact('course', 'lesson', 'userProgress'));
+        // Check if user can access materials
+        $canAccessMaterials = false;
+        if ($user) {
+            $canAccessMaterials = $course->canUserAccessMaterials($user);
+        }
+
+        return view('courses.lesson-content', compact('course', 'lesson', 'userProgress', 'canAccessMaterials'));
     }
 
     /**

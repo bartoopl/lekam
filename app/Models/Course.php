@@ -120,11 +120,45 @@ class Course extends Model
     }
 
     /**
-     * Check if user can access quiz and materials (after last lesson completion)
+     * Check if user can access materials (after last lesson completion)
+     */
+    public function canUserAccessMaterials(User $user): bool
+    {
+        return $this->isCompletedByUser($user);
+    }
+
+    /**
+     * Check if user can access quiz (after materials timer completion)
+     */
+    public function canUserAccessQuiz(User $user): bool
+    {
+        if (!$this->isCompletedByUser($user)) {
+            return false;
+        }
+
+        // Find lessons with materials and check if timer has expired
+        $lessonsWithMaterials = $this->lessons()
+            ->where(function($query) {
+                $query->where('requires_download_completion', true)
+                      ->orWhere('download_timer_minutes', '>', 0);
+            })
+            ->get();
+
+        foreach ($lessonsWithMaterials as $lesson) {
+            if (!$lesson->canUserProceedAfterDownload($user)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Check if user can access quiz and materials (after last lesson completion) - deprecated
      */
     public function canUserAccessQuizAndMaterials(User $user): bool
     {
-        return $this->isCompletedByUser($user);
+        return $this->canUserAccessMaterials($user);
     }
 
     /**

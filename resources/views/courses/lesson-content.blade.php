@@ -90,7 +90,7 @@
 @endif
 
 
-@if($lesson->hasDownloadableMaterials())
+@if($lesson->hasDownloadableMaterials() && $canAccessMaterials)
     <style>
         .material-download {
             background: linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%) !important;
@@ -405,9 +405,28 @@
     </script>
 @endif
 
+{{-- Materials blocked - show locked message --}}
+@if(($lesson->hasDownloadableMaterials() || $lesson->requires_download_completion || stripos($lesson->title, 'materiały do pobrania') !== false || stripos($lesson->title, 'materialy do pobrania') !== false) && !$canAccessMaterials)
+    <div class="lesson-materials">
+        <h3 class="materials-title">Materiały do pobrania</h3>
+        <div class="material-item">
+            <div class="material-icon bg-gray-400">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                </svg>
+            </div>
+            <div class="material-info">
+                <div class="material-name">🔒 Materiały zablokowane</div>
+                <div class="material-size">Ukończ wszystkie lekcje aby odblokować materiały</div>
+            </div>
+            <div class="text-gray-500 px-4">
+                Zablokowane
+            </div>
+        </div>
+    </div>
+@endif
 
-
-@if(!$lesson->hasDownloadableMaterials() && ($lesson->requires_download_completion || stripos($lesson->title, 'materiały do pobrania') !== false || stripos($lesson->title, 'materialy do pobrania') !== false))
+@if(!$lesson->hasDownloadableMaterials() && ($lesson->requires_download_completion || stripos($lesson->title, 'materiały do pobrania') !== false || stripos($lesson->title, 'materialy do pobrania') !== false) && $canAccessMaterials)
     <style>
         .material-download {
             background: linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%) !important;
@@ -519,7 +538,7 @@
         
         <!-- Download button (show only if not downloaded yet) -->
         @if(!$userProgress || !$userProgress->file_downloaded_at)
-            @if($lesson->hasDownloadableMaterials())
+            @if($lesson->hasDownloadableMaterials() && $canAccessMaterials)
                 @foreach($lesson->downloadable_materials as $material)
                     <div class="material-item">
                         <div class="material-icon">
