@@ -13,6 +13,7 @@
             <div class="navbar-links desktop-only">
                 <a href="{{ route('home') }}#about" class="nav-link">O nas</a>
                 <a href="{{ route('courses') }}" class="nav-link">Szkolenia</a>
+                <a href="{{ route('contact') }}" class="nav-link">Kontakt</a>
             </div>
 
             <!-- Account Buttons (Desktop) -->
@@ -61,6 +62,7 @@
                 <div class="mobile-nav-links">
                     <a href="{{ route('home') }}#about" class="mobile-nav-link" onclick="closeMobileMenu()">O nas</a>
                     <a href="{{ route('courses') }}" class="mobile-nav-link" onclick="closeMobileMenu()">Szkolenia</a>
+                    <a href="{{ route('contact') }}" class="mobile-nav-link" onclick="closeMobileMenu()">Kontakt</a>
                 </div>
 
                 <!-- Account Buttons -->
