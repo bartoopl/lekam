@@ -619,7 +619,7 @@
                         <strong>🧪 Tryb testowy:</strong> Przycisk do resetowania postępu
                     </div>
                     <button onclick="resetCourseProgress()" 
-                            class="bg-red-600 text-white px-4 py-2 rounded text-sm hover:bg-red-700 transition duration-300">
+                            class="btn btn-danger">
                         Resetuj postęp kursu
                     </button>
                 </div>
@@ -736,7 +736,7 @@
                         <p>Automatycznie ładuję pierwszą dostępną lekcję: <strong>{{ $firstAvailableLesson->title }}</strong></p>
                         <div class="mt-4">
                             <button onclick="loadLesson({{ $firstAvailableLesson->id }}, '{{ $firstAvailableLesson->title }}')" 
-                                    class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition duration-300">
+                                    class="btn btn-primary">
                                 Rozpocznij naukę
                             </button>
                         </div>
@@ -744,9 +744,23 @@
                 </div>
             @else
                 <div class="no-lesson-selected">
-                    <div>
-                        <h3>Wybierz lekcję z listy po lewej stronie</h3>
-                        <p>Aby rozpocząć naukę, kliknij na jedną z lekcji w spisie tematów.</p>
+                    <div class="text-center">
+                        @if(auth()->check() && !auth()->user()->hasStartedCourse($course))
+                            <h3>Dołącz do szkolenia</h3>
+                            <p>Rozpocznij naukę klikając przycisk poniżej</p>
+                            <div class="mt-6">
+                                <form action="{{ route('courses.enroll', $course) }}" method="POST">
+                                    @csrf
+                                    <button type="submit" class="btn btn-primary" 
+                                        style="background-color: #21235F; color: white; padding: 0.75rem 1.5rem; border-radius: 16px; border: 2px solid #21235F; font-weight: 500; cursor: pointer; transition: all 0.2s ease;">
+                                        Dołącz do szkolenia
+                                    </button>
+                                </form>
+                            </div>
+                        @else
+                            <h3>Wybierz lekcję z listy po lewej stronie</h3>
+                            <p>Aby rozpocząć naukę, kliknij na jedną z lekcji w spisie tematów.</p>
+                        @endif
                     </div>
                 </div>
             @endif

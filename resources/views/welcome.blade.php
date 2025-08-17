@@ -24,6 +24,9 @@ ob_start();
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
 
+    <!-- Scripts -->
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+
     <style>
         /* Hide PHP errors completely */
         br:first-of-type,
@@ -131,7 +134,7 @@ ob_start();
             animation: fadeInUp 1s ease-out 1.2s both;
         }
         
-        .btn-primary {
+        .hero-btn-primary {
             background: #E0E7FA;
             color: black;
             border: none;
@@ -145,12 +148,12 @@ ob_start();
             display: inline-block;
         }
         
-        .btn-primary:hover {
+        .hero-btn-primary:hover {
             transform: translateY(-2px);
             box-shadow: 0 10px 25px rgba(224, 231, 250, 0.3);
         }
         
-        .btn-secondary {
+        .hero-btn-secondary {
             background: transparent;
             color: #E0E7FA;
             border: 2px solid #E0E7FA;
@@ -164,7 +167,7 @@ ob_start();
             display: inline-block;
         }
         
-        .btn-secondary:hover {
+        .hero-btn-secondary:hover {
             background: #E0E7FA;
             color: black;
             transform: translateY(-2px);
@@ -653,8 +656,8 @@ ob_start();
                 <b>Witaj w serwisie stworzonym z myślą o farmaceutach i technikach farmacji.</b> To wymagające zawody – nie tylko ze względu na codzienną pracę w aptece, ale także przez wpisaną w nie potrzebę stałego rozwoju. Akademia LEK-AM wspiera Cię w tym procesie. Zarejestruj konto, aby zyskać dostęp do bezpłatnych szkoleń, zdobywać punkty edukacyjne i poszerzać wiedzę – bez wychodzenia z domu.
                 </p>
                 <div class="hero-buttons">
-                    <a href="{{ route('register') }}" class="btn-primary">Zarejestruj się →</a>
-                    <a href="{{ route('login') }}" class="btn-secondary">Zaloguj się →</a>
+                    <a href="{{ route('register') }}" class="hero-btn-primary">Zarejestruj się →</a>
+                    <a href="{{ route('login') }}" class="hero-btn-secondary">Zaloguj się →</a>
                 </div>
             </div>
         </div>

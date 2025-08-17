@@ -79,7 +79,7 @@
                                 <a href="{{ route('admin.instructors.index') }}" class="bg-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-400 transition duration-300">
                                     Anuluj
                                 </a>
-                                <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-300">
+                                <button type="submit" class="btn btn-primary">
                                     Utwórz wykładowcę
                                 </button>
                             </div>

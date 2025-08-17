@@ -17,6 +17,11 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 })->name('home');
+
+// Button system demo route
+Route::get('/button-demo', function () {
+    return view('button-demo');
+})->name('button-demo');
 Route::get('/about', [HomeController::class, 'about'])->name('about');
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
 Route::get('/terms', [HomeController::class, 'terms'])->name('terms');
@@ -41,6 +46,9 @@ Route::middleware(['auth'])->group(function () {
     
     // Test route for resetting course progress (only in debug/local mode)
     Route::post('/courses/{course}/reset-progress', [CourseController::class, 'resetProgress'])->name('courses.reset-progress');
+    
+    // Course enrollment route
+    Route::post('/courses/{course}/enroll', [CourseController::class, 'enroll'])->name('courses.enroll');
 });
 Route::get('/courses/{course}/progress', [CourseController::class, 'progress'])->name('courses.progress');
 

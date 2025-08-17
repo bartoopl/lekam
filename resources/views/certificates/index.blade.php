@@ -67,7 +67,7 @@
                                         Zobacz szczegóły
                                     </a>
                                     <a href="{{ route('certificates.download', $certificate) }}" 
-                                       class="bg-blue-600 text-white px-4 py-2 rounded text-sm hover:bg-blue-700 transition duration-300">
+                                       class="btn btn-primary">
                                         Pobierz PDF
                                     </a>
                                 </div>
@@ -91,7 +91,7 @@
                     <p class="text-gray-600 mb-6">
                         Nie masz jeszcze żadnych certyfikatów. Ukończ szkolenia i zdaj testy, aby otrzymać certyfikaty.
                     </p>
-                    <a href="{{ route('courses') }}" class="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition duration-300">
+                    <a href="{{ route('courses') }}" class="btn btn-primary">
                         Przeglądaj szkolenia
                     </a>
                 </div>

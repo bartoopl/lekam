@@ -209,6 +209,42 @@ ob_start();
             box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
         }
         
+        /* Button styles for register page */
+        .btn {
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            padding: 0.75rem 1.5rem !important;
+            font-family: 'Poppins', sans-serif !important;
+            font-weight: 600 !important;
+            font-size: 1rem !important;
+            line-height: 1.25rem !important;
+            border-radius: 12px !important;
+            border: 2px solid transparent !important;
+            text-decoration: none !important;
+            cursor: pointer !important;
+            transition: all 0.3s ease !important;
+            white-space: nowrap !important;
+            user-select: none !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+            margin: 0 !important;
+        }
+        
+        .btn-primary {
+            background-color: #21235F !important;
+            color: white !important;
+            border: 2px solid #21235F !important;
+            width: 100% !important;
+        }
+        
+        .btn-primary:hover {
+            background-color: #1a1a4d !important;
+            border-color: #1a1a4d !important;
+            transform: translateY(-2px) !important;
+            box-shadow: 0 4px 12px rgba(33, 35, 95, 0.3) !important;
+        }
+        
         .login-link {
             font-family: 'Poppins', sans-serif;
             font-weight: 400;
@@ -453,7 +489,7 @@ ob_start();
                     </div>
                 </div>
                 
-                <button type="submit" class="register-button">
+                <button type="submit" class="btn btn-primary">
                     Zarejestruj się
                 </button>
                 

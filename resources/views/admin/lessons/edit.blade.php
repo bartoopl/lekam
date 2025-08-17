@@ -163,7 +163,7 @@
                                         <div id="materials-list" class="space-y-3">
                                             <!-- New materials will be added here dynamically -->
                                         </div>
-                                        <button type="button" id="add-material" class="mt-2 bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700">
+                                        <button type="button" id="add-material" class="btn btn-success">
                                             + Dodaj materiał
                                         </button>
                                         <p class="mt-1 text-sm text-gray-500">Dozwolone formaty: PDF, DOC, DOCX, PPT, PPTX, XLS, XLSX, TXT (max 10MB)</p>
@@ -204,10 +204,10 @@
 
                             <!-- Submit Button -->
                             <div class="flex justify-end space-x-3">
-                                <a href="{{ route('admin.courses.show', $course) }}" class="bg-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-400 transition duration-300">
+                                <a href="{{ route('admin.courses.show', $course) }}" class="btn btn-secondary">
                                     Anuluj
                                 </a>
-                                <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-300">
+                                <button type="submit" class="btn btn-primary">
                                     Zaktualizuj lekcję
                                 </button>
                             </div>

@@ -63,7 +63,7 @@
                                 <p class="text-sm text-gray-600">Pobierz plik, aby kontynuować naukę</p>
                             </div>
                             <a href="{{ route('courses.download-file', ['course' => $course, 'lesson' => $lesson]) }}" 
-                               class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition duration-300">
+                               class="btn btn-primary">
                                 Pobierz plik
                             </a>
                         </div>
@@ -205,7 +205,7 @@
                         
                         @if(!$userProgress || !$userProgress->is_completed)
                             <button id="completeLessonBtn" 
-                                    class="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700 transition duration-300">
+                                    class="btn btn-success">
                                 Ukończ lekcję
                             </button>
                         @else

@@ -21,24 +21,24 @@
                 @auth
                     <div class="auth-buttons">
                         @if(auth()->user()->isAdmin() || auth()->user()->email === 'admin@admin.com' || auth()->user()->user_type === 'admin')
-                            <a href="{{ route('admin.dashboard') }}" class="admin-button">Panel Admin</a>
+                            <a href="{{ route('admin.dashboard') }}" class="btn btn-danger">Panel Admin</a>
                         @endif
-                        <a href="{{ route('dashboard') }}" class="account-button">
+                        <a href="{{ route('dashboard') }}" class="btn btn-primary">
                             Moje konto
                         </a>
                         <form method="POST" action="{{ route('logout') }}" class="logout-form">
                             @csrf
-                            <button type="submit" class="logout-button">
+                            <button type="submit" class="btn btn-outlined">
                                 Wyloguj
                             </button>
                         </form>
                     </div>
                 @else
                     <div class="auth-buttons">
-                        <a href="{{ route('login') }}" class="login-button">
+                        <a href="{{ route('login') }}" class="btn btn-secondary">
                             Zaloguj
                         </a>
-                        <a href="{{ route('register') }}" class="register-button">
+                        <a href="{{ route('register') }}" class="btn btn-primary">
                             Zarejestruj
                         </a>
                     </div>
@@ -77,22 +77,22 @@
                 <div class="mobile-auth-buttons">
                     @auth
                         @if(auth()->user()->isAdmin() || auth()->user()->email === 'admin@admin.com' || auth()->user()->user_type === 'admin')
-                            <a href="{{ route('admin.dashboard') }}" class="mobile-admin-button" onclick="closeMobileMenu()">Panel Admin</a>
+                            <a href="{{ route('admin.dashboard') }}" class="btn btn-danger" onclick="closeMobileMenu()">Panel Admin</a>
                         @endif
-                        <a href="{{ route('dashboard') }}" class="mobile-account-button" onclick="closeMobileMenu()">
+                        <a href="{{ route('dashboard') }}" class="btn btn-primary" onclick="closeMobileMenu()">
                             Moje konto
                         </a>
                         <form method="POST" action="{{ route('logout') }}" class="mobile-logout-form">
                             @csrf
-                            <button type="submit" class="mobile-logout-button" onclick="closeMobileMenu()">
+                            <button type="submit" class="btn btn-outlined" onclick="closeMobileMenu()">
                                 Wyloguj
                             </button>
                         </form>
                     @else
-                        <a href="{{ route('login') }}" class="mobile-login-button" onclick="closeMobileMenu()">
+                        <a href="{{ route('login') }}" class="btn btn-secondary" onclick="closeMobileMenu()">
                             Zaloguj
                         </a>
-                        <a href="{{ route('register') }}" class="mobile-register-button" onclick="closeMobileMenu()">
+                        <a href="{{ route('register') }}" class="btn btn-primary" onclick="closeMobileMenu()">
                             Zarejestruj
                         </a>
                     @endauth
@@ -148,8 +148,6 @@
             height: auto;
         }
 
-
-
         .navbar-links {
             display: flex;
             align-items: center;
@@ -188,108 +186,84 @@
             gap: 1rem;
         }
         
-        .account-button {
-            background: linear-gradient(135deg, #21235F 0%, #3B82F6 100%) !important;
+        /* Override button styles for navbar */
+        .auth-buttons .btn {
+            padding: 0.75rem 1.5rem !important;
+            font-size: 0.9rem !important;
+            border-radius: 16px !important;
+            font-weight: 600 !important;
+            transition: all 0.3s ease !important;
+            margin: 0 !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            text-decoration: none !important;
+            cursor: pointer !important;
+            white-space: nowrap !important;
+            user-select: none !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+        }
+        
+        .auth-buttons .btn:hover {
+            transform: translateY(-2px) !important;
+        }
+        
+        /* Specific button styles for navbar */
+        .auth-buttons .btn-primary {
+            background-color: #21235F !important;
             color: white !important;
-            padding: 0.75rem 1.5rem;
-            border-radius: 20px;
-            font-family: 'Poppins', sans-serif;
-            font-weight: 600;
-            font-size: 0.9rem;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
-        }
-        
-        .account-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
-        }
-        
-        .login-button {
-            background: transparent !important;
-            color: #21235F !important;
-            padding: 0.75rem 1.5rem;
-            border-radius: 20px;
-            font-family: 'Poppins', sans-serif;
-            font-weight: 600;
-            font-size: 0.9rem;
-            text-decoration: none;
-            transition: all 0.3s ease;
             border: 2px solid #21235F !important;
         }
         
-        .login-button:hover {
-            background: #21235F;
-            color: white;
-            transform: translateY(-2px);
+        .auth-buttons .btn-primary:hover {
+            background-color: #1a1a4d !important;
+            border-color: #1a1a4d !important;
+            transform: translateY(-2px) !important;
+            box-shadow: 0 4px 12px rgba(33, 35, 95, 0.3) !important;
         }
         
-        .register-button {
-            background: linear-gradient(135deg, #21235F 0%, #3B82F6 100%) !important;
-            color: white !important;
-            padding: 0.75rem 1.5rem;
-            border-radius: 20px;
-            font-family: 'Poppins', sans-serif;
-            font-weight: 600;
-            font-size: 0.9rem;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
-        }
-        
-        .register-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
-        }
-        
-        .logout-button,
-        button.logout-button,
-        form.logout-form button.logout-button {
-            background: transparent !important;
+        .auth-buttons .btn-secondary {
             background-color: transparent !important;
-            color: #DC2626 !important;
-            padding: 0.75rem 1.5rem;
-            border-radius: 20px;
-            font-family: 'Poppins', sans-serif;
-            font-weight: 600;
-            font-size: 0.9rem;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            border: 2px solid #DC2626 !important;
-            cursor: pointer;
+            color: #21235F !important;
+            border: 2px solid #21235F !important;
         }
         
-        .logout-button:hover,
-        button.logout-button:hover,
-        form.logout-form button.logout-button:hover {
-            background: #DC2626 !important;
-            background-color: #DC2626 !important;
+        .auth-buttons .btn-secondary:hover {
+            background-color: #21235F !important;
             color: white !important;
-            transform: translateY(-2px);
+            transform: translateY(-2px) !important;
+            box-shadow: 0 4px 12px rgba(33, 35, 95, 0.3) !important;
+        }
+        
+        .auth-buttons .btn-outlined {
+            background-color: transparent !important;
+            color: #21235F !important;
+            border: 2px solid #21235F !important;
+        }
+        
+        .auth-buttons .btn-outlined:hover {
+            background-color: #21235F !important;
+            color: white !important;
+            transform: translateY(-2px) !important;
+            box-shadow: 0 4px 12px rgba(33, 35, 95, 0.3) !important;
+        }
+        
+        .auth-buttons .btn-danger {
+            background-color: #EF4444 !important;
+            color: white !important;
+            border: 2px solid #EF4444 !important;
+        }
+        
+        .auth-buttons .btn-danger:hover {
+            background-color: #DC2626 !important;
+            border-color: #DC2626 !important;
+            transform: translateY(-2px) !important;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3) !important;
         }
         
         .logout-form {
             margin: 0;
-        }
-        
-        .admin-button {
-            background: linear-gradient(135deg, #DC2626 0%, #B91C1C 100%) !important;
-            color: white !important;
-            padding: 0.75rem 1.5rem;
-            border-radius: 20px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(220, 38, 38, 0.3);
-        }
-        
-        .admin-button:hover {
-            background: linear-gradient(135deg, #B91C1C 0%, #991B1B 100%);
-            color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(220, 38, 38, 0.4);
         }
 
         /* Sticky behavior */
@@ -449,59 +423,81 @@
             gap: 1rem;
         }
         
-        .mobile-account-button,
-        .mobile-register-button,
-        .mobile-admin-button {
-            background: linear-gradient(135deg, #21235F 0%, #3B82F6 100%);
-            color: white;
-            padding: 1rem 1.5rem;
-            border-radius: 12px;
-            font-family: 'Poppins', sans-serif;
-            font-weight: 600;
-            font-size: 1rem;
-            text-decoration: none;
-            text-align: center;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
-        }
-        
-        .mobile-login-button {
-            background: transparent;
-            color: #21235F;
-            padding: 1rem 1.5rem;
-            border-radius: 12px;
-            font-family: 'Poppins', sans-serif;
-            font-weight: 600;
-            font-size: 1rem;
-            text-decoration: none;
-            text-align: center;
-            transition: all 0.3s ease;
-            border: 2px solid #21235F;
-        }
-        
-        .mobile-logout-button {
-            background: transparent;
-            color: #DC2626;
-            padding: 1rem 1.5rem;
-            border-radius: 12px;
-            font-family: 'Poppins', sans-serif;
-            font-weight: 600;
-            font-size: 1rem;
-            text-decoration: none;
-            text-align: center;
-            transition: all 0.3s ease;
-            border: 2px solid #DC2626;
-            cursor: pointer;
-            width: 100%;
+        /* Mobile button overrides */
+        .mobile-auth-buttons .btn {
+            padding: 1rem 1.5rem !important;
+            font-size: 1rem !important;
+            border-radius: 12px !important;
+            font-weight: 600 !important;
+            text-align: center !important;
+            transition: all 0.3s ease !important;
+            margin: 0 !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            text-decoration: none !important;
+            cursor: pointer !important;
+            white-space: nowrap !important;
+            user-select: none !important;
+            opacity: 1 !important;
+            visibility: visible !important;
         }
         
         .mobile-logout-form {
             margin: 0;
         }
         
-        .mobile-admin-button {
-            background: linear-gradient(135deg, #DC2626 0%, #B91C1C 100%);
-            box-shadow: 0 4px 15px rgba(220, 38, 38, 0.3);
+        /* Specific mobile button styles */
+        .mobile-auth-buttons .btn-primary {
+            background-color: #21235F !important;
+            color: white !important;
+            border: 2px solid #21235F !important;
+        }
+        
+        .mobile-auth-buttons .btn-primary:hover {
+            background-color: #1a1a4d !important;
+            border-color: #1a1a4d !important;
+            transform: translateY(-2px) !important;
+            box-shadow: 0 4px 12px rgba(33, 35, 95, 0.3) !important;
+        }
+        
+        .mobile-auth-buttons .btn-secondary {
+            background-color: transparent !important;
+            color: #21235F !important;
+            border: 2px solid #21235F !important;
+        }
+        
+        .mobile-auth-buttons .btn-secondary:hover {
+            background-color: #21235F !important;
+            color: white !important;
+            transform: translateY(-2px) !important;
+            box-shadow: 0 4px 12px rgba(33, 35, 95, 0.3) !important;
+        }
+        
+        .mobile-auth-buttons .btn-outlined {
+            background-color: transparent !important;
+            color: #21235F !important;
+            border: 2px solid #21235F !important;
+        }
+        
+        .mobile-auth-buttons .btn-outlined:hover {
+            background-color: #21235F !important;
+            color: white !important;
+            transform: translateY(-2px) !important;
+            box-shadow: 0 4px 12px rgba(33, 35, 95, 0.3) !important;
+        }
+        
+        .mobile-auth-buttons .btn-danger {
+            background-color: #EF4444 !important;
+            color: white !important;
+            border: 2px solid #EF4444 !important;
+        }
+        
+        .mobile-auth-buttons .btn-danger:hover {
+            background-color: #DC2626 !important;
+            border-color: #DC2626 !important;
+            transform: translateY(-2px) !important;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3) !important;
         }
 
         @media (max-width: 768px) {

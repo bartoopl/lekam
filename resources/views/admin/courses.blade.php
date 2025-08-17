@@ -258,7 +258,7 @@
                             <h3 class="mt-2 text-sm font-medium text-gray-900">Brak kursów</h3>
                             <p class="mt-1 text-sm text-gray-500">Nie ma jeszcze żadnych kursów w systemie.</p>
                             <div class="mt-6">
-                                <a href="{{ route('admin.courses.create') }}" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-300">
+                                <a href="{{ route('admin.courses.create') }}" class="btn btn-primary">
                                     Dodaj pierwszy kurs
                                 </a>
                             </div>

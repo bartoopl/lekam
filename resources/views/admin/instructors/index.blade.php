@@ -6,7 +6,7 @@
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 {{ __('Zarządzanie Wykładowcami') }}
             </h2>
-            <a href="{{ route('admin.instructors.create') }}" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-300">
+            <a href="{{ route('admin.instructors.create') }}" class="btn btn-primary">
                 Dodaj wykładowcę
             </a>
         </div>
@@ -73,7 +73,7 @@
                             <h3 class="mt-2 text-sm font-medium text-gray-900">Brak wykładowców</h3>
                             <p class="mt-1 text-sm text-gray-500">Nie ma jeszcze żadnych wykładowców w systemie.</p>
                             <div class="mt-6">
-                                <a href="{{ route('admin.instructors.create') }}" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-300">
+                                <a href="{{ route('admin.instructors.create') }}" class="btn btn-primary">
                                     Dodaj pierwszego wykładowcę
                                 </a>
                             </div>

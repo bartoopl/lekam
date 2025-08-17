@@ -31,11 +31,11 @@
 
                     <div class="flex items-center justify-center space-x-6">
                         <a href="{{ route('certificates.download', $certificate) }}" 
-                           class="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition duration-300">
+                           class="btn btn-primary">
                             Pobierz PDF
                         </a>
                         <a href="{{ route('certificates.index') }}" 
-                           class="bg-gray-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-700 transition duration-300">
+                           class="btn btn-secondary">
                             Powrót do listy
                         </a>
                     </div>
@@ -179,7 +179,7 @@
                         </svg>
                         <p class="text-gray-600 mb-4">Podgląd certyfikatu w formacie PDF</p>
                         <a href="{{ route('certificates.download', $certificate) }}" 
-                           class="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition duration-300">
+                           class="btn btn-primary">
                             Pobierz certyfikat
                         </a>
                     </div>

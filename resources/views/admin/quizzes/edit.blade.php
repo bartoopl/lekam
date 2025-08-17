@@ -297,11 +297,11 @@
                                     <span class="text-sm text-gray-500">({{ $question->points }} pkt)</span>
                                 </div>
                                 <div class="question-actions">
-                                    <a href="{{ route('admin.questions.edit', [$course, $quiz, $question]) }}" class="btn-small btn-edit">Edytuj</a>
+                                    <a href="{{ route('admin.questions.edit', [$course, $quiz, $question]) }}" class="btn btn-info">Edytuj</a>
                                     <form action="{{ route('admin.questions.destroy', [$course, $quiz, $question]) }}" method="POST" class="inline">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn-small btn-delete" onclick="return confirm('Czy na pewno chcesz usunąć to pytanie?')">
+                                        <button type="submit" class="btn btn-danger" onclick="return confirm('Czy na pewno chcesz usunąć to pytanie?')">
                                             Usuń
                                         </button>
                                     </form>

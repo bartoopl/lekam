@@ -17,6 +17,9 @@ ob_start();
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
+    <!-- Scripts -->
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+
     @include('layouts.navigation')
 
     <style>
@@ -214,76 +217,7 @@ ob_start();
             flex: 1;
         }
         
-        .course-button {
-            width: 100%;
-            background: #21235F;
-            color: white;
-            border: none;
-            padding: 1rem 1.5rem;
-            border-radius: 12px;
-            font-family: 'Poppins', sans-serif;
-            font-weight: 600;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            text-decoration: none;
-            text-align: center;
-            display: inline-block;
-        }
-        
-        .course-button:hover {
-            background: #1A1D4A;
-            color: white;
-            text-decoration: none;
-        }
-        
-        .course-button.continue {
-            background: #059669;
-        }
-        
-        .course-button.continue:hover {
-            background: #047857;
-            color: white;
-        }
 
-        .course-auth-buttons {
-            display: flex;
-            gap: 0.5rem;
-            flex-direction: column;
-        }
-
-        .course-button.login {
-            background: transparent;
-            color: #21235F;
-            border: 2px solid #21235F;
-            padding: 0.75rem 1rem;
-            font-size: 0.9rem;
-        }
-
-        .course-button.login:hover {
-            background: #21235F;
-            color: white;
-        }
-
-        .course-button.register {
-            background: linear-gradient(135deg, #21235F 0%, #3B82F6 100%);
-            color: white;
-            border: 2px solid transparent;
-            padding: 0.75rem 1rem;
-            font-size: 0.9rem;
-        }
-
-        .course-button.register:hover {
-            background: linear-gradient(135deg, #1a1d4f 0%, #2563EB 100%);
-            color: white;
-            transform: translateY(-1px);
-        }
-
-        @media (min-width: 768px) {
-            .course-auth-buttons {
-                flex-direction: row;
-            }
-        }
         
         /* Animations */
         @keyframes slideInRight {

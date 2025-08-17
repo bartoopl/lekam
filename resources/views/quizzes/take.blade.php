@@ -97,7 +97,7 @@
                         </div>
                         <button type="submit" 
                                 id="submitBtn"
-                                class="bg-green-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-green-700 transition duration-300">
+                                class="btn btn-success">
                             Zakończ test
                         </button>
                     </div>

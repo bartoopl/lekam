@@ -101,7 +101,7 @@ class User extends Authenticatable
     {
         // For now, we'll consider users with email containing 'admin' as administrators
         // In production, you should add an 'is_admin' column to the users table
-        return str_contains(strtolower($this->email), 'admin') || $this->email === 'bartosz@creativetrust.pl';
+        return str_contains(strtolower($this->email), 'admin') || $this->email === 'bartosz@creativetrust.pl' || $this->email === 'bartosz.lysniewski@gmail.com';
     }
 
     /**

@@ -112,7 +112,7 @@
                             </div>
                         @endif
                         
-                        <button id="startQuizBtn" class="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition duration-300">
+                        <button id="startQuizBtn" class="btn btn-primary">
                             Rozpocznij test
                         </button>
                     </div>

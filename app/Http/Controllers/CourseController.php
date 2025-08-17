@@ -453,4 +453,38 @@ class CourseController extends Controller
             ], 500);
         }
     }
+
+    /**
+     * Enroll user in course
+     */
+    public function enroll(Request $request, Course $course)
+    {
+        $user = Auth::user();
+        
+        if (!$user) {
+            return redirect()->route('login');
+        }
+
+        // Check if user already has progress in this course
+        if ($user->hasStartedCourse($course)) {
+            return redirect()->route('courses.show', $course)
+                ->with('info', 'Już jesteś zapisany do tego kursu.');
+        }
+
+        // Create initial progress for first lesson to "enroll" user
+        $firstLesson = $course->lessons()->orderBy('order')->first();
+        
+        if ($firstLesson) {
+            UserProgress::create([
+                'user_id' => $user->id,
+                'lesson_id' => $firstLesson->id,
+                'course_id' => $course->id,
+                'is_completed' => false,
+                'completed_at' => null
+            ]);
+        }
+
+        return redirect()->route('courses.show', $course)
+            ->with('success', 'Pomyślnie dołączyłeś do szkolenia!');
+    }
 }

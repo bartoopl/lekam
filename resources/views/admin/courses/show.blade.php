@@ -7,19 +7,19 @@
                 {{ __('Szczegóły Kursu') }}: {{ $course->title }}
             </h2>
             <div class="flex space-x-3">
-                <a href="{{ route('admin.courses.edit', $course) }}" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-300">
+                <a href="{{ route('admin.courses.edit', $course) }}" class="btn btn-primary">
                     ✏️ Edytuj kurs
                 </a>
-                <a href="{{ route('admin.chapters.create', $course) }}" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition duration-300">
+                <a href="{{ route('admin.chapters.create', $course) }}" class="btn btn-info">
                     📚 Dodaj sekcję
                 </a>
-                <a href="{{ route('admin.lessons.create', $course) }}" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition duration-300">
+                <a href="{{ route('admin.lessons.create', $course) }}" class="btn btn-success">
                     ➕ Dodaj lekcję
                 </a>
                 <form action="{{ route('admin.courses.destroy', $course) }}" method="POST" class="inline">
                     @csrf
                     @method('DELETE')
-                    <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition duration-300" onclick="return confirm('Czy na pewno chcesz usunąć ten kurs?')">
+                    <button type="submit" class="btn btn-danger" onclick="return confirm('Czy na pewno chcesz usunąć ten kurs?')">
                         🗑️ Usuń kurs
                     </button>
                 </form>
@@ -83,7 +83,7 @@
                 <div class="p-6">
                     <div class="flex justify-between items-center mb-4">
                         <h3 class="text-lg font-medium text-gray-900">Sekcje ({{ $course->chapters->count() }})</h3>
-                        <a href="{{ route('admin.chapters.create', $course) }}" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition duration-300">
+                        <a href="{{ route('admin.chapters.create', $course) }}" class="btn btn-info">
                             ➕ Dodaj sekcję
                         </a>
                     </div>
@@ -136,9 +136,9 @@
                     <div class="flex justify-between items-center mb-4">
                         <h3 class="text-lg font-medium text-gray-900">Lekcje ({{ $course->lessons->count() }})</h3>
                         @if($course->chapters->count() > 0)
-                            <a href="{{ route('admin.lessons.create', $course) }}" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition duration-300">
-                                ➕ Dodaj lekcję
-                            </a>
+                                                    <a href="{{ route('admin.lessons.create', $course) }}" class="btn btn-success">
+                            ➕ Dodaj lekcję
+                        </a>
                         @else
                             <span class="text-sm text-gray-500">Najpierw dodaj sekcję, aby móc dodać lekcję</span>
                         @endif
@@ -237,19 +237,19 @@
                         <h3 class="text-lg font-medium text-gray-900">Test końcowy</h3>
                         @if($course->quiz)
                             <div class="flex space-x-2">
-                                <a href="{{ route('admin.quizzes.edit', [$course, $course->quiz]) }}" class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition duration-300">
+                                <a href="{{ route('admin.quizzes.edit', [$course, $course->quiz]) }}" class="btn btn-info">
                                     ✏️ Edytuj test
                                 </a>
                                 <form action="{{ route('admin.quizzes.destroy', [$course, $course->quiz]) }}" method="POST" class="inline">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition duration-300" onclick="return confirm('Czy na pewno chcesz usunąć ten test?')">
+                                    <button type="submit" class="btn btn-danger" onclick="return confirm('Czy na pewno chcesz usunąć ten test?')">
                                         🗑️ Usuń test
                                     </button>
                                 </form>
                             </div>
                         @else
-                            <a href="{{ route('admin.quizzes.create', $course) }}" class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition duration-300">
+                            <a href="{{ route('admin.quizzes.create', $course) }}" class="btn btn-info">
                                 ➕ Dodaj test
                             </a>
                         @endif

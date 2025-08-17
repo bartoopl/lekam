@@ -152,10 +152,10 @@
                     Rozpocznij swoją podróż z nami i rozwijaj swoje umiejętności w branży farmaceutycznej
                 </p>
                 <div class="space-x-4">
-                    <a href="{{ route('register') }}" class="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition duration-300">
+                    <a href="{{ route('register') }}" class="btn btn-primary">
                         Zarejestruj się
                     </a>
-                    <a href="{{ route('contact') }}" class="bg-gray-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-gray-700 transition duration-300">
+                    <a href="{{ route('contact') }}" class="btn btn-secondary">
                         Skontaktuj się z nami
                     </a>
                 </div>

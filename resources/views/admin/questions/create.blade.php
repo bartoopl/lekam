@@ -272,7 +272,7 @@
                             <!-- Options will be added here dynamically -->
                         </div>
                         
-                        <button type="button" id="addOptionBtn" class="btn-add-option">
+                        <button type="button" id="addOptionBtn" class="btn btn-success">
                             ➕ Dodaj opcję
                         </button>
                         
@@ -385,7 +385,7 @@ function addOption() {
     optionDiv.innerHTML = `
         <div class="option-header">
             <span class="option-number">Opcja ${optionCounter}</span>
-            <button type="button" class="btn-remove-option" onclick="removeOption(this)">Usuń</button>
+            <button type="button" class="btn btn-danger" onclick="removeOption(this)">Usuń</button>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>

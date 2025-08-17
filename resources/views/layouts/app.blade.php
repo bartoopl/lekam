@@ -20,6 +20,35 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         <script src="{{ asset('js/video-controller.js') }}"></script>
         
+        <script>
+            // Hide PHP errors immediately when page loads
+            document.addEventListener('DOMContentLoaded', function() {
+                // Hide any PHP error messages
+                const elements = document.querySelectorAll('br, b');
+                elements.forEach(function(element) {
+                    if (element.textContent && element.textContent.includes('Notice')) {
+                        element.style.display = 'none';
+                    }
+                    if (element.textContent && element.textContent.includes('file_put_contents')) {
+                        element.style.display = 'none';
+                    }
+                    if (element.textContent && element.textContent.includes('Broken pipe')) {
+                        element.style.display = 'none';
+                    }
+                });
+            });
+            
+            // Also hide immediately for faster hiding
+            window.addEventListener('load', function() {
+                const elements = document.querySelectorAll('br, b');
+                elements.forEach(function(element) {
+                    if (element.textContent && (element.textContent.includes('Notice') || element.textContent.includes('file_put_contents') || element.textContent.includes('Broken pipe'))) {
+                        element.style.display = 'none';
+                    }
+                });
+            });
+        </script>
+        
         <style>
             /* Custom video player styles - no dark overlays */
             #lesson-video {
