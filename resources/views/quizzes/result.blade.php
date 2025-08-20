@@ -284,7 +284,7 @@
             </div>
             @if($attempt->passed)
                 <div class="score-item">
-                    <div class="score-value text-purple-600">{{ $attempt->earned_points }}</div>
+                    <div class="score-value text-purple-600">{{ $course->getPointsForUser(auth()->user()) }}</div>
                     <div class="score-label">Punkty za kurs</div>
                 </div>
             @endif
@@ -319,4 +319,66 @@
 
     </div>
 </div>
+
+@if($attempt->passed)
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Confetti burst when page loads (course completion celebration)
+        
+        // First burst - from center
+        confetti({
+            particleCount: 100,
+            spread: 70,
+            origin: { y: 0.6 }
+        });
+        
+        // Second burst after 200ms - from left
+        setTimeout(() => {
+            confetti({
+                particleCount: 50,
+                angle: 60,
+                spread: 55,
+                origin: { x: 0 }
+            });
+        }, 200);
+        
+        // Third burst after 400ms - from right
+        setTimeout(() => {
+            confetti({
+                particleCount: 50,
+                angle: 120,
+                spread: 55,
+                origin: { x: 1 }
+            });
+        }, 400);
+        
+        // Continuous golden confetti for 3 seconds
+        const duration = 3 * 1000;
+        const animationEnd = Date.now() + duration;
+        const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+
+        function randomInRange(min, max) {
+            return Math.random() * (max - min) + min;
+        }
+
+        const interval = setInterval(function() {
+            const timeLeft = animationEnd - Date.now();
+
+            if (timeLeft <= 0) {
+                return clearInterval(interval);
+            }
+
+            const particleCount = 50 * (timeLeft / duration);
+            
+            // Golden confetti from random positions
+            confetti(Object.assign({}, defaults, { 
+                particleCount,
+                origin: { x: randomInRange(0.1, 0.9), y: Math.random() - 0.2 },
+                colors: ['#FFD700', '#FFA500', '#FF8C00', '#DAA520', '#B8860B']
+            }));
+        }, 250);
+    });
+</script>
+@endif
 @endsection
