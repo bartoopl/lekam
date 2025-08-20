@@ -9,6 +9,7 @@ window.initCustomVideoControls = function(video) {
     if (startPosition) {
         const setStartPosition = () => {
             const position = parseInt(startPosition);
+            console.log('Video metadata loaded - duration:', video.duration, 'seconds, requested position:', position);
             // Only set position if it's less than video duration
             if (video.duration && position < video.duration) {
                 video.currentTime = position;
@@ -75,6 +76,16 @@ window.initCustomVideoControls = function(video) {
         // Auto-complete lesson when video ends - but only if video was actually played for reasonable time
         const completeUrl = video.dataset.completeLessonUrl;
         const minWatchTime = 5; // At least 5 seconds should be watched
+        
+        console.log('Video ended event fired:', {
+            currentTime: video.currentTime,
+            duration: video.duration,
+            minWatchTime: minWatchTime,
+            watchedPercent: video.duration ? (video.currentTime / video.duration * 100).toFixed(1) + '%' : 'unknown',
+            requiredPercent: '80%',
+            meetsMinTime: video.currentTime >= minWatchTime,
+            meetsPercentage: video.duration && video.currentTime >= video.duration * 0.8
+        });
         
         if (completeUrl && video.currentTime >= minWatchTime && video.duration && video.currentTime >= video.duration * 0.8) {
             console.log('Video ended after sufficient watch time, auto-completing lesson...');
