@@ -79,7 +79,7 @@
                 data-lesson-id="{{ $lesson->id }}" data-course-id="{{ $course->id }}"
                 data-save-position-url="{{ route('courses.save-video-position', ['course' => $course, 'lesson' => $lesson]) }}"
                 data-complete-lesson-url="{{ route('courses.complete-lesson', ['course' => $course, 'lesson' => $lesson]) }}"
-                @if($userProgress && $userProgress->video_position) data-start-position="{{ $userProgress->video_position }}" @endif>
+                @if($userProgress && $userProgress->video_position && !$userProgress->is_completed) data-start-position="{{ $userProgress->video_position }}" @endif>
                 <source src="{{ str_starts_with($lesson->video_file, 'http') ? $lesson->video_file : Storage::url($lesson->video_file) }}" type="video/mp4">
                 Twoja przeglądarka nie obsługuje odtwarzania wideo.
             </video>
