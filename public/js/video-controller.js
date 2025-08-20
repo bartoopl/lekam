@@ -10,10 +10,16 @@ window.initCustomVideoControls = function(video) {
         const setStartPosition = () => {
             const position = parseInt(startPosition);
             console.log('Video metadata loaded - duration:', video.duration, 'seconds, requested position:', position);
-            // Only set position if it's less than video duration
-            if (video.duration && position < video.duration) {
+            // Only set position if it's less than video duration with safety margin
+            // Don't set position to last 2 seconds to avoid immediate 'ended' event
+            const safeMaxPosition = Math.max(0, video.duration - 2);
+            if (video.duration && position < safeMaxPosition) {
                 video.currentTime = position;
                 console.log('Set video position to:', position);
+            } else if (video.duration && position >= safeMaxPosition) {
+                // If saved position is near the end, set it to safe position
+                video.currentTime = Math.max(0, safeMaxPosition);
+                console.log('Start position', position, 'too close to end, set to safe position:', Math.max(0, safeMaxPosition));
             } else {
                 console.log('Start position', position, 'exceeds video duration', video.duration, '- not setting');
             }
