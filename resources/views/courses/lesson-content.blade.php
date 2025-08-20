@@ -654,6 +654,44 @@
                     const timerDisplay = document.getElementById('timer-display');
                     const timerInfo = document.getElementById('timer-info');
                     
+                    // Auto-refresh lesson state every 30 seconds to keep timer accurate
+                    let refreshInterval = null;
+                    
+                    function refreshLessonState() {
+                        // Only refresh if timer is still active
+                        if (remainingTime > 0) {
+                            // Soft refresh - fetch lesson progress without full page reload
+                            fetch(window.location.href, {
+                                method: 'GET',
+                                headers: {
+                                    'X-Requested-With': 'XMLHttpRequest',
+                                    'Accept': 'application/json'
+                                }
+                            }).then(response => {
+                                if (!response.ok) {
+                                    // If request fails, do a full page refresh as fallback
+                                    window.location.reload();
+                                }
+                            }).catch(() => {
+                                // If fetch fails, try again in next interval
+                            });
+                        } else {
+                            // Timer finished, stop refreshing
+                            if (refreshInterval) {
+                                clearInterval(refreshInterval);
+                            }
+                        }
+                    }
+                    
+                    // Start periodic refresh
+                    refreshInterval = setInterval(refreshLessonState, 30000); // Every 30 seconds
+                    
+                    // Cleanup intervals when page is unloaded
+                    window.addEventListener('beforeunload', () => {
+                        if (countdown) clearInterval(countdown);
+                        if (refreshInterval) clearInterval(refreshInterval);
+                    });
+                    
                     const countdown = setInterval(() => {
                         const mins = Math.floor(remainingTime / 60);
                         const secs = remainingTime % 60;
@@ -665,6 +703,9 @@
                         
                         if (remainingTime <= 0) {
                             clearInterval(countdown);
+                            if (refreshInterval) {
+                                clearInterval(refreshInterval);
+                            }
                             
                             // Complete lesson automatically
                             fetch('{{ route("courses.complete-lesson", ["course" => $course, "lesson" => $lesson]) }}', {
