@@ -208,7 +208,7 @@
     <script>
         let countdownInterval = null;
         
-        function handleMaterialDownload(event) {
+        window.handleMaterialDownload = function(event) {
             event.preventDefault();
             const link = event.target.closest('.material-download');
             const lessonId = link.dataset.lessonId;
