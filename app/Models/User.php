@@ -29,6 +29,7 @@ class User extends Authenticatable
         'pharmacy_postal_code',
         'pharmacy_city',
         'ref',
+        'representative_id',
     ];
 
     /**
@@ -76,6 +77,14 @@ class User extends Authenticatable
     public function certificates()
     {
         return $this->hasMany(Certificate::class);
+    }
+
+    /**
+     * Get the representative that referred this user
+     */
+    public function representative()
+    {
+        return $this->belongsTo(Representative::class);
     }
 
     /**

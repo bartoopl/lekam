@@ -239,8 +239,9 @@ class Lesson extends Model
             ]
         );
 
-        // If no timer is set, complete the lesson immediately
-        if (!$this->download_timer_minutes || $this->download_timer_minutes <= 0) {
+        // Only auto-complete if lesson has actual downloadable materials and no timer
+        // Don't auto-complete lessons without real materials (demo files only)
+        if ($this->hasDownloadableMaterials() && (!$this->download_timer_minutes || $this->download_timer_minutes <= 0)) {
             $this->markAsCompleted($user);
         }
     }

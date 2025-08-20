@@ -300,6 +300,9 @@
                 <a href="{{ route('admin.statistics') }}" class="action-button yellow">
                     📊 Statystyki
                 </a>
+                <a href="{{ route('admin.representatives.index') }}" class="action-button red">
+                    📱 Zarządzaj przedstawicielami
+                </a>
             </div>
         </div>
 

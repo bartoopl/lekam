@@ -8,6 +8,7 @@ use App\Models\Lesson;
 use App\Models\Quiz;
 use App\Models\QuizQuestion;
 use App\Models\Certificate;
+use App\Models\Representative;
 use Illuminate\Http\Request;
 
 class AdminController extends Controller
@@ -422,6 +423,19 @@ class AdminController extends Controller
             'recent_activity' => [
                 'new_users' => User::where('created_at', '>=', now()->subDays(7))->count(),
                 'new_certificates' => Certificate::where('created_at', '>=', now()->subDays(7))->count(),
+            ],
+            'representatives' => [
+                'total' => Representative::count(),
+                'active' => Representative::where('is_active', true)->count(),
+                'with_registrations' => Representative::has('users')->count(),
+                'top_performers' => Representative::withCount('users')
+                    ->where('is_active', true)
+                    ->orderBy('users_count', 'desc')
+                    ->take(5)
+                    ->get(),
+                'registrations_this_month' => User::whereNotNull('representative_id')
+                    ->where('created_at', '>=', now()->startOfMonth())
+                    ->count(),
             ],
         ];
 

@@ -131,6 +131,63 @@
                 </div>
             </div>
 
+            <!-- Representative Statistics -->
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-8">
+                <div class="p-6">
+                    <h3 class="text-lg font-medium text-gray-900 mb-4">Statystyki przedstawicieli</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                        <div class="bg-blue-50 p-4 rounded-lg">
+                            <div class="text-sm font-medium text-blue-600">Łącznie przedstawicieli</div>
+                            <div class="text-2xl font-bold text-blue-900">{{ $stats['representatives']['total'] }}</div>
+                        </div>
+                        <div class="bg-green-50 p-4 rounded-lg">
+                            <div class="text-sm font-medium text-green-600">Aktywni przedstawiciele</div>
+                            <div class="text-2xl font-bold text-green-900">{{ $stats['representatives']['active'] }}</div>
+                        </div>
+                        <div class="bg-purple-50 p-4 rounded-lg">
+                            <div class="text-sm font-medium text-purple-600">Z rejestracjami</div>
+                            <div class="text-2xl font-bold text-purple-900">{{ $stats['representatives']['with_registrations'] }}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="bg-orange-50 p-4 rounded-lg">
+                            <div class="text-sm font-medium text-orange-600">Rejestracje w tym miesiącu</div>
+                            <div class="text-2xl font-bold text-orange-900">{{ $stats['representatives']['registrations_this_month'] }}</div>
+                        </div>
+                        <div class="bg-indigo-50 p-4 rounded-lg">
+                            <div class="text-sm font-medium text-indigo-600">Średnio rejestracji na przedstawiciela</div>
+                            <div class="text-2xl font-bold text-indigo-900">
+                                @if($stats['representatives']['active'] > 0)
+                                    {{ round(($stats['users_by_type']['farmaceuta'] + $stats['users_by_type']['technik_farmacji']) / $stats['representatives']['active'], 1) }}
+                                @else
+                                    0
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                    
+                    @if($stats['representatives']['top_performers']->count() > 0)
+                        <div class="mt-6">
+                            <h4 class="text-md font-medium text-gray-900 mb-3">Top 5 przedstawicieli</h4>
+                            <div class="space-y-2">
+                                @foreach($stats['representatives']['top_performers'] as $representative)
+                                    <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                                        <div>
+                                            <div class="font-medium text-gray-900">{{ $representative->name }}</div>
+                                            <div class="text-sm text-gray-500">{{ $representative->email }}</div>
+                                        </div>
+                                        <div class="text-lg font-bold text-gray-900">
+                                            {{ $representative->users_count }} rejestracji
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    @endif
+                </div>
+            </div>
+
             <!-- Platform Overview -->
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6">

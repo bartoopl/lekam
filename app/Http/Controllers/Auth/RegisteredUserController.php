@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Representative;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -46,6 +47,14 @@ class RegisteredUserController extends Controller
             'ref' => ['nullable', 'string', 'max:255'],
         ]);
 
+        // Check if the ref parameter is a representative code
+        $representative = null;
+        if ($request->ref) {
+            $representative = Representative::where('code', $request->ref)
+                ->where('is_active', true)
+                ->first();
+        }
+
         $user = User::create([
             'name' => $request->first_name . ' ' . $request->last_name,
             'email' => $request->email,
@@ -57,6 +66,7 @@ class RegisteredUserController extends Controller
             'pharmacy_postal_code' => $request->pharmacy_postal_code,
             'pharmacy_city' => $request->pharmacy_city,
             'ref' => $request->ref,
+            'representative_id' => $representative ? $representative->id : null,
         ]);
 
         event(new Registered($user));

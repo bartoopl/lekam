@@ -11,6 +11,7 @@ use App\Http\Controllers\InstructorController;
 use App\Http\Controllers\LessonController;
 use App\Http\Controllers\ChapterController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Admin\RepresentativeController;
 use Illuminate\Support\Facades\Route;
 
 // Public routes
@@ -27,6 +28,11 @@ Route::get('/contact', [ContactController::class, 'index'])->name('contact');
 Route::get('/terms', [HomeController::class, 'terms'])->name('terms');
 Route::get('/privacy', [HomeController::class, 'privacy'])->name('privacy');
 Route::get('/courses', [HomeController::class, 'courses'])->name('courses');
+
+// Representative registration route
+Route::get('/register/{code}', function ($code) {
+    return redirect()->route('register', ['ref' => $code]);
+})->name('register.representative');
 
 // Course routes (require authentication)
 Route::middleware(['auth'])->group(function () {
@@ -116,6 +122,10 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     
     // Instructors management
     Route::resource('instructors', InstructorController::class);
+    
+    // Representatives management
+    Route::resource('representatives', RepresentativeController::class);
+    Route::post('/representatives/{representative}/generate-code', [RepresentativeController::class, 'generateNewCode'])->name('representatives.generate-code');
     
     Route::get('/certificates', [AdminController::class, 'certificates'])->name('certificates');
     Route::get('/statistics', [AdminController::class, 'statistics'])->name('statistics');
