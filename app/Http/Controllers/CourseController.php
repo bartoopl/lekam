@@ -165,6 +165,11 @@ class CourseController extends Controller
 
         // Handle POST request for marking file as downloaded
         if ($request->isMethod('post')) {
+            \Log::info('Download POST request received', [
+                'user_id' => $user->id,
+                'lesson_id' => $lesson->id,
+                'lesson_title' => $lesson->title
+            ]);
             $lesson->markFileAsDownloaded($user);
             return response()->json(['success' => true]);
         }

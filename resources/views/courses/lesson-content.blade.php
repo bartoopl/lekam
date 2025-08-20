@@ -209,6 +209,7 @@
         
         // Define handleMaterialDownload function first, before any HTML uses it
         window.handleMaterialDownload = function(event) {
+            console.log('handleMaterialDownload called!');
             event.preventDefault();
             const link = event.target.closest('.material-download');
             const lessonId = link.dataset.lessonId;
@@ -242,8 +243,12 @@
         
         // Add event listeners to all material download buttons when DOM is ready
         document.addEventListener('DOMContentLoaded', function() {
-            document.querySelectorAll('.material-download').forEach(function(button) {
+            console.log('DOMContentLoaded - setting up event listeners');
+            const buttons = document.querySelectorAll('.material-download');
+            console.log('Found material download buttons:', buttons.length);
+            buttons.forEach(function(button) {
                 button.addEventListener('click', window.handleMaterialDownload);
+                console.log('Event listener added to button:', button);
             });
         });
         
