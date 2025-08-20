@@ -108,8 +108,12 @@
             left: 0;
             right: 0;
             z-index: 1000;
-            transition: all 0.3s ease;
+            transition: transform 0.3s ease;
             width: 100%;
+        }
+        
+        .navbar-container.navbar-hidden {
+            transform: translateY(-100%);
         }
 
         .navbar {
@@ -186,8 +190,8 @@
             gap: 1rem;
         }
         
-        /* Override button styles for navbar */
-        .auth-buttons .btn {
+        /* Override button styles ONLY for navbar context */
+        .navbar-container .auth-buttons .btn {
             padding: 0.75rem 1.5rem !important;
             font-size: 0.9rem !important;
             border-radius: 16px !important;
@@ -205,57 +209,57 @@
             visibility: visible !important;
         }
         
-        .auth-buttons .btn:hover {
+        .navbar-container .auth-buttons .btn:hover {
             transform: translateY(-2px) !important;
         }
         
-        /* Specific button styles for navbar */
-        .auth-buttons .btn-primary {
+        /* Specific button styles ONLY for navbar */
+        .navbar-container .auth-buttons .btn-primary {
             background-color: #21235F !important;
             color: white !important;
             border: 2px solid #21235F !important;
         }
         
-        .auth-buttons .btn-primary:hover {
+        .navbar-container .auth-buttons .btn-primary:hover {
             background-color: #1a1a4d !important;
             border-color: #1a1a4d !important;
             transform: translateY(-2px) !important;
             box-shadow: 0 4px 12px rgba(33, 35, 95, 0.3) !important;
         }
         
-        .auth-buttons .btn-secondary {
+        .navbar-container .auth-buttons .btn-secondary {
             background-color: transparent !important;
             color: #21235F !important;
             border: 2px solid #21235F !important;
         }
         
-        .auth-buttons .btn-secondary:hover {
+        .navbar-container .auth-buttons .btn-secondary:hover {
             background-color: #21235F !important;
             color: white !important;
             transform: translateY(-2px) !important;
             box-shadow: 0 4px 12px rgba(33, 35, 95, 0.3) !important;
         }
         
-        .auth-buttons .btn-outlined {
+        .navbar-container .auth-buttons .btn-outlined {
             background-color: transparent !important;
             color: #21235F !important;
             border: 2px solid #21235F !important;
         }
         
-        .auth-buttons .btn-outlined:hover {
+        .navbar-container .auth-buttons .btn-outlined:hover {
             background-color: #21235F !important;
             color: white !important;
             transform: translateY(-2px) !important;
             box-shadow: 0 4px 12px rgba(33, 35, 95, 0.3) !important;
         }
         
-        .auth-buttons .btn-danger {
+        .navbar-container .auth-buttons .btn-danger {
             background-color: #EF4444 !important;
             color: white !important;
             border: 2px solid #EF4444 !important;
         }
         
-        .auth-buttons .btn-danger:hover {
+        .navbar-container .auth-buttons .btn-danger:hover {
             background-color: #DC2626 !important;
             border-color: #DC2626 !important;
             transform: translateY(-2px) !important;
@@ -423,8 +427,8 @@
             gap: 1rem;
         }
         
-        /* Mobile button overrides */
-        .mobile-auth-buttons .btn {
+        /* Mobile button overrides ONLY for navbar */
+        .navbar-container .mobile-auth-buttons .btn {
             padding: 1rem 1.5rem !important;
             font-size: 1rem !important;
             border-radius: 12px !important;
@@ -447,53 +451,53 @@
             margin: 0;
         }
         
-        /* Specific mobile button styles */
-        .mobile-auth-buttons .btn-primary {
+        /* Specific mobile button styles ONLY for navbar */
+        .navbar-container .mobile-auth-buttons .btn-primary {
             background-color: #21235F !important;
             color: white !important;
             border: 2px solid #21235F !important;
         }
         
-        .mobile-auth-buttons .btn-primary:hover {
+        .navbar-container .mobile-auth-buttons .btn-primary:hover {
             background-color: #1a1a4d !important;
             border-color: #1a1a4d !important;
             transform: translateY(-2px) !important;
             box-shadow: 0 4px 12px rgba(33, 35, 95, 0.3) !important;
         }
         
-        .mobile-auth-buttons .btn-secondary {
+        .navbar-container .mobile-auth-buttons .btn-secondary {
             background-color: transparent !important;
             color: #21235F !important;
             border: 2px solid #21235F !important;
         }
         
-        .mobile-auth-buttons .btn-secondary:hover {
+        .navbar-container .mobile-auth-buttons .btn-secondary:hover {
             background-color: #21235F !important;
             color: white !important;
             transform: translateY(-2px) !important;
             box-shadow: 0 4px 12px rgba(33, 35, 95, 0.3) !important;
         }
         
-        .mobile-auth-buttons .btn-outlined {
+        .navbar-container .mobile-auth-buttons .btn-outlined {
             background-color: transparent !important;
             color: #21235F !important;
             border: 2px solid #21235F !important;
         }
         
-        .mobile-auth-buttons .btn-outlined:hover {
+        .navbar-container .mobile-auth-buttons .btn-outlined:hover {
             background-color: #21235F !important;
             color: white !important;
             transform: translateY(-2px) !important;
             box-shadow: 0 4px 12px rgba(33, 35, 95, 0.3) !important;
         }
         
-        .mobile-auth-buttons .btn-danger {
+        .navbar-container .mobile-auth-buttons .btn-danger {
             background-color: #EF4444 !important;
             color: white !important;
             border: 2px solid #EF4444 !important;
         }
         
-        .mobile-auth-buttons .btn-danger:hover {
+        .navbar-container .mobile-auth-buttons .btn-danger:hover {
             background-color: #DC2626 !important;
             border-color: #DC2626 !important;
             transform: translateY(-2px) !important;
@@ -524,14 +528,81 @@
     </style>
 
     <script>
-        // Sticky navbar behavior
+        // Auto-hide navbar functionality
+        let lastScrollTop = 0;
+        let isNavbarVisible = true;
+        let hideTimer = null;
+
+        function showNavbar() {
+            const navbar = document.querySelector('.navbar-container');
+            navbar.classList.remove('navbar-hidden');
+            isNavbarVisible = true;
+            
+            // Clear any existing hide timer
+            if (hideTimer) {
+                clearTimeout(hideTimer);
+                hideTimer = null;
+            }
+        }
+
+        function hideNavbar() {
+            const navbar = document.querySelector('.navbar-container');
+            navbar.classList.add('navbar-hidden');
+            isNavbarVisible = false;
+        }
+
+        // Scroll behavior - hide when scrolling down, show when scrolling up
         window.addEventListener('scroll', function() {
             const navbar = document.querySelector('.navbar-container');
+            const currentScrollTop = window.pageYOffset || document.documentElement.scrollTop;
             
-            if (window.scrollY > 50) {
+            // Add sticky class for visual changes
+            if (currentScrollTop > 50) {
                 navbar.classList.add('sticky');
             } else {
                 navbar.classList.remove('sticky');
+            }
+            
+            // Auto-hide logic
+            if (currentScrollTop > lastScrollTop && currentScrollTop > 100) {
+                // Scrolling down - hide navbar
+                if (isNavbarVisible) {
+                    hideNavbar();
+                }
+            } else if (currentScrollTop < lastScrollTop) {
+                // Scrolling up - show navbar
+                if (!isNavbarVisible) {
+                    showNavbar();
+                }
+            }
+            
+            lastScrollTop = currentScrollTop <= 0 ? 0 : currentScrollTop;
+        });
+
+        // Mouse movement behavior - show navbar when mouse is near top
+        document.addEventListener('mousemove', function(e) {
+            // Show navbar when mouse is within 100px from top of screen
+            if (e.clientY <= 100) {
+                if (!isNavbarVisible) {
+                    showNavbar();
+                }
+                
+                // Set timer to hide navbar after 3 seconds of no mouse movement at top
+                if (hideTimer) {
+                    clearTimeout(hideTimer);
+                }
+                hideTimer = setTimeout(() => {
+                    if (window.pageYOffset > 100 && e.clientY > 100) {
+                        hideNavbar();
+                    }
+                }, 3000);
+            }
+        });
+
+        // Always show navbar when at top of page
+        window.addEventListener('scroll', function() {
+            if (window.pageYOffset <= 50) {
+                showNavbar();
             }
         });
 
