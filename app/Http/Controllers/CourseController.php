@@ -424,10 +424,7 @@ class CourseController extends Controller
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 
-        // Only allow in debug mode or local environment
-        if (!config('app.debug') && !app()->environment('local')) {
-            return response()->json(['error' => 'This feature is only available in debug mode'], 403);
-        }
+        // Reset progress is now available for testing purposes on all environments
 
         try {
             // Delete all user progress for this course
