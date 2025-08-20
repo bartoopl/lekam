@@ -14,7 +14,7 @@ class RepresentativeController extends Controller
     public function index()
     {
         $representatives = Representative::withCount('users')->paginate(15);
-        return view('admin.representatives.index', compact('representatives'));
+        return view('representatives.index', compact('representatives'));
     }
 
     /**
@@ -22,7 +22,7 @@ class RepresentativeController extends Controller
      */
     public function create()
     {
-        return view('admin.representatives.create');
+        return view('representatives.create');
     }
 
     /**
@@ -44,7 +44,7 @@ class RepresentativeController extends Controller
             'is_active' => true,
         ]);
 
-        return redirect()->route('admin.representatives.show', $representative)
+        return redirect()->route('representatives.show', $representative)
                         ->with('success', 'Przedstawiciel został utworzony.');
     }
 
@@ -57,7 +57,7 @@ class RepresentativeController extends Controller
             $query->latest()->limit(10);
         }]);
         
-        return view('admin.representatives.show', compact('representative'));
+        return view('representatives.show', compact('representative'));
     }
 
     /**
@@ -65,7 +65,7 @@ class RepresentativeController extends Controller
      */
     public function edit(Representative $representative)
     {
-        return view('admin.representatives.edit', compact('representative'));
+        return view('representatives.edit', compact('representative'));
     }
 
     /**
@@ -82,7 +82,7 @@ class RepresentativeController extends Controller
 
         $representative->update($request->only(['name', 'email', 'phone', 'is_active']));
 
-        return redirect()->route('admin.representatives.show', $representative)
+        return redirect()->route('representatives.show', $representative)
                         ->with('success', 'Przedstawiciel został zaktualizowany.');
     }
 
@@ -93,7 +93,7 @@ class RepresentativeController extends Controller
     {
         $representative->delete();
         
-        return redirect()->route('admin.representatives.index')
+        return redirect()->route('representatives.index')
                         ->with('success', 'Przedstawiciel został usunięty.');
     }
 
@@ -106,7 +106,7 @@ class RepresentativeController extends Controller
             'code' => Representative::generateCode(),
         ]);
 
-        return redirect()->route('admin.representatives.show', $representative)
+        return redirect()->route('representatives.show', $representative)
                         ->with('success', 'Nowy kod został wygenerowany.');
     }
 }

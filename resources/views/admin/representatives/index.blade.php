@@ -7,7 +7,7 @@
             <h1 class="text-3xl font-bold text-gray-900">Przedstawiciele</h1>
             <p class="text-gray-600 mt-1">Zarządzaj przedstawicieilami i kodami QR</p>
         </div>
-        <a href="{{ route('admin.representatives.create') }}" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition duration-200">
+        <a href="{{ route('representatives.create') }}" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition duration-200">
             <i class="fas fa-plus mr-2"></i>
             Dodaj przedstawiciela
         </a>
@@ -59,13 +59,13 @@
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                             <div class="flex space-x-2">
-                                <a href="{{ route('admin.representatives.show', $representative) }}" class="text-blue-600 hover:text-blue-900">
+                                <a href="{{ route('representatives.show', $representative) }}" class="text-blue-600 hover:text-blue-900">
                                     <i class="fas fa-eye"></i>
                                 </a>
-                                <a href="{{ route('admin.representatives.edit', $representative) }}" class="text-yellow-600 hover:text-yellow-900">
+                                <a href="{{ route('representatives.edit', $representative) }}" class="text-yellow-600 hover:text-yellow-900">
                                     <i class="fas fa-edit"></i>
                                 </a>
-                                <form method="POST" action="{{ route('admin.representatives.destroy', $representative) }}" class="inline" onsubmit="return confirm('Czy na pewno chcesz usunąć tego przedstawiciela?')">
+                                <form method="POST" action="{{ route('representatives.destroy', $representative) }}" class="inline" onsubmit="return confirm('Czy na pewno chcesz usunąć tego przedstawiciela?')">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="text-red-600 hover:text-red-900">
@@ -81,7 +81,7 @@
                             <div class="text-gray-500">
                                 <i class="fas fa-users text-4xl mb-4"></i>
                                 <p>Brak przedstawicieli</p>
-                                <a href="{{ route('admin.representatives.create') }}" class="text-blue-600 hover:text-blue-800 underline">
+                                <a href="{{ route('representatives.create') }}" class="text-blue-600 hover:text-blue-800 underline">
                                     Dodaj pierwszego przedstawiciela
                                 </a>
                             </div>

@@ -8,10 +8,10 @@
             <p class="text-gray-600 mt-1">Szczegóły przedstawiciela</p>
         </div>
         <div class="flex space-x-2">
-            <a href="{{ route('admin.representatives.edit', $representative) }}" class="bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded-lg">
+            <a href="{{ route('representatives.edit', $representative) }}" class="bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded-lg">
                 <i class="fas fa-edit mr-2"></i>Edytuj
             </a>
-            <a href="{{ route('admin.representatives.index') }}" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg">
+            <a href="{{ route('representatives.index') }}" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg">
                 <i class="fas fa-arrow-left mr-2"></i>Powrót
             </a>
         </div>
@@ -85,7 +85,7 @@
                             <h4 class="font-medium mb-2">Kod przedstawiciela:</h4>
                             <div class="flex items-center space-x-2">
                                 <span class="px-3 py-2 bg-gray-100 text-gray-800 font-mono rounded">{{ $representative->code }}</span>
-                                <form method="POST" action="{{ route('admin.representatives.generate-code', $representative) }}" class="inline">
+                                <form method="POST" action="{{ route('representatives.generate-code', $representative) }}" class="inline">
                                     @csrf
                                     <button type="submit" class="bg-orange-600 hover:bg-orange-700 text-white text-sm px-3 py-1 rounded" onclick="return confirm('Czy na pewno chcesz wygenerować nowy kod? Stary kod przestanie działać.')">
                                         <i class="fas fa-refresh mr-1"></i>Wygeneruj nowy

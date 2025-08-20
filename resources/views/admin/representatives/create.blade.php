@@ -7,14 +7,14 @@
             <h1 class="text-3xl font-bold text-gray-900">Dodaj przedstawiciela</h1>
             <p class="text-gray-600 mt-1">Stwórz nowego przedstawiciela z kodem QR</p>
         </div>
-        <a href="{{ route('admin.representatives.index') }}" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg">
+        <a href="{{ route('representatives.index') }}" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg">
             <i class="fas fa-arrow-left mr-2"></i>Powrót
         </a>
     </div>
 
     <div class="max-w-2xl mx-auto">
         <div class="bg-white shadow-md rounded-lg p-6">
-            <form method="POST" action="{{ route('admin.representatives.store') }}">
+            <form method="POST" action="{{ route('representatives.store') }}">
                 @csrf
                 
                 <div class="space-y-6">
@@ -59,7 +59,7 @@
                     </div>
 
                     <div class="flex justify-end space-x-3">
-                        <a href="{{ route('admin.representatives.index') }}" class="bg-gray-300 hover:bg-gray-400 text-gray-700 font-bold py-2 px-4 rounded-lg">
+                        <a href="{{ route('representatives.index') }}" class="bg-gray-300 hover:bg-gray-400 text-gray-700 font-bold py-2 px-4 rounded-lg">
                             Anuluj
                         </a>
                         <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">
