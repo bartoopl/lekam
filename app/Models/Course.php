@@ -185,6 +185,7 @@ class Course extends Model
         return match($userType) {
             'farmaceuta' => $this->pharmacist_points ?? 0,
             'technik_farmacji' => $this->technician_points ?? 0,
+            'admin' => $this->pharmacist_points ?? 0, // Admin gets pharmacist points
             default => 0,
         };
     }
