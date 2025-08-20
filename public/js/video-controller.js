@@ -72,10 +72,12 @@ window.initCustomVideoControls = function(video) {
         clearInterval(saveInterval);
         savePosition(); // Save when video ends
         
-        // Auto-complete lesson when video ends
+        // Auto-complete lesson when video ends - but only if video was actually played for reasonable time
         const completeUrl = video.dataset.completeLessonUrl;
-        if (completeUrl) {
-            console.log('Video ended, auto-completing lesson...');
+        const minWatchTime = 5; // At least 5 seconds should be watched
+        
+        if (completeUrl && video.currentTime >= minWatchTime && video.duration && video.currentTime >= video.duration * 0.8) {
+            console.log('Video ended after sufficient watch time, auto-completing lesson...');
             if (typeof window.completeLesson === 'function') {
                 window.completeLesson(completeUrl);
             } else {
@@ -112,6 +114,13 @@ window.initCustomVideoControls = function(video) {
                     console.error('Error completing lesson after video end:', error);
                 });
             }
+        } else {
+            console.log('Video ended but auto-complete prevented:', {
+                currentTime: video.currentTime,
+                duration: video.duration,
+                minWatchTime: minWatchTime,
+                watchedPercent: video.duration ? (video.currentTime / video.duration * 100).toFixed(1) + '%' : 'unknown'
+            });
         }
     });
 
