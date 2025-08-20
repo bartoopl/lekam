@@ -612,19 +612,17 @@
         </div>
         
         <!-- Test Reset Button -->
-        @if(config('app.debug') || app()->environment('local'))
-            <div class="mt-4 p-3 bg-yellow-100 border border-yellow-300 rounded-md">
-                <div class="flex items-center justify-between">
-                    <div class="text-yellow-800 text-sm">
-                        <strong>🧪 Tryb testowy:</strong> Przycisk do resetowania postępu
-                    </div>
-                    <button onclick="resetCourseProgress()" 
-                            class="btn btn-danger">
-                        Resetuj postęp kursu
-                    </button>
+        <div class="mt-4 p-3 bg-yellow-100 border border-yellow-300 rounded-md">
+            <div class="flex items-center justify-between">
+                <div class="text-yellow-800 text-sm">
+                    <strong>🧪 Funkcja testowa:</strong> Przycisk do resetowania postępu
                 </div>
+                <button onclick="resetCourseProgress()" 
+                        class="btn btn-danger">
+                    Resetuj postęp kursu
+                </button>
             </div>
-        @endif
+        </div>
     </div>
 
 
