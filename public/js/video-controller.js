@@ -5,9 +5,24 @@ window.initCustomVideoControls = function(video) {
     const savePositionUrl = video.dataset.savePositionUrl;
     const startPosition = video.dataset.startPosition;
     
-    // Set start position if available
+    // Set start position if available, but only after video metadata is loaded
     if (startPosition) {
-        video.currentTime = parseInt(startPosition);
+        const setStartPosition = () => {
+            const position = parseInt(startPosition);
+            // Only set position if it's less than video duration
+            if (video.duration && position < video.duration) {
+                video.currentTime = position;
+                console.log('Set video position to:', position);
+            } else {
+                console.log('Start position', position, 'exceeds video duration', video.duration, '- not setting');
+            }
+        };
+        
+        if (video.readyState >= 1) { // HAVE_METADATA
+            setStartPosition();
+        } else {
+            video.addEventListener('loadedmetadata', setStartPosition, { once: true });
+        }
     }
 
     // Allow backward seeking but block forward seeking
