@@ -18,7 +18,7 @@
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
-        <script src="{{ asset('js/video-controller.js') }}"></script>
+        <script src="{{ asset('js/video-controller.js') }}?v={{ time() }}"></script>
         
         <script>
             // Hide PHP errors immediately when page loads
