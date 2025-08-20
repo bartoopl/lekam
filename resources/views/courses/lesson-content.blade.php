@@ -190,8 +190,7 @@
                     <div class="material-size">{{ $material['size'] ?? 'Nieznany rozmiar' }}</div>
                 </div>
                 <a href="{{ route('courses.download-file', ['course' => $course, 'lesson' => $lesson]) }}?file={{ urlencode($material['name']) }}" 
-                   class="material-download" 
-                   onclick="handleMaterialDownload(event)"
+                   class="material-download"
                    data-lesson-id="{{ $lesson->id }}"
                    data-course-id="{{ $course->id }}"
                    data-complete-lesson-url="{{ route('courses.complete-lesson', ['course' => $course, 'lesson' => $lesson]) }}"
@@ -208,6 +207,7 @@
     <script>
         let countdownInterval = null;
         
+        // Define handleMaterialDownload function first, before any HTML uses it
         window.handleMaterialDownload = function(event) {
             event.preventDefault();
             const link = event.target.closest('.material-download');
@@ -239,6 +239,13 @@
                 setTimeout(() => completeLesson(completeUrl), 1000);
             }
         }
+        
+        // Add event listeners to all material download buttons when DOM is ready
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.material-download').forEach(function(button) {
+                button.addEventListener('click', window.handleMaterialDownload);
+            });
+        });
         
         window.startDownloadTimer = function(minutes, completeUrl) {
             const timerInfo = document.getElementById('timer-info');
@@ -551,8 +558,7 @@
                             <div class="material-size">{{ $material['size'] ?? 'Nieznany rozmiar' }}</div>
                         </div>
                         <a href="{{ route('courses.download-file', ['course' => $course, 'lesson' => $lesson]) }}?file={{ urlencode($material['name']) }}" 
-                           class="material-download" 
-                           onclick="handleMaterialDownload(event)"
+                           class="material-download"
                            data-lesson-id="{{ $lesson->id }}"
                            data-course-id="{{ $course->id }}"
                            data-complete-lesson-url="{{ route('courses.complete-lesson', ['course' => $course, 'lesson' => $lesson]) }}"
@@ -587,8 +593,7 @@
                         </div>
                     </div>
                     <a href="{{ route('courses.download-file', ['course' => $course, 'lesson' => $lesson]) }}" 
-                       class="material-download" 
-                       onclick="handleMaterialDownload(event)"
+                       class="material-download"
                        data-lesson-id="{{ $lesson->id }}"
                        data-course-id="{{ $course->id }}"
                        data-complete-lesson-url="{{ route('courses.complete-lesson', ['course' => $course, 'lesson' => $lesson]) }}"
