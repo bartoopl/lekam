@@ -132,6 +132,14 @@ class Lesson extends Model
     }
 
     /**
+     * Check if this lesson is a video lesson
+     */
+    public function isVideoLesson(): bool
+    {
+        return !empty($this->video_url) || !empty($this->video_file);
+    }
+
+    /**
      * Check if lesson is accessible by user
      */
     public function isAccessibleByUser(User $user): bool
@@ -141,15 +149,21 @@ class Lesson extends Model
             return true;
         }
 
-        // If this is the last lesson, check if ALL other lessons are completed
+        // If this is the last lesson, check if all VIDEO lessons (except this one) are completed
         if ($this->is_last_lesson) {
-            $allOtherLessons = $this->course->lessons()->where('id', '!=', $this->id)->get();
-            foreach ($allOtherLessons as $lesson) {
+            $otherVideoLessons = $this->course->lessons()
+                ->where('id', '!=', $this->id)
+                ->get()
+                ->filter(function ($lesson) {
+                    return $lesson->isVideoLesson();
+                });
+            
+            foreach ($otherVideoLessons as $lesson) {
                 if (!$lesson->isCompletedByUser($user)) {
-                    return false; // All other lessons must be completed before last lesson
+                    return false; // All other VIDEO lessons must be completed before last lesson
                 }
             }
-            return true; // Last lesson is accessible when all other lessons are completed
+            return true; // Last lesson is accessible when all other VIDEO lessons are completed
         }
 
         // For middle lessons (neither first nor last), check if first lesson is completed
