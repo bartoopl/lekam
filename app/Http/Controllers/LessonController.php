@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Course;
 use App\Models\Lesson;
 use App\Models\Instructor;
+use App\Models\UserProgress;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -292,6 +293,29 @@ class LessonController extends Controller
 
         if (!file_exists($filePath)) {
             abort(404);
+        }
+
+        // Record download progress for timer functionality
+        $user = auth()->user();
+        if ($user && $lesson->requires_download_completion) {
+            $progress = UserProgress::updateOrCreate(
+                [
+                    'user_id' => $user->id,
+                    'lesson_id' => $lesson->id,
+                ],
+                [
+                    'course_id' => $course->id,
+                    'file_downloaded_at' => now(),
+                    'can_proceed_after' => $lesson->download_timer_minutes > 0 
+                        ? now()->addMinutes($lesson->download_timer_minutes)
+                        : now(),
+                ]
+            );
+            
+            // If no timer, complete lesson immediately
+            if (!$lesson->download_timer_minutes || $lesson->download_timer_minutes <= 0) {
+                $lesson->markAsCompleted($user);
+            }
         }
 
         // Use original filename if available, otherwise use the stored name
