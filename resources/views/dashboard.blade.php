@@ -283,7 +283,7 @@
             <div class="stats-grid">
                 <!-- Completed Courses -->
                 <div class="stat-box">
-                    <span class="stat-number">{{ $completedCourses }}</span>
+                    <span class="stat-number">{{ $completedCourses }}/{{ $totalAvailableCourses }}</span>
                     <div class="stat-label">Ukończone kursy</div>
                 </div>
 

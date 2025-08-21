@@ -45,12 +45,16 @@ class DashboardController extends Controller
         // Count certificates (assuming we have a certificates table)
         $certificatesCount = Certificate::where('user_id', $user->id)->count();
 
+        // Count total available courses
+        $totalAvailableCourses = Course::count();
+
         return view('dashboard', compact(
             'user', 
             'enrolledCourses', 
             'completedCourses', 
             'certificatesCount', 
-            'totalPoints'
+            'totalPoints',
+            'totalAvailableCourses'
         ));
     }
 }
