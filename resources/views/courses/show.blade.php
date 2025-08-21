@@ -1311,20 +1311,51 @@ function initializeCountdownTimer() {
         const progressSection = document.querySelector('[class*="bg-green-50"]');
         if (progressSection) {
             const progressText = progressSection.textContent;
-            const timeMatch = progressText.match(/(\d+)\s*minut/);
+            console.log('Progress text to search:', progressText);
+            
+            // Try different regex patterns for Polish text
+            const timeMatch = progressText.match(/za\s*(\d+)\s*minut/i) || 
+                             progressText.match(/(\d+)\s*minut/i) ||
+                             progressText.match(/dostępna\s+za\s*:\s*(\d+):(\d+)/i);
             
             if (timeMatch) {
-                const minutes = parseInt(timeMatch[1]);
-                console.log('Found timer duration from text:', minutes, 'minutes');
-                
-                // Calculate end time (current time + minutes)
-                const endTime = new Date(Date.now() + minutes * 60 * 1000);
-                console.log('Calculated timer end time:', endTime);
-                
-                // Start the countdown
-                startCountdownTimer(endTime, countdownTimer, quizSection);
+                let minutes;
+                if (timeMatch[2]) {
+                    // Format: "X:Y" (minutes:seconds)
+                    minutes = parseInt(timeMatch[1]);
+                    const seconds = parseInt(timeMatch[2]);
+                    const totalSeconds = minutes * 60 + seconds;
+                    const endTime = new Date(Date.now() + totalSeconds * 1000);
+                    console.log('Found timer from MM:SS format:', minutes + ':' + seconds);
+                    startCountdownTimer(endTime, countdownTimer, quizSection);
+                } else {
+                    // Format: "X minut"
+                    minutes = parseInt(timeMatch[1]);
+                    console.log('Found timer duration from text:', minutes, 'minutes');
+                    
+                    // Calculate end time (current time + minutes)
+                    const endTime = new Date(Date.now() + minutes * 60 * 1000);
+                    console.log('Calculated timer end time:', endTime);
+                    
+                    // Start the countdown
+                    startCountdownTimer(endTime, countdownTimer, quizSection);
+                }
             } else {
                 console.log('Could not extract timer duration from text:', progressText);
+                
+                // Last resort: check if countdown-timer already has a time
+                if (countdownTimer && countdownTimer.textContent !== '--:--') {
+                    console.log('Timer element has content:', countdownTimer.textContent);
+                    const existingTime = countdownTimer.textContent.match(/(\d+):(\d+)/);
+                    if (existingTime) {
+                        const mins = parseInt(existingTime[1]);
+                        const secs = parseInt(existingTime[2]);
+                        const totalSeconds = mins * 60 + secs;
+                        const endTime = new Date(Date.now() + totalSeconds * 1000);
+                        console.log('Using existing timer value:', mins + ':' + secs);
+                        startCountdownTimer(endTime, countdownTimer, quizSection);
+                    }
+                }
             }
         }
     }
