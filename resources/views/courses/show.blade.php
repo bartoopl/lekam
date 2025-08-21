@@ -1240,11 +1240,11 @@ function setupMaterialDownloadHandlers(lessonId) {
             console.log('Timer minutes:', timerMinutes);
             console.log('Complete URL:', completeUrl);
             
-            // Trigger actual download
-            window.location.href = link.href;
+            // First, update download tracking on backend
+            const downloadUrl = '{{ route("courses.download-file", ["course" => $course, "lesson" => "__LESSON_ID__"]) }}'.replace('__LESSON_ID__', lessonId);
+            console.log('Download tracking URL:', downloadUrl);
             
-            // Update download tracking on backend  
-            fetch('{{ route("courses.download-file", ["course" => $course, "lesson" => "__LESSON_ID__"]) }}'.replace('__LESSON_ID__', lessonId), {
+            fetch(downloadUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -1254,15 +1254,20 @@ function setupMaterialDownloadHandlers(lessonId) {
                     action: 'mark_downloaded'
                 })
             }).then(response => {
-                console.log('Download marked as completed');
+                console.log('Download marked as completed, response status:', response.status);
+                
+                // Now trigger actual download
+                window.location.href = link.href;
                 
                 // Reload lesson content to show updated status and timer
                 setTimeout(() => {
                     console.log('Reloading lesson content to show timer...');
                     loadLesson(lessonId, 'Reload for timer');
-                }, 1000);
+                }, 1500);
             }).catch(error => {
                 console.error('Error marking download:', error);
+                // Even if marking fails, allow download
+                window.location.href = link.href;
             });
         });
     });
