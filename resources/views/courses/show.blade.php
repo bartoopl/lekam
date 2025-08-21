@@ -807,6 +807,8 @@ function loadLesson(lessonId, lessonTitle) {
                 initializeVideoControls();
                 // Initialize countdown timer if it exists
                 initializeCountdownTimer();
+                // Setup material download handlers
+                setupMaterialDownloadHandlers(lessonId);
                 // Give more time for navigation buttons to be rendered in lesson content
                 setTimeout(() => {
                     updateNavigationButtons();
@@ -1219,6 +1221,53 @@ function resetCourseProgress() {
     }
 }
 
+// Setup material download handlers
+function setupMaterialDownloadHandlers(lessonId) {
+    console.log('setupMaterialDownloadHandlers called for lesson:', lessonId);
+    
+    const downloadButtons = document.querySelectorAll('.material-download');
+    console.log('Found download buttons:', downloadButtons.length);
+    
+    downloadButtons.forEach(button => {
+        button.addEventListener('click', function(event) {
+            console.log('Material download clicked');
+            event.preventDefault();
+            
+            const link = event.target.closest('.material-download');
+            const timerMinutes = parseInt(link.dataset.downloadTimer) || 0;
+            const completeUrl = link.dataset.completeLessonUrl;
+            
+            console.log('Timer minutes:', timerMinutes);
+            console.log('Complete URL:', completeUrl);
+            
+            // Trigger actual download
+            window.location.href = link.href;
+            
+            // Update download tracking on backend
+            fetch(`/courses/{{ $course->id }}/lesson/${lessonId}/download-file`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify({
+                    action: 'mark_downloaded'
+                })
+            }).then(response => {
+                console.log('Download marked as completed');
+                
+                // Reload lesson content to show updated status and timer
+                setTimeout(() => {
+                    console.log('Reloading lesson content to show timer...');
+                    loadLesson(lessonId, 'Reload for timer');
+                }, 1000);
+            }).catch(error => {
+                console.error('Error marking download:', error);
+            });
+        });
+    });
+}
+
 // Initialize countdown timer for download materials
 function initializeCountdownTimer() {
     console.log('initializeCountdownTimer called');
@@ -1236,29 +1285,48 @@ function initializeCountdownTimer() {
     const timerParent = countdownTimer.closest('div');
     if (!timerParent) return;
     
-    // Try to find timer data in the loaded content
-    const progressSection = document.querySelector('[class*="bg-green-50"]');
-    if (!progressSection) {
-        console.log('No progress section found');
-        return;
-    }
+    // Look for the script data that might contain the timer information
+    const scriptTags = document.querySelectorAll('script');
+    let canProceedAfter = null;
     
-    // Look for time information in the text
-    const progressText = progressSection.textContent;
-    const timeMatch = progressText.match(/(\d+)\s*minut/);
+    // Try to find can_proceed_after data in the loaded content scripts
+    scriptTags.forEach(script => {
+        const scriptContent = script.textContent;
+        if (scriptContent && scriptContent.includes('can_proceed_after')) {
+            const dateMatch = scriptContent.match(/can_proceed_after.*?new Date\('([^']+)'\)/);
+            if (dateMatch) {
+                canProceedAfter = new Date(dateMatch[1]);
+                console.log('Found can_proceed_after:', canProceedAfter);
+            }
+        }
+    });
     
-    if (timeMatch) {
-        const minutes = parseInt(timeMatch[1]);
-        console.log('Found timer duration:', minutes, 'minutes');
-        
-        // Calculate end time (current time + minutes)
-        const endTime = new Date(Date.now() + minutes * 60 * 1000);
-        console.log('Timer end time:', endTime);
-        
-        // Start the countdown
-        startCountdownTimer(endTime, countdownTimer, quizSection);
+    if (canProceedAfter) {
+        console.log('Starting timer with end time:', canProceedAfter);
+        startCountdownTimer(canProceedAfter, countdownTimer, quizSection);
     } else {
-        console.log('Could not extract timer duration from text:', progressText);
+        console.log('Could not find timer end date, trying alternative method...');
+        
+        // Fallback: look for "za X minut" text and calculate
+        const progressSection = document.querySelector('[class*="bg-green-50"]');
+        if (progressSection) {
+            const progressText = progressSection.textContent;
+            const timeMatch = progressText.match(/(\d+)\s*minut/);
+            
+            if (timeMatch) {
+                const minutes = parseInt(timeMatch[1]);
+                console.log('Found timer duration from text:', minutes, 'minutes');
+                
+                // Calculate end time (current time + minutes)
+                const endTime = new Date(Date.now() + minutes * 60 * 1000);
+                console.log('Calculated timer end time:', endTime);
+                
+                // Start the countdown
+                startCountdownTimer(endTime, countdownTimer, quizSection);
+            } else {
+                console.log('Could not extract timer duration from text:', progressText);
+            }
+        }
     }
 }
 
