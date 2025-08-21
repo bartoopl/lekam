@@ -1086,10 +1086,15 @@
 <script>
 // Check if lesson is completed and timer has expired, then show quiz button
 function checkQuizAvailability() {
+    console.log('checkQuizAvailability called');
     @if($lesson->download_timer_minutes && $lesson->download_timer_minutes > 0)
+        console.log('Timer minutes: {{ $lesson->download_timer_minutes }}');
         @if($userProgress && $userProgress->can_proceed_after)
+            console.log('User progress exists with can_proceed_after');
             const canProceedAfter = new Date('{{ $userProgress->can_proceed_after->toISOString() }}');
             const now = new Date();
+            console.log('Can proceed after:', canProceedAfter);
+            console.log('Now:', now);
             
             if (now >= canProceedAfter) {
                 // Timer has expired, clear any running timer
@@ -1119,8 +1124,23 @@ function checkQuizAvailability() {
                 // Timer is still running, show countdown
                 showActiveTimer(canProceedAfter);
             }
+        @else
+            console.log('No user progress or can_proceed_after not set');
         @endif
+    @else
+        console.log('No timer configured or timer is 0 minutes');
     @endif
+    
+    // Alternative approach: try to find countdown timer and set it manually if data exists
+    const countdownTimer = document.getElementById('countdown-timer');
+    if (countdownTimer && countdownTimer.textContent === '--:--') {
+        console.log('Found countdown timer with --:--, trying to set time...');
+        // Check if we have timer data in the page
+        @if($userProgress && $userProgress->can_proceed_after)
+            const altCanProceedAfter = new Date('{{ $userProgress->can_proceed_after->toISOString() }}');
+            showActiveTimer(altCanProceedAfter);
+        @endif
+    }
 }
 
 // Show active countdown timer
