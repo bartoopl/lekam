@@ -805,6 +805,8 @@ function loadLesson(lessonId, lessonTitle) {
             // Initialize video controls after content is loaded
             setTimeout(() => {
                 initializeVideoControls();
+                // Initialize countdown timer if it exists
+                initializeCountdownTimer();
                 // Give more time for navigation buttons to be rendered in lesson content
                 setTimeout(() => {
                     updateNavigationButtons();
@@ -1215,6 +1217,96 @@ function resetCourseProgress() {
             alert('Wystąpił błąd podczas resetowania postępów: ' + error.message);
         });
     }
+}
+
+// Initialize countdown timer for download materials
+function initializeCountdownTimer() {
+    console.log('initializeCountdownTimer called');
+    const countdownTimer = document.getElementById('countdown-timer');
+    const quizSection = document.getElementById('quiz-start-section');
+    
+    if (!countdownTimer) {
+        console.log('No countdown timer found');
+        return;
+    }
+    
+    console.log('Countdown timer found');
+    
+    // Extract the end time from the parent element's data or search for it in the HTML
+    const timerParent = countdownTimer.closest('div');
+    if (!timerParent) return;
+    
+    // Try to find timer data in the loaded content
+    const progressSection = document.querySelector('[class*="bg-green-50"]');
+    if (!progressSection) {
+        console.log('No progress section found');
+        return;
+    }
+    
+    // Look for time information in the text
+    const progressText = progressSection.textContent;
+    const timeMatch = progressText.match(/(\d+)\s*minut/);
+    
+    if (timeMatch) {
+        const minutes = parseInt(timeMatch[1]);
+        console.log('Found timer duration:', minutes, 'minutes');
+        
+        // Calculate end time (current time + minutes)
+        const endTime = new Date(Date.now() + minutes * 60 * 1000);
+        console.log('Timer end time:', endTime);
+        
+        // Start the countdown
+        startCountdownTimer(endTime, countdownTimer, quizSection);
+    } else {
+        console.log('Could not extract timer duration from text:', progressText);
+    }
+}
+
+// Start countdown timer with real-time updates
+function startCountdownTimer(endTime, timerElement, quizSection) {
+    console.log('startCountdownTimer called with end time:', endTime);
+    
+    function updateCountdown() {
+        const now = new Date();
+        const timeLeft = endTime - now;
+        
+        if (timeLeft <= 0) {
+            console.log('Timer expired');
+            timerElement.textContent = '0:00';
+            
+            // Clear interval
+            if (window.countdownInterval) {
+                clearInterval(window.countdownInterval);
+            }
+            
+            // Hide countdown and show quiz button if available
+            if (timerElement.closest('div')) {
+                timerElement.closest('div').style.display = 'none';
+            }
+            
+            if (quizSection) {
+                quizSection.style.display = 'block';
+            } else {
+                console.log('No quiz section found');
+                // Show completion message
+                timerElement.textContent = 'Ukończono!';
+                if (timerElement.closest('div')) {
+                    timerElement.closest('div').style.display = 'block';
+                }
+            }
+            return;
+        }
+        
+        const minutes = Math.floor(timeLeft / (1000 * 60));
+        const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+        const display = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        
+        timerElement.textContent = display;
+    }
+    
+    // Update immediately and then every second
+    updateCountdown();
+    window.countdownInterval = setInterval(updateCountdown, 1000);
 }
 </script>
 @endsection
