@@ -1285,10 +1285,16 @@ function initializeCountdownTimer() {
     }
     
     console.log('Countdown timer found');
+    console.log('Timer element content:', countdownTimer.textContent);
+    console.log('Timer element HTML:', countdownTimer.outerHTML);
     
     // Extract the end time from the parent element's data or search for it in the HTML
     const timerParent = countdownTimer.closest('div');
-    if (!timerParent) return;
+    if (!timerParent) {
+        console.log('No timer parent found');
+        return;
+    }
+    console.log('Timer parent HTML:', timerParent.outerHTML);
     
     // Look for the script data that might contain the timer information
     const scriptTags = document.querySelectorAll('script');
