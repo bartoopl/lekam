@@ -189,7 +189,7 @@
                 </div>
                 @if($userProgress->can_proceed_after && now()->lt($userProgress->can_proceed_after))
                     <div class="mt-2 text-green-700">
-                        <span>Kolejna lekcja będzie dostępna {{ $userProgress->can_proceed_after->diffForHumans() }}</span>
+                        <span>Kolejna lekcja będzie dostępna za: <span id="countdown-timer" class="font-bold">--:--</span></span>
                     </div>
                 @endif
             </div>
@@ -1092,17 +1092,66 @@ function checkQuizAvailability() {
             const now = new Date();
             
             if (now >= canProceedAfter) {
-                // Timer has expired, show quiz button if available
+                // Timer has expired, clear any running timer
+                if (window.timerInterval) {
+                    clearInterval(window.timerInterval);
+                }
+                
+                // Hide countdown and show quiz button if available
+                const countdownTimer = document.getElementById('countdown-timer');
                 const quizSection = document.getElementById('quiz-start-section');
-                const timerInfo = document.getElementById('timer-info');
+                
+                if (countdownTimer) {
+                    countdownTimer.textContent = '0:00';
+                    countdownTimer.closest('div').style.display = 'none';
+                }
                 
                 if (quizSection && window.parent && typeof window.parent.navigateToQuiz === 'function') {
-                    if (timerInfo) timerInfo.style.display = 'none';
                     quizSection.style.display = 'block';
+                } else {
+                    // Fallback: just hide countdown and show completion
+                    if (countdownTimer) {
+                        countdownTimer.textContent = 'Ukończono!';
+                        countdownTimer.closest('div').style.display = 'block';
+                    }
                 }
+            } else {
+                // Timer is still running, show countdown
+                showActiveTimer(canProceedAfter);
             }
         @endif
     @endif
+}
+
+// Show active countdown timer
+function showActiveTimer(endTime) {
+    const countdownTimer = document.getElementById('countdown-timer');
+    
+    if (!countdownTimer) return;
+    
+    function updateCountdown() {
+        const now = new Date();
+        const timeLeft = endTime - now;
+        
+        if (timeLeft <= 0) {
+            // Timer expired, check for quiz
+            checkQuizAvailability();
+            return;
+        }
+        
+        const minutes = Math.floor(timeLeft / (1000 * 60));
+        const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+        const display = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        
+        countdownTimer.textContent = display;
+    }
+    
+    // Update immediately and then every second
+    updateCountdown();
+    const intervalId = setInterval(updateCountdown, 1000);
+    
+    // Store interval ID to clear it later if needed
+    window.timerInterval = intervalId;
 }
 
 // Check immediately when page loads
