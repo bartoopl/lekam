@@ -1243,8 +1243,8 @@ function setupMaterialDownloadHandlers(lessonId) {
             // Trigger actual download
             window.location.href = link.href;
             
-            // Update download tracking on backend
-            fetch(`/courses/{{ $course->id }}/lesson/${lessonId}/download-file`, {
+            // Update download tracking on backend  
+            fetch('{{ route("courses.download-file", ["course" => $course, "lesson" => "__LESSON_ID__"]) }}'.replace('__LESSON_ID__', lessonId), {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
