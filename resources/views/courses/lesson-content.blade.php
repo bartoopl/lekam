@@ -161,6 +161,23 @@
             </div>
         @endif
         
+        <!-- Quiz Start Button (hidden until timer completes) -->
+        <div id="quiz-start-section" class="mb-4" style="display: none;">
+            <div class="p-4 bg-green-50 border border-green-200 rounded-lg">
+                <div class="flex flex-col items-center space-y-4">
+                    <div class="flex items-center text-green-800">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        <span class="font-bold">Materiały zostały przygotowane! Możesz teraz przystąpić do testu.</span>
+                    </div>
+                    <button id="start-quiz-btn" onclick="window.parent.navigateToQuiz()" class="btn btn-success">
+                        Rozpocznij test końcowy
+                    </button>
+                </div>
+            </div>
+        </div>
+        
         <!-- Download Status -->
         @if($userProgress && $userProgress->file_downloaded_at)
             <div class="mb-4 p-4 bg-green-50 border border-green-200 rounded-lg">
@@ -1065,5 +1082,34 @@
         </div>
     </div>
 @endif
+
+<script>
+// Check if lesson is completed and timer has expired, then show quiz button
+function checkQuizAvailability() {
+    @if($lesson->download_timer_minutes && $lesson->download_timer_minutes > 0)
+        @if($userProgress && $userProgress->can_proceed_after)
+            const canProceedAfter = new Date('{{ $userProgress->can_proceed_after->toISOString() }}');
+            const now = new Date();
+            
+            if (now >= canProceedAfter) {
+                // Timer has expired, show quiz button if available
+                const quizSection = document.getElementById('quiz-start-section');
+                const timerInfo = document.getElementById('timer-info');
+                
+                if (quizSection && window.parent && typeof window.parent.navigateToQuiz === 'function') {
+                    if (timerInfo) timerInfo.style.display = 'none';
+                    quizSection.style.display = 'block';
+                }
+            }
+        @endif
+    @endif
+}
+
+// Check immediately when page loads
+document.addEventListener('DOMContentLoaded', checkQuizAvailability);
+
+// Check every 30 seconds for timer expiration
+setInterval(checkQuizAvailability, 30000);
+</script>
 
 
