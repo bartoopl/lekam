@@ -1084,6 +1084,14 @@
 @endif
 
 <script>
+console.log('lesson-content.blade.php script loaded');
+console.log('Lesson ID: {{ $lesson->id ?? "undefined" }}');
+console.log('Timer minutes: {{ $lesson->download_timer_minutes ?? "undefined" }}');
+console.log('User progress exists: {{ $userProgress ? "yes" : "no" }}');
+@if($userProgress && $userProgress->can_proceed_after)
+console.log('Can proceed after: {{ $userProgress->can_proceed_after }}');
+@endif
+
 // Check if lesson is completed and timer has expired, then show quiz button
 function checkQuizAvailability() {
     console.log('checkQuizAvailability called');
