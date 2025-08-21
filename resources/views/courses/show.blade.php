@@ -1121,8 +1121,8 @@ function updateNavigationButtons() {
             
             if (prevIdMatch && prevTitleMatch) {
                 prevBtn.disabled = false;
-                prevBtn.className = 'inline-flex items-center justify-center px-6 py-3 bg-blue-600 border-2 border-blue-600 rounded-full font-semibold text-sm text-white tracking-wide cursor-pointer transition-all duration-300 shadow-lg hover:shadow-xl hover:bg-blue-700';
-                prevBtn.style.cssText = 'background: #2563eb !important; border-color: #2563eb !important; min-width: 150px; height: 50px; color: white !important;';
+                prevBtn.className = 'btn btn-secondary flex items-center justify-center';
+                prevBtn.style.cssText = 'min-width: 150px; height: 50px;';
                 prevBtn.innerHTML = '← Poprzednia';
                 prevBtn.onclick = () => loadLesson(parseInt(prevIdMatch[1]), prevTitleMatch[1]);
                 console.log('Previous lesson enabled:', prevTitleMatch[1]);
@@ -1130,8 +1130,8 @@ function updateNavigationButtons() {
         }
     } else {
         prevBtn.disabled = true;
-        prevBtn.className = 'inline-flex items-center justify-center px-6 py-3 bg-gray-400 border-2 border-gray-400 rounded-full font-semibold text-sm text-white tracking-wide cursor-not-allowed transition-all duration-300 shadow-lg hover:shadow-xl';
-        prevBtn.style.cssText = 'background: #9ca3af !important; border-color: #9ca3af !important; min-width: 150px; height: 50px; color: white !important;';
+        prevBtn.className = 'btn btn-secondary flex items-center justify-center opacity-50 cursor-not-allowed';
+        prevBtn.style.cssText = 'min-width: 150px; height: 50px;';
         prevBtn.innerHTML = '← Poprzednia';
         prevBtn.onclick = null;
         console.log('Previous lesson disabled');
@@ -1147,17 +1147,18 @@ function updateNavigationButtons() {
             
             if (nextIdMatch && nextTitleMatch) {
                 nextBtn.disabled = false;
-                nextBtn.className = 'inline-flex items-center justify-center px-6 py-3 bg-blue-600 border-2 border-blue-600 rounded-full font-semibold text-sm text-white tracking-wide cursor-pointer transition-all duration-300 shadow-lg hover:shadow-xl hover:bg-blue-700';
-                nextBtn.style.cssText = 'background: #2563eb !important; border-color: #2563eb !important; min-width: 150px; height: 50px; color: white !important;';
-                nextBtn.innerHTML = 'Następna →';
+                nextBtn.className = 'btn btn-primary flex items-center justify-center';
+                nextBtn.style.cssText = 'min-width: 150px; height: 50px;';
+                const isTestLesson = nextTitleMatch[1] && (nextTitleMatch[1].toLowerCase().includes('test') || nextTitleMatch[1].toLowerCase().includes('quiz'));
+                nextBtn.innerHTML = isTestLesson ? 'Przejdź do testu →' : 'Następna →';
                 nextBtn.onclick = () => loadLesson(parseInt(nextIdMatch[1]), nextTitleMatch[1]);
                 console.log('Next lesson enabled:', nextTitleMatch[1]);
             }
         }
     } else {
         nextBtn.disabled = true;
-        nextBtn.className = 'inline-flex items-center justify-center px-6 py-3 bg-gray-400 border-2 border-gray-400 rounded-full font-semibold text-sm text-white tracking-wide cursor-not-allowed transition-all duration-300 shadow-lg hover:shadow-xl';
-        nextBtn.style.cssText = 'background: #9ca3af !important; border-color: #9ca3af !important; min-width: 150px; height: 50px; color: white !important;';
+        nextBtn.className = 'btn btn-primary flex items-center justify-center opacity-50 cursor-not-allowed';
+        nextBtn.style.cssText = 'min-width: 150px; height: 50px;';
         nextBtn.innerHTML = 'Następna →';
         nextBtn.onclick = null;
         console.log('Next lesson disabled');
