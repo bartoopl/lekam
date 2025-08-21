@@ -121,12 +121,12 @@
                                     <div class="flex items-center space-x-4">
                                         @if($previousLesson)
                                             <a href="{{ route('courses.lesson', ['course' => $course, 'lesson' => $previousLesson]) }}" 
-                                               class="flex items-center text-blue-600 hover:text-blue-800 transition duration-300">
+                                               class="btn btn-secondary flex items-center">
                                                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
                                                 </svg>
                                                 <span class="font-medium">Poprzednia lekcja</span>
-                                                <span class="lesson-title text-sm text-gray-500 ml-2">{{ $previousLesson->title }}</span>
+                                                <span class="lesson-title text-sm text-gray-300 ml-2">{{ $previousLesson->title }}</span>
                                             </a>
                                         @else
                                             <span class="text-gray-400">Brak poprzedniej lekcji</span>
@@ -136,9 +136,15 @@
                                     <div class="flex items-center space-x-4">
                                         @if($nextLesson)
                                             <a href="{{ route('courses.lesson', ['course' => $course, 'lesson' => $nextLesson]) }}" 
-                                               class="flex items-center text-blue-600 hover:text-blue-800 transition duration-300">
-                                                <span class="font-medium">Następna lekcja</span>
-                                                <span class="lesson-title text-sm text-gray-500 mr-2">{{ $nextLesson->title }}</span>
+                                               class="btn btn-primary flex items-center">
+                                                <span class="font-medium">
+                                                    @if(str_contains(strtolower($nextLesson->title), 'test') || str_contains(strtolower($nextLesson->title), 'quiz'))
+                                                        Przejdź do testu
+                                                    @else
+                                                        Następna lekcja
+                                                    @endif
+                                                </span>
+                                                <span class="lesson-title text-sm text-gray-300 mr-2 ml-2">{{ $nextLesson->title }}</span>
                                                 <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                                                 </svg>
@@ -179,7 +185,7 @@
                     <div class="flex items-center space-x-4">
                         @if($previousLesson)
                             <a href="{{ route('courses.lesson', ['course' => $course, 'lesson' => $previousLesson]) }}" 
-                               class="flex items-center text-blue-600 hover:text-blue-800">
+                               class="btn btn-secondary flex items-center">
                                 <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
                                 </svg>
@@ -189,8 +195,12 @@
                         
                         @if($nextLesson)
                             <a href="{{ route('courses.lesson', ['course' => $course, 'lesson' => $nextLesson]) }}" 
-                               class="flex items-center text-blue-600 hover:text-blue-800">
-                                Następna lekcja
+                               class="btn btn-primary flex items-center">
+                                @if(str_contains(strtolower($nextLesson->title), 'test') || str_contains(strtolower($nextLesson->title), 'quiz'))
+                                    Przejdź do testu
+                                @else
+                                    Następna lekcja
+                                @endif
                                 <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                                 </svg>
@@ -444,7 +454,7 @@
                             console.log('Adding previous lesson button:', data.previous_lesson);
                             const prevButton = document.createElement('a');
                             prevButton.href = data.previous_lesson.url;
-                            prevButton.className = 'flex items-center text-blue-600 hover:text-blue-800';
+                            prevButton.className = 'btn btn-secondary flex items-center';
                             prevButton.innerHTML = `
                                 <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
@@ -461,9 +471,10 @@
                             console.log('Adding next lesson button:', data.next_lesson);
                             const nextButton = document.createElement('a');
                             nextButton.href = data.next_lesson.url;
-                            nextButton.className = 'flex items-center text-blue-600 hover:text-blue-800';
+                            nextButton.className = 'btn btn-primary flex items-center';
+                            const isTestLesson = data.next_lesson.title && (data.next_lesson.title.toLowerCase().includes('test') || data.next_lesson.title.toLowerCase().includes('quiz'));
                             nextButton.innerHTML = `
-                                Następna lekcja
+                                ${isTestLesson ? 'Przejdź do testu' : 'Następna lekcja'}
                                 <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                                 </svg>
