@@ -683,12 +683,12 @@
                 </div>
                 
                 <script>
-                    // Continue countdown from server time
-                    let remainingTime = {{ $remainingSeconds }};
+                    // Server-side timer - just refresh page periodically to update display
                     const timerDisplay = document.getElementById('timer-display');
                     const timerInfo = document.getElementById('timer-info');
+                    let remainingTime = {{ $remainingSeconds }};
                     
-                    // Auto-refresh lesson state every 30 seconds to keep timer accurate
+                    // Auto-refresh lesson content every 30 seconds to get updated timer from server
                     let refreshInterval = null;
                     
                     function refreshLessonState() {
@@ -726,32 +726,26 @@
                         if (refreshInterval) clearInterval(refreshInterval);
                     });
                     
-                    const countdown = setInterval(() => {
-                        const mins = Math.floor(remainingTime / 60);
-                        const secs = remainingTime % 60;
-                        const display = mins + ':' + (secs < 10 ? '0' : '') + secs;
+                    // Auto-refresh every 30 seconds to get updated timer from server
+                    refreshInterval = setInterval(refreshLessonState, 30000);
+                    
+                    // Check immediately if timer has expired
+                    if (remainingTime <= 0) {
+                        console.log('Timer already expired, completing lesson...');
                         
-                        if (timerDisplay) {
-                            timerDisplay.textContent = display;
-                        }
-                        
-                        if (remainingTime <= 0) {
-                            clearInterval(countdown);
-                            if (refreshInterval) {
-                                clearInterval(refreshInterval);
+                        // Complete lesson automatically
+                        fetch('{{ route("courses.complete-lesson", ["course" => $course, "lesson" => $lesson]) }}', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                             }
-                            
-                            // Complete lesson automatically
-                            fetch('{{ route("courses.complete-lesson", ["course" => $course, "lesson" => $lesson]) }}', {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                                }
-                            }).then(response => {
-                                if (response.ok) {
-                                    // Update timer display to show completion
-                                    if (timerInfo) {
+                        }).then(response => response.json()).then(data => {
+                            if (data.success) {
+                                console.log('Lesson completed after timer expiry');
+                                
+                                // Update timer display to show completion
+                                if (timerInfo) {
                                         timerInfo.innerHTML = `
                                             <div class="flex items-center text-green-600">
                                                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -781,10 +775,17 @@
                                         showSuccessMessage('Timer zakończony! Lekcja została ukończona.');
                                     }
                                     
-                                    // Notify parent window to refresh lessons status
+                                    // Notify parent window to refresh lessons status and update buttons
                                     if (parent && parent !== window && typeof parent.refreshLessonsAccessibility === 'function') {
                                         parent.refreshLessonsAccessibility();
                                     }
+                                    
+                                    // Update navigation buttons after lesson completion
+                                    setTimeout(() => {
+                                        if (parent && parent !== window && typeof parent.updateNavigationButtons === 'function') {
+                                            parent.updateNavigationButtons();
+                                        }
+                                    }, 1500);
                                 } else {
                                     console.error('Failed to complete lesson');
                                     // Fallback: reload page to update UI
