@@ -1158,10 +1158,25 @@ function updateNavigationButtons() {
                 nextBtn.disabled = false;
                 nextBtn.className = 'btn btn-primary flex items-center justify-center';
                 nextBtn.style.cssText = 'min-width: 150px; height: 50px;';
+                
+                // Check if current lesson has materials (suggests next is test)
+                const hasDownloadMaterials = document.querySelector('.material-download') || 
+                                           document.querySelector('[data-download-timer]') ||
+                                           document.querySelector('#timer-display') ||
+                                           document.querySelector('#countdown-timer');
+                
+                // Check if next lesson is test/quiz
                 const isTestLesson = nextTitleMatch[1] && (nextTitleMatch[1].toLowerCase().includes('test') || nextTitleMatch[1].toLowerCase().includes('quiz'));
-                nextBtn.innerHTML = isTestLesson ? 'Przejdź do testu →' : 'Następna →';
+                
+                // If current lesson has materials OR next is test, show test button
+                if (hasDownloadMaterials || isTestLesson) {
+                    nextBtn.innerHTML = 'Przejdź do testu →';
+                } else {
+                    nextBtn.innerHTML = 'Następna →';
+                }
+                
                 nextBtn.onclick = () => loadLesson(parseInt(nextIdMatch[1]), nextTitleMatch[1]);
-                console.log('Next lesson enabled:', nextTitleMatch[1]);
+                console.log('Next lesson enabled:', nextTitleMatch[1], '| Has materials:', !!hasDownloadMaterials, '| Is test:', isTestLesson);
             }
         }
     } else {
@@ -1479,15 +1494,41 @@ function startCountdownFromMinutes(minutes, completeUrl) {
                         'Content-Type': 'application/json',
                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                     }
-                }).then(response => {
-                    if (response.ok) {
+                }).then(response => response.json()).then(data => {
+                    if (data.success) {
                         console.log('Lesson completed after timer');
                         countdownTimer.textContent = 'Ukończono!';
-                        // Refresh lessons
+                        
+                        // Update lesson status in sidebar
+                        const lessonItem = document.querySelector('.lesson-item.active');
+                        if (lessonItem) {
+                            lessonItem.classList.add('completed');
+                            const statusElement = lessonItem.querySelector('.lesson-status');
+                            if (statusElement) {
+                                statusElement.textContent = '✓ Ukończona';
+                            }
+                        }
+                        
+                        // Show success message
+                        if (data.quiz_unlocked && window.showSuccessMessage) {
+                            window.showSuccessMessage('🎉 Wszystkie lekcje ukończone! Test końcowy został odblokowany.');
+                        } else if (window.showSuccessMessage) {
+                            window.showSuccessMessage('Lekcja została ukończona!');
+                        }
+                        
+                        // Refresh lessons and navigation
                         if (typeof refreshLessonsAccessibility === 'function') {
                             refreshLessonsAccessibility();
                         }
+                        
+                        setTimeout(() => {
+                            if (typeof updateNavigationButtons === 'function') {
+                                updateNavigationButtons();
+                            }
+                        }, 1000);
                     }
+                }).catch(error => {
+                    console.error('Error completing lesson after timer:', error);
                 });
             }
             
