@@ -18,7 +18,15 @@
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
-        <script src="{{ asset('js/video-controller.js') }}?v={{ time() }}"></script>
+        
+        <!-- Backup: Original video controller (uncomment to test timer) -->
+        <!-- <script src="{{ asset('js/video-controller-backup.js') }}?v={{ time() }}"></script> -->
+        
+        <!-- Video.js -->
+        <link href="https://vjs.zencdn.net/8.12.0/video-js.css" rel="stylesheet" />
+        <link href="{{ asset('css/videojs-custom.css') }}?v={{ time() }}" rel="stylesheet" />
+        <script src="https://vjs.zencdn.net/8.12.0/video.min.js"></script>
+        <script src="{{ asset('js/video-controller-videojs.js') }}?v={{ time() }}"></script>
         
         <script>
             // Hide PHP errors immediately when page loads

@@ -282,20 +282,30 @@
                 // Wait for video to be ready
                 if (video.readyState >= 2) {
                     console.log('Video ready, initializing controls...');
-                    if (typeof window.initCustomVideoControls === 'function') {
-                        initCustomVideoControls(video);
+                    if (typeof window.initVideoJSPlayer === 'function') {
+                        const options = {
+                            saveUrl: video.dataset.savePositionUrl,
+                            startPosition: video.dataset.startPosition,
+                            completeUrl: video.dataset.completeLessonUrl
+                        };
+                        initVideoJSPlayer(video, options);
                     } else {
-                        console.log('Custom controls not available, using default controls');
+                        console.log('Video.js player not available, using default controls');
                         video.controls = true;
                     }
                 } else {
                     console.log('Video not ready, waiting for loadedmetadata...');
                     video.addEventListener('loadedmetadata', function() {
                         console.log('Video metadata loaded, initializing controls...');
-                        if (typeof window.initCustomVideoControls === 'function') {
-                            initCustomVideoControls(video);
+                        if (typeof window.initVideoJSPlayer === 'function') {
+                            const options = {
+                                saveUrl: video.dataset.savePositionUrl,
+                                startPosition: video.dataset.startPosition,
+                                completeUrl: video.dataset.completeLessonUrl
+                            };
+                            initVideoJSPlayer(video, options);
                         } else {
-                            console.log('Custom controls not available, using default controls');
+                            console.log('Video.js player not available, using default controls');
                             video.controls = true;
                         }
                     });

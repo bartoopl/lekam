@@ -75,14 +75,21 @@
     <div class="lesson-video">
         <h3 class="materials-title">Wideo</h3>
         <div class="video-container">
-            <video id="lesson-video" class="w-full rounded-lg" preload="metadata"
-                data-lesson-id="{{ $lesson->id }}" data-course-id="{{ $course->id }}"
-                data-save-position-url="{{ route('courses.save-video-position', ['course' => $course, 'lesson' => $lesson]) }}"
-                data-complete-lesson-url="{{ route('courses.complete-lesson', ['course' => $course, 'lesson' => $lesson]) }}"
-                @if($userProgress && $userProgress->video_position && !$userProgress->is_completed) data-start-position="{{ $userProgress->video_position }}" @endif>
+            <video-js id="lesson-video" 
+                     class="vjs-default-skin" 
+                     preload="metadata"
+                     data-lesson-id="{{ $lesson->id }}" 
+                     data-course-id="{{ $course->id }}"
+                     data-save-position-url="{{ route('courses.save-video-position', ['course' => $course, 'lesson' => $lesson]) }}"
+                     data-complete-lesson-url="{{ route('courses.complete-lesson', ['course' => $course, 'lesson' => $lesson]) }}"
+                     @if($userProgress && $userProgress->video_position && !$userProgress->is_completed) data-start-position="{{ $userProgress->video_position }}" @endif
+                     data-setup='{}'>
                 <source src="{{ str_starts_with($lesson->video_file, 'http') ? $lesson->video_file : Storage::url($lesson->video_file) }}" type="video/mp4">
-                Twoja przeglądarka nie obsługuje odtwarzania wideo.
-            </video>
+                <p class="vjs-no-js">
+                    To view this video please enable JavaScript, and consider upgrading to a web browser that
+                    <a href="https://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>.
+                </p>
+            </video-js>
         </div>
     </div>
 

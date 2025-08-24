@@ -834,13 +834,18 @@ function initializeVideoControls() {
         console.log('Basic controls added');
         
         // Try to call custom controls
-        if (typeof window.initCustomVideoControls === 'function') {
-            console.log('Custom controls function found, calling...');
+        if (typeof window.initVideoJSPlayer === 'function') {
+            console.log('Video.js player function found, calling...');
             try {
-                window.initCustomVideoControls(video);
-                console.log('Custom controls initialized successfully');
+                const options = {
+                    saveUrl: video.dataset.savePositionUrl,
+                    startPosition: video.dataset.startPosition,
+                    completeUrl: video.dataset.completeLessonUrl
+                };
+                window.initVideoJSPlayer(video, options);
+                console.log('Video.js player initialized successfully');
             } catch (error) {
-                console.error('Error initializing custom controls:', error);
+                console.error('Error initializing Video.js player:', error);
             }
         } else {
             console.log('Custom controls function not found, using fallback');
@@ -1277,11 +1282,39 @@ function setupMaterialDownloadHandlers(lessonId) {
 function initializeCountdownTimer() {
     console.log('initializeCountdownTimer called');
     const countdownTimer = document.getElementById('countdown-timer');
+    const timerDisplay = document.getElementById('timer-display');
     const quizSection = document.getElementById('quiz-start-section');
     
-    if (!countdownTimer) {
+    // Check for either countdown-timer or timer-display
+    const activeTimer = countdownTimer || timerDisplay;
+    
+    if (!activeTimer) {
         console.log('No countdown timer found');
         return;
+    }
+    
+    console.log('Timer found:', activeTimer.id);
+    
+    // If it's timer-display, it already has JavaScript in lesson-content.blade.php
+    if (activeTimer.id === 'timer-display') {
+        console.log('timer-display found - JavaScript already handled in lesson-content');
+        return;
+    }
+    
+    // If countdown-timer shows --:--, it means PHP didn't initialize it properly
+    if (activeTimer.id === 'countdown-timer' && activeTimer.textContent === '--:--') {
+        console.log('countdown-timer shows --:--, trying to find lesson timer data...');
+        
+        // Look for download buttons to get timer duration
+        const downloadButtons = document.querySelectorAll('.material-download');
+        if (downloadButtons.length > 0) {
+            const timerMinutes = parseInt(downloadButtons[0].dataset.downloadTimer) || 2;
+            console.log('Found download timer:', timerMinutes, 'minutes');
+            
+            // Start countdown from the download timer value
+            startCountdownFromMinutes(timerMinutes, downloadButtons[0].dataset.completeLessonUrl);
+            return;
+        }
     }
     
     console.log('Countdown timer found');
@@ -1417,6 +1450,56 @@ function startCountdownTimer(endTime, timerElement, quizSection) {
     // Update immediately and then every second
     updateCountdown();
     window.countdownInterval = setInterval(updateCountdown, 1000);
+}
+
+// Start countdown timer from given minutes (fallback for --:-- timers)
+function startCountdownFromMinutes(minutes, completeUrl) {
+    const countdownTimer = document.getElementById('countdown-timer');
+    if (!countdownTimer) return;
+    
+    console.log('Starting countdown from', minutes, 'minutes');
+    
+    let totalSeconds = minutes * 60;
+    
+    function updateDisplay() {
+        const mins = Math.floor(totalSeconds / 60);
+        const secs = totalSeconds % 60;
+        const display = mins + ':' + (secs < 10 ? '0' : '') + secs;
+        
+        countdownTimer.textContent = display;
+        
+        if (totalSeconds <= 0) {
+            console.log('Timer finished, completing lesson...');
+            
+            // Complete lesson
+            if (completeUrl) {
+                fetch(completeUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    }
+                }).then(response => {
+                    if (response.ok) {
+                        console.log('Lesson completed after timer');
+                        countdownTimer.textContent = 'Ukończono!';
+                        // Refresh lessons
+                        if (typeof refreshLessonsAccessibility === 'function') {
+                            refreshLessonsAccessibility();
+                        }
+                    }
+                });
+            }
+            
+            return;
+        }
+        
+        totalSeconds--;
+    }
+    
+    // Update immediately and then every second
+    updateDisplay();
+    setInterval(updateDisplay, 1000);
 }
 </script>
 @endsection
