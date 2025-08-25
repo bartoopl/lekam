@@ -82,35 +82,53 @@
 
     .progress-bar-container {
         position: relative;
-        height: 16px;
-        background: rgba(33, 35, 95, 0.2) !important;
-        border-radius: 8px;
-        overflow: visible !important;
-        border: 1px solid rgba(33, 35, 95, 0.3);
-        box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+        height: 60px;
+        width: 100%;
+        overflow: visible;
+        margin: 20px 0;
     }
 
-    .progress-bar-fill {
-        height: 100% !important;
-        background: linear-gradient(90deg, #3B82F6 0%, #1D4ED8 100%) !important;
-        border-radius: 8px;
-        transition: width 0.3s ease;
-        position: relative;
-        box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
-        min-width: 8px !important;
+    .sinusoidal-progress {
+        width: 100%;
+        height: 60px;
+        overflow: visible;
     }
 
-    .progress-bar-circle {
-        position: absolute !important;
-        right: -6px !important;
-        top: -3px !important;
-        width: 18px !important;
-        height: 18px !important;
-        background: #3B82F6 !important;
-        border: 3px solid white !important;
-        border-radius: 50% !important;
-        box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3) !important;
-        z-index: 10 !important;
+    .progress-path-bg {
+        fill: none;
+        stroke: rgba(33, 35, 95, 0.3);
+        stroke-width: 6;
+        stroke-linecap: round;
+    }
+
+    .progress-path {
+        fill: none;
+        stroke-width: 6;
+        stroke-linecap: round;
+        transition: stroke-dasharray 1s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .progress-dot {
+        r: 8;
+        filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+        transition: cx 1s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .progress-pulse {
+        r: 8;
+        opacity: 0.4;
+        animation: progressPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes progressPulse {
+        0%, 100% {
+            transform: scale(1);
+            opacity: 0.4;
+        }
+        50% {
+            transform: scale(1.5);
+            opacity: 0.1;
+        }
     }
 
     .quiz-section {
@@ -603,9 +621,42 @@
             <div class="progress-percentage">{{ $progressPercentage }}%</div>
         </div>
         <div class="progress-bar-container">
-            <div class="progress-bar-fill" style="width: {{ $progressPercentage }}%">
-                <div class="progress-bar-circle"></div>
-            </div>
+            <svg class="sinusoidal-progress" viewBox="0 0 400 60" preserveAspectRatio="xMidYMid meet">
+                <!-- Gradient definitions -->
+                <defs>
+                    <linearGradient id="progressGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stop-color="#21235F" />
+                        <stop offset="100%" stop-color="#22C55E" />
+                    </linearGradient>
+                    <radialGradient id="dotGradient" cx="50%" cy="30%">
+                        <stop offset="0%" stop-color="#ffffff" stop-opacity="0.8"/>
+                        <stop offset="100%" stop-color="#21235F" stop-opacity="1"/>
+                    </radialGradient>
+                </defs>
+                
+                <!-- Background path -->
+                <path id="progress-path-bg" class="progress-path-bg" 
+                      d="M 10 30 
+                         Q 60 15, 110 35
+                         T 210 25
+                         Q 260 40, 310 20
+                         T 390 30" />
+                
+                <!-- Progress path -->
+                <path id="progress-path" class="progress-path" 
+                      stroke="url(#progressGradient)"
+                      d="M 10 30 
+                         Q 60 15, 110 35
+                         T 210 25
+                         Q 260 40, 310 20
+                         T 390 30" />
+                
+                <!-- Animated pulse -->
+                <circle class="progress-pulse" cx="10" cy="30" fill="url(#progressGradient)" />
+                
+                <!-- Progress dot -->
+                <circle class="progress-dot" cx="10" cy="30" fill="url(#dotGradient)" stroke="#ffffff" stroke-width="2" />
+            </svg>
         </div>
         <div class="mt-4 text-sm text-gray-600">
             {{ $completedLessons }} z {{ $totalLessons }} lekcji ukończonych
@@ -1074,13 +1125,11 @@ function refreshLessonsAccessibility() {
             
             // Update progress bar if provided
             if (data.progress_percentage !== undefined) {
-                const progressBar = document.querySelector('.progress-bar-fill');
+                updateSinusoidalProgress(data.progress_percentage);
+                
                 const progressPercentage = document.querySelector('.progress-percentage');
                 const progressText = document.querySelector('.progress-section .text-sm');
                 
-                if (progressBar) {
-                    progressBar.style.width = data.progress_percentage + '%';
-                }
                 if (progressPercentage) {
                     progressPercentage.textContent = data.progress_percentage + '%';
                 }
@@ -1480,5 +1529,116 @@ function startCountdownFromMinutes(minutes, completeUrl) {
         window.location.reload();
     }, 1000);
 }
+
+// Sinusoidal Progress Bar Functions
+function updateSinusoidalProgress(percentage) {
+    const progressPath = document.querySelector('#progress-path');
+    const progressDot = document.querySelector('.progress-dot');
+    const progressPulse = document.querySelector('.progress-pulse');
+    
+    if (!progressPath || !progressDot) return;
+    
+    // Get path length and calculate progress
+    const pathLength = progressPath.getTotalLength();
+    const progress = Math.max(0, Math.min(100, percentage)) / 100;
+    const progressLength = pathLength * progress;
+    
+    // Set stroke-dasharray to show progress
+    progressPath.style.strokeDasharray = `${progressLength} ${pathLength}`;
+    
+    // Update gradient color based on progress
+    updateProgressGradient(progress);
+    
+    // Get point along path for dot position
+    if (progress > 0) {
+        const point = progressPath.getPointAtLength(progressLength);
+        progressDot.setAttribute('cx', point.x);
+        progressDot.setAttribute('cy', point.y);
+        progressPulse.setAttribute('cx', point.x);
+        progressPulse.setAttribute('cy', point.y);
+        
+        // Update dot color based on progress
+        updateDotGradient(progress);
+    }
+}
+
+function interpolateColor(color1, color2, factor) {
+    // Convert hex to RGB
+    const hex1 = color1.replace('#', '');
+    const hex2 = color2.replace('#', '');
+    
+    const r1 = parseInt(hex1.substr(0, 2), 16);
+    const g1 = parseInt(hex1.substr(2, 2), 16);
+    const b1 = parseInt(hex1.substr(4, 2), 16);
+    
+    const r2 = parseInt(hex2.substr(0, 2), 16);
+    const g2 = parseInt(hex2.substr(2, 2), 16);
+    const b2 = parseInt(hex2.substr(4, 2), 16);
+    
+    // Interpolate
+    const r = Math.round(r1 + (r2 - r1) * factor);
+    const g = Math.round(g1 + (g2 - g1) * factor);
+    const b = Math.round(b1 + (b2 - b1) * factor);
+    
+    return `rgb(${r}, ${g}, ${b})`;
+}
+
+function updateProgressGradient(progress) {
+    const gradient = document.querySelector('#progressGradient');
+    const stop1 = gradient.querySelector('stop:first-child');
+    const stop2 = gradient.querySelector('stop:last-child');
+    
+    if (progress < 0.5) {
+        // First half: navy to blue
+        stop1.setAttribute('stop-color', '#21235F');
+        stop2.setAttribute('stop-color', interpolateColor('#21235F', '#3B82F6', progress * 2));
+    } else {
+        // Second half: blue to green
+        stop1.setAttribute('stop-color', interpolateColor('#21235F', '#3B82F6', 1));
+        stop2.setAttribute('stop-color', interpolateColor('#3B82F6', '#22C55E', (progress - 0.5) * 2));
+    }
+}
+
+function updateDotGradient(progress) {
+    // Create or update dynamic dot gradient
+    const defs = document.querySelector('defs');
+    let dynamicGradient = document.querySelector('#dotGradient-dynamic');
+    
+    if (!dynamicGradient) {
+        dynamicGradient = document.createElementNS('http://www.w3.org/2000/svg', 'radialGradient');
+        dynamicGradient.setAttribute('id', 'dotGradient-dynamic');
+        dynamicGradient.setAttribute('cx', '50%');
+        dynamicGradient.setAttribute('cy', '30%');
+        
+        const stop1 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+        stop1.setAttribute('offset', '0%');
+        stop1.setAttribute('stop-color', '#ffffff');
+        stop1.setAttribute('stop-opacity', '0.9');
+        
+        const stop2 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+        stop2.setAttribute('offset', '100%');
+        stop2.setAttribute('stop-opacity', '1');
+        
+        dynamicGradient.appendChild(stop1);
+        dynamicGradient.appendChild(stop2);
+        defs.appendChild(dynamicGradient);
+    }
+    
+    const stop2 = dynamicGradient.querySelector('stop:last-child');
+    const dotColor = interpolateColor('#21235F', '#22C55E', progress);
+    stop2.setAttribute('stop-color', dotColor);
+    
+    // Update dot to use dynamic gradient
+    const progressDot = document.querySelector('.progress-dot');
+    progressDot.setAttribute('fill', 'url(#dotGradient-dynamic)');
+}
+
+// Initialize progress on page load
+document.addEventListener('DOMContentLoaded', function() {
+    const progressPercentage = {{ $progressPercentage }};
+    setTimeout(() => {
+        updateSinusoidalProgress(progressPercentage);
+    }, 100);
+});
 </script>
 @endsection

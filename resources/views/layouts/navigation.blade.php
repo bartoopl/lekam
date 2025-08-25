@@ -10,7 +10,8 @@
             </div>
 
             <!-- Navigation Links (Desktop) -->
-            <div class="navbar-links desktop-only">
+            <div class="navbar-links desktop-only" id="navbar-links">
+                <div class="magic-border" id="magic-border"></div>
                 <a href="{{ route('home') }}#about" class="nav-link">O nas</a>
                 <a href="{{ route('courses') }}" class="nav-link">Szkolenia</a>
                 <a href="{{ route('contact') }}" class="nav-link">Kontakt</a>
@@ -158,6 +159,26 @@
             gap: 1rem;
             margin-left: auto;
             margin-right: 2rem;
+            position: relative;
+        }
+        
+        .magic-border {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 100%;
+            border: 2px solid #21235F;
+            border-radius: 20px;
+            background: rgba(33, 35, 95, 0.05);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 0;
+            z-index: 0;
+            pointer-events: none;
+        }
+        
+        .magic-border.visible {
+            opacity: 1;
         }
 
         .nav-link {
@@ -166,17 +187,15 @@
             font-size: 1rem;
             color: #374151 !important;
             text-decoration: none;
-            transition: all 0.3s ease;
+            transition: color 0.3s ease;
             position: relative;
             padding: 0.3rem 0.8rem;
             border-radius: 20px;
-            border: 2px solid transparent;
+            z-index: 1;
         }
 
         .nav-link:hover {
             color: #21235F !important;
-            border: 2px solid #21235F;
-            background: rgba(33, 35, 95, 0.05);
         }
 
         .navbar-actions {
@@ -606,6 +625,90 @@
             }
         });
 
+        // Magic Border Navigation
+        function initMagicBorder() {
+            const magicBorder = document.getElementById('magic-border');
+            const navLinks = document.querySelectorAll('.navbar-links .nav-link');
+            const navLinksContainer = document.getElementById('navbar-links');
+            
+            if (!magicBorder || !navLinks.length) return;
+            
+            let currentActiveLink = null;
+            
+            function moveMagicBorder(targetLink) {
+                if (!targetLink) {
+                    magicBorder.classList.remove('visible');
+                    return;
+                }
+                
+                const containerRect = navLinksContainer.getBoundingClientRect();
+                const targetRect = targetLink.getBoundingClientRect();
+                
+                const left = targetRect.left - containerRect.left;
+                const width = targetRect.width;
+                
+                magicBorder.style.left = `${left}px`;
+                magicBorder.style.width = `${width}px`;
+                magicBorder.classList.add('visible');
+            }
+            
+            // Check if current page matches any nav link
+            function setActiveLink() {
+                const currentPath = window.location.pathname;
+                const currentHash = window.location.hash;
+                
+                navLinks.forEach(link => {
+                    const linkPath = new URL(link.href).pathname;
+                    const linkHash = new URL(link.href).hash;
+                    
+                    if ((currentPath === linkPath && currentHash === linkHash) || 
+                        (currentPath === '/courses' && linkPath === '/courses') ||
+                        (currentPath === '/contact' && linkPath === '/contact') ||
+                        (currentPath === '/' && linkHash === '#about' && currentHash === '#about')) {
+                        currentActiveLink = link;
+                        moveMagicBorder(link);
+                    }
+                });
+            }
+            
+            // Add hover events
+            navLinks.forEach(link => {
+                link.addEventListener('mouseenter', () => {
+                    moveMagicBorder(link);
+                });
+                
+                link.addEventListener('mouseleave', () => {
+                    if (currentActiveLink) {
+                        moveMagicBorder(currentActiveLink);
+                    } else {
+                        magicBorder.classList.remove('visible');
+                    }
+                });
+            });
+            
+            // Container leave event
+            navLinksContainer.addEventListener('mouseleave', () => {
+                if (currentActiveLink) {
+                    moveMagicBorder(currentActiveLink);
+                } else {
+                    magicBorder.classList.remove('visible');
+                }
+            });
+            
+            // Set initial active link
+            setActiveLink();
+            
+            // Handle window resize
+            window.addEventListener('resize', () => {
+                if (currentActiveLink) {
+                    setTimeout(() => moveMagicBorder(currentActiveLink), 100);
+                }
+            });
+        }
+        
+        // Initialize magic border when DOM is ready
+        document.addEventListener('DOMContentLoaded', initMagicBorder);
+        
         // Mobile menu toggle functions
         function toggleMobileMenu() {
             const mobileMenu = document.getElementById('mobile-menu');
