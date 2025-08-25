@@ -1526,18 +1526,80 @@ function startCountdownTimer(endTime, timerElement, quizSection) {
     window.countdownInterval = setInterval(updateCountdown, 1000);
 }
 
-// Fallback timer function - now just triggers immediate refresh since server handles timing
+// Working timer function for download materials
 function startCountdownFromMinutes(minutes, completeUrl) {
     const countdownTimer = document.getElementById('countdown-timer');
     if (!countdownTimer) return;
     
-    console.log('Server-side timer detected, refreshing lesson content...');
+    console.log('Starting countdown from', minutes, 'minutes');
     
-    // Instead of JavaScript countdown, just refresh the lesson content
-    // Server will handle the timer logic and show proper state
-    setTimeout(() => {
-        window.location.reload();
-    }, 1000);
+    let totalSeconds = minutes * 60;
+    
+    function updateDisplay() {
+        const mins = Math.floor(totalSeconds / 60);
+        const secs = totalSeconds % 60;
+        const display = mins + ':' + (secs < 10 ? '0' : '') + secs;
+        
+        countdownTimer.textContent = display;
+        
+        if (totalSeconds <= 0) {
+            console.log('Timer finished, completing lesson...');
+            
+            // Complete lesson
+            if (completeUrl) {
+                fetch(completeUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    }
+                }).then(response => response.json()).then(data => {
+                    if (data.success) {
+                        console.log('Lesson completed after timer');
+                        countdownTimer.textContent = 'Ukończono!';
+                        
+                        // Update lesson status in sidebar
+                        const lessonItem = document.querySelector('.lesson-item.active');
+                        if (lessonItem) {
+                            lessonItem.classList.add('completed');
+                            const statusElement = lessonItem.querySelector('.lesson-status');
+                            if (statusElement) {
+                                statusElement.textContent = '✓ Ukończona';
+                            }
+                        }
+                        
+                        // Show success message
+                        if (data.quiz_unlocked && window.showSuccessMessage) {
+                            window.showSuccessMessage('🎉 Wszystkie lekcje ukończone! Test końcowy został odblokowany.');
+                        } else if (window.showSuccessMessage) {
+                            window.showSuccessMessage('Lekcja została ukończona!');
+                        }
+                        
+                        // Refresh lessons and navigation
+                        if (typeof refreshLessonsAccessibility === 'function') {
+                            refreshLessonsAccessibility();
+                        }
+                        
+                        setTimeout(() => {
+                            if (typeof updateNavigationButtons === 'function') {
+                                updateNavigationButtons();
+                            }
+                        }, 1000);
+                    }
+                }).catch(error => {
+                    console.error('Error completing lesson after timer:', error);
+                });
+            }
+            
+            return;
+        }
+        
+        totalSeconds--;
+    }
+    
+    // Update immediately and then every second
+    updateDisplay();
+    setInterval(updateDisplay, 1000);
 }
 
 // Sinusoidal Progress Bar Functions
