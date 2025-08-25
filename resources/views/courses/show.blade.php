@@ -82,7 +82,7 @@
 
     .progress-bar-container {
         position: relative;
-        height: 60px;
+        height: 80px;
         width: 100%;
         overflow: visible;
         margin: 20px 0;
@@ -90,7 +90,7 @@
 
     .sinusoidal-progress {
         width: 100%;
-        height: 60px;
+        height: 80px;
         overflow: visible;
     }
 
@@ -621,7 +621,7 @@
             <div class="progress-percentage">{{ $progressPercentage }}%</div>
         </div>
         <div class="progress-bar-container">
-            <svg class="sinusoidal-progress" viewBox="0 0 400 60" preserveAspectRatio="xMidYMid meet">
+            <svg class="sinusoidal-progress" viewBox="0 0 800 80" preserveAspectRatio="none">
                 <!-- Gradient definitions -->
                 <defs>
                     <linearGradient id="progressGradient" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -636,26 +636,24 @@
                 
                 <!-- Background path -->
                 <path id="progress-path-bg" class="progress-path-bg" 
-                      d="M 10 30 
-                         Q 60 15, 110 35
-                         T 210 25
-                         Q 260 40, 310 20
-                         T 390 30" />
+                      d="M 0 40 
+                         C 100 25, 200 55, 300 45
+                         C 400 35, 500 50, 600 35
+                         C 700 20, 750 45, 800 40" />
                 
                 <!-- Progress path -->
                 <path id="progress-path" class="progress-path" 
                       stroke="url(#progressGradient)"
-                      d="M 10 30 
-                         Q 60 15, 110 35
-                         T 210 25
-                         Q 260 40, 310 20
-                         T 390 30" />
+                      d="M 0 40 
+                         C 100 25, 200 55, 300 45
+                         C 400 35, 500 50, 600 35
+                         C 700 20, 750 45, 800 40" />
                 
                 <!-- Animated pulse -->
-                <circle class="progress-pulse" cx="10" cy="30" fill="url(#progressGradient)" />
+                <circle class="progress-pulse" cx="0" cy="40" fill="url(#progressGradient)" />
                 
                 <!-- Progress dot -->
-                <circle class="progress-dot" cx="10" cy="30" fill="url(#dotGradient)" stroke="#ffffff" stroke-width="2" />
+                <circle class="progress-dot" cx="0" cy="40" fill="url(#dotGradient)" stroke="#ffffff" stroke-width="2" />
             </svg>
         </div>
         <div class="mt-4 text-sm text-gray-600">
