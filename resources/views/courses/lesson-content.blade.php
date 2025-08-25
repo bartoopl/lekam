@@ -14,61 +14,74 @@
 
 @if($lesson->video_file)
     <style>
-        /* Custom Video Controls Styling */
-        .video-controls {
-            display: flex !important;
-            align-items: center !important;
-            gap: 1rem !important;
-            background: rgba(0, 0, 0, 0.8) !important;
-            padding: 0.75rem 1rem !important;
-            border-radius: 8px !important;
-            margin-top: 0.5rem !important;
-            backdrop-filter: blur(10px) !important;
+        /* Custom Video Layout - Progress on video, controls below */
+        .video-container {
+            position: relative;
         }
         
-        .video-controls button {
-            background: transparent !important;
-            border: none !important;
-            color: white !important;
-            cursor: pointer !important;
-            padding: 0.5rem !important;
-            border-radius: 4px !important;
-            transition: all 0.2s ease !important;
-            display: flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-            font-size: 16px !important;
-            min-width: 40px !important;
-            height: 40px !important;
-        }
-        
-        .video-controls button:hover {
-            background: rgba(255, 255, 255, 0.2) !important;
-            transform: scale(1.1) !important;
-        }
-        
-        .video-controls #time-display {
-            color: white !important;
-            font-size: 0.9rem !important;
-            font-family: monospace !important;
-            min-width: 100px !important;
-        }
-        
-        .video-controls .flex-1 {
-            flex: 1 !important;
-            height: 6px !important;
-            background: rgba(255, 255, 255, 0.3) !important;
-            border-radius: 3px !important;
+        /* Video.js custom styling */
+        .vjs-control-bar {
             position: relative !important;
-            cursor: pointer !important;
-            margin: 0 1rem !important;
+            bottom: 0 !important;
+            background: rgba(0, 0, 0, 0.8) !important;
+            backdrop-filter: blur(10px) !important;
+            border-radius: 8px !important;
+            margin-top: 10px !important;
+            padding: 0.5rem 1rem !important;
         }
         
-        .video-controls #progress-fill {
-            height: 100% !important;
-            background: linear-gradient(90deg, #3B82F6 0%, #1D4ED8 100%) !important;
-            border-radius: 3px !important;
-            transition: width 0.1s ease !important;
+        /* Custom progress bar overlay on video */
+        .custom-progress-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 10;
+            cursor: pointer;
+        }
+        
+        .custom-progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #3B82F6 0%, #1D4ED8 100%);
+            width: 0%;
+            transition: width 0.1s ease;
+        }
+        
+        .custom-progress-overlay:hover {
+            height: 8px;
+        }
+        
+        .custom-progress-overlay:hover .custom-progress-bar {
+            box-shadow: 0 0 8px rgba(59, 130, 246, 0.5);
+        }
+        
+        /* Hide default Video.js progress control */
+        .vjs-progress-control {
+            display: none !important;
+        }
+        
+        /* Style control bar buttons */
+        .vjs-control-bar .vjs-button {
+            font-size: 18px !important;
+        }
+        
+        .vjs-control-bar .vjs-time-display {
+            font-family: monospace !important;
+            font-size: 14px !important;
+        }
+        
+        /* Fullscreen adjustments */
+        .vjs-fullscreen .custom-progress-overlay {
+            height: 8px;
+        }
+        
+        .vjs-fullscreen .vjs-control-bar {
+            margin-top: 0 !important;
+            border-radius: 0 !important;
+            position: absolute !important;
+            bottom: 0 !important;
         }
     </style>
     
@@ -90,6 +103,10 @@
                     <a href="https://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>.
                 </p>
             </video-js>
+            <!-- Custom progress bar overlay -->
+            <div class="custom-progress-overlay" id="custom-progress-overlay">
+                <div class="custom-progress-bar" id="custom-progress-bar"></div>
+            </div>
         </div>
     </div>
 

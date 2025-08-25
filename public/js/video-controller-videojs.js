@@ -244,6 +244,51 @@ videojs.registerPlugin('visibilityControl', function(options = {}) {
     });
 });
 
+// Custom progress overlay plugin
+videojs.registerPlugin('customProgressOverlay', function(options = {}) {
+    const player = this;
+    const progressOverlay = document.getElementById('custom-progress-overlay');
+    const progressBar = document.getElementById('custom-progress-bar');
+    
+    if (!progressOverlay || !progressBar) {
+        console.log('Custom progress elements not found');
+        return;
+    }
+    
+    // Update progress bar
+    function updateProgress() {
+        const duration = player.duration();
+        const currentTime = player.currentTime();
+        
+        if (duration > 0) {
+            const progress = (currentTime / duration) * 100;
+            progressBar.style.width = progress + '%';
+        }
+    }
+    
+    // Handle clicks on progress bar
+    progressOverlay.addEventListener('click', function(e) {
+        const rect = progressOverlay.getBoundingClientRect();
+        const clickX = e.clientX - rect.left;
+        const width = rect.width;
+        const clickPercent = clickX / width;
+        const duration = player.duration();
+        
+        if (duration > 0) {
+            const seekTime = clickPercent * duration;
+            player.currentTime(seekTime);
+        }
+    });
+    
+    // Update progress during playback
+    player.on('timeupdate', updateProgress);
+    player.on('seeking', updateProgress);
+    player.on('seeked', updateProgress);
+    
+    // Initial update
+    player.ready(updateProgress);
+});
+
 // Main initialization function
 window.initVideoJSPlayer = function(videoElement, options = {}) {
     if (!videoElement) return;
@@ -257,7 +302,9 @@ window.initVideoJSPlayer = function(videoElement, options = {}) {
         controlBar: {
             children: [
                 'playToggle',
-                'progressControl', 
+                'currentTimeDisplay',
+                'timeDivider',
+                'durationDisplay',
                 'muteToggle',
                 'fullscreenToggle'
             ]
@@ -271,7 +318,8 @@ window.initVideoJSPlayer = function(videoElement, options = {}) {
                 startPosition: options.startPosition || 0,
                 completeUrl: options.completeUrl
             },
-            visibilityControl: {}
+            visibilityControl: {},
+            customProgressOverlay: {}
         }
     };
     
