@@ -246,6 +246,86 @@
         padding: 2rem;
     }
 
+    .overall-progress-section {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 20px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        text-align: center;
+        box-shadow: 
+            0 8px 32px rgba(0, 0, 0, 0.1),
+            0 4px 16px rgba(0, 0, 0, 0.05),
+            inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        transition: all 0.3s ease;
+    }
+
+    .overall-progress-section:hover {
+        transform: translateY(-2px);
+        box-shadow: 
+            0 12px 40px rgba(0, 0, 0, 0.15),
+            0 6px 20px rgba(0, 0, 0, 0.08),
+            inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    }
+
+    .overall-progress-title {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: #21235F;
+        margin-bottom: 1.5rem;
+    }
+
+    .circular-progress-container {
+        position: relative;
+        width: 140px;
+        height: 140px;
+        margin: 0 auto 1rem;
+    }
+
+    .circular-progress {
+        transform: rotate(-90deg);
+        width: 140px;
+        height: 140px;
+    }
+
+    .progress-circle-bg {
+        fill: none;
+        stroke: rgba(33, 35, 95, 0.2);
+        stroke-width: 12;
+    }
+
+    .progress-circle-fill {
+        fill: none;
+        stroke: url(#overallProgressGradient);
+        stroke-width: 12;
+        stroke-linecap: round;
+        stroke-dasharray: 0 440;
+        transition: stroke-dasharray 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+        filter: drop-shadow(0 0 8px rgba(33, 35, 95, 0.3));
+    }
+
+    .progress-percentage-text {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 2rem;
+        font-weight: 700;
+        color: #21235F;
+    }
+
+    .progress-subtitle {
+        font-size: 0.9rem;
+        color: #666;
+        margin-top: 0.5rem;
+    }
+
+    @keyframes progressAnimation {
+        from { stroke-dasharray: 0 440; }
+        to { stroke-dasharray: var(--progress) 440; }
+    }
+
     @media (max-width: 768px) {
         .dashboard-content {
             grid-template-columns: 1fr;
@@ -338,9 +418,36 @@
             @endif
         </div>
 
-        <!-- Right side - My Courses -->
-        <div class="courses-section">
-            <h2 class="courses-title">Moje kursy</h2>
+        <!-- Right side - Overall Progress and My Courses -->
+        <div>
+            <!-- Overall Progress Section -->
+            @php
+                $overallProgressPercentage = $totalAvailableCourses > 0 ? round(($completedCourses / $totalAvailableCourses) * 100) : 0;
+            @endphp
+            <div class="overall-progress-section">
+                <h3 class="overall-progress-title">Ogólny postęp</h3>
+                <div class="circular-progress-container">
+                    <svg class="circular-progress" viewBox="0 0 140 140">
+                        <defs>
+                            <linearGradient id="overallProgressGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" stop-color="#21235F" />
+                                <stop offset="50%" stop-color="#3B82F6" />
+                                <stop offset="100%" stop-color="#22C55E" />
+                            </linearGradient>
+                        </defs>
+                        <!-- Background circle -->
+                        <circle class="progress-circle-bg" cx="70" cy="70" r="60" />
+                        <!-- Progress circle -->
+                        <circle class="progress-circle-fill" cx="70" cy="70" r="60" id="overallProgressCircle" />
+                    </svg>
+                    <div class="progress-percentage-text">{{ $overallProgressPercentage }}%</div>
+                </div>
+                <div class="progress-subtitle">{{ $completedCourses }} z {{ $totalAvailableCourses }} kursów ukończonych</div>
+            </div>
+
+            <!-- My Courses Section -->
+            <div class="courses-section">
+                <h2 class="courses-title">Moje kursy</h2>
             
             @if($enrolledCourses->count() > 0)
                 @foreach($enrolledCourses as $course)
@@ -382,7 +489,30 @@
                     </a>
                 </div>
             @endif
+            </div>
         </div>
     </div>
 </div>
+
+<script>
+// Animate overall progress circle on page load
+document.addEventListener('DOMContentLoaded', function() {
+    const progressCircle = document.getElementById('overallProgressCircle');
+    const percentage = {{ $overallProgressPercentage }};
+    
+    if (progressCircle && percentage > 0) {
+        // Calculate circumference of the circle (2 * π * r, where r = 60)
+        const circumference = 2 * Math.PI * 60; // ≈ 377
+        const progress = (percentage / 100) * circumference;
+        
+        // Set initial state
+        progressCircle.style.strokeDasharray = `0 ${circumference}`;
+        
+        // Animate to final state after a short delay
+        setTimeout(() => {
+            progressCircle.style.strokeDasharray = `${progress} ${circumference}`;
+        }, 500);
+    }
+});
+</script>
 @endsection
