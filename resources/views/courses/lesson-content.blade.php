@@ -19,15 +19,51 @@
             position: relative;
         }
         
-        /* Video.js custom styling */
+        /* Hide default Video.js control bar */
         .vjs-control-bar {
-            position: relative !important;
-            bottom: 0 !important;
+            display: none !important;
+        }
+        
+        /* Custom control bar below video */
+        .custom-controls {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            gap: 1rem !important;
             background: rgba(0, 0, 0, 0.8) !important;
             backdrop-filter: blur(10px) !important;
             border-radius: 8px !important;
             margin-top: 10px !important;
-            padding: 0.5rem 1rem !important;
+            padding: 0.75rem 1rem !important;
+        }
+        
+        .custom-controls button {
+            background: transparent !important;
+            border: none !important;
+            color: white !important;
+            cursor: pointer !important;
+            padding: 0.5rem !important;
+            border-radius: 4px !important;
+            transition: all 0.2s ease !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            font-size: 18px !important;
+            min-width: 40px !important;
+            height: 40px !important;
+        }
+        
+        .custom-controls button:hover {
+            background: rgba(255, 255, 255, 0.2) !important;
+            transform: scale(1.1) !important;
+        }
+        
+        .custom-controls .time-display {
+            color: white !important;
+            font-size: 14px !important;
+            font-family: monospace !important;
+            min-width: 120px !important;
+            text-align: center !important;
         }
         
         /* Custom progress bar overlay on video */
@@ -57,20 +93,6 @@
             box-shadow: 0 0 8px rgba(59, 130, 246, 0.5);
         }
         
-        /* Hide default Video.js progress control */
-        .vjs-progress-control {
-            display: none !important;
-        }
-        
-        /* Style control bar buttons */
-        .vjs-control-bar .vjs-button {
-            font-size: 18px !important;
-        }
-        
-        .vjs-control-bar .vjs-time-display {
-            font-family: monospace !important;
-            font-size: 14px !important;
-        }
         
         /* Fullscreen adjustments */
         .vjs-fullscreen .custom-progress-overlay {
@@ -106,6 +128,14 @@
             <!-- Custom progress bar overlay -->
             <div class="custom-progress-overlay" id="custom-progress-overlay">
                 <div class="custom-progress-bar" id="custom-progress-bar"></div>
+            </div>
+            
+            <!-- Custom controls below video -->
+            <div class="custom-controls">
+                <button id="play-pause-btn">▶️</button>
+                <div class="time-display" id="time-display">00:00 / 00:00</div>
+                <button id="mute-btn">🔊</button>
+                <button id="fullscreen-btn">⛶</button>
             </div>
         </div>
     </div>
