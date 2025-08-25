@@ -637,17 +637,25 @@
                 <!-- Background path -->
                 <path id="progress-path-bg" class="progress-path-bg" 
                       d="M 0 40 
-                         C 100 25, 200 55, 300 45
-                         C 400 35, 500 50, 600 35
-                         C 700 20, 750 45, 800 40" />
+                         C 80 15, 120 65, 160 35
+                         C 200 5, 240 70, 280 50
+                         C 320 25, 360 60, 400 30
+                         C 440 10, 480 55, 520 45
+                         C 560 75, 600 15, 640 35
+                         C 680 65, 720 25, 760 50
+                         C 780 35, 790 60, 800 40" />
                 
                 <!-- Progress path -->
                 <path id="progress-path" class="progress-path" 
                       stroke="url(#progressGradient)"
                       d="M 0 40 
-                         C 100 25, 200 55, 300 45
-                         C 400 35, 500 50, 600 35
-                         C 700 20, 750 45, 800 40" />
+                         C 80 15, 120 65, 160 35
+                         C 200 5, 240 70, 280 50
+                         C 320 25, 360 60, 400 30
+                         C 440 10, 480 55, 520 45
+                         C 560 75, 600 15, 640 35
+                         C 680 65, 720 25, 760 50
+                         C 780 35, 790 60, 800 40" />
                 
                 <!-- Animated pulse -->
                 <circle class="progress-pulse" cx="0" cy="40" fill="url(#progressGradient)" />
