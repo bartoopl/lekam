@@ -244,29 +244,18 @@ videojs.registerPlugin('visibilityControl', function(options = {}) {
     });
 });
 
-// Custom controls plugin
-videojs.registerPlugin('customControls', function(options = {}) {
+// Custom progress overlay plugin (only progress bar on video)
+videojs.registerPlugin('customProgressOverlay', function(options = {}) {
     const player = this;
     const progressOverlay = document.getElementById('custom-progress-overlay');
     const progressBar = document.getElementById('custom-progress-bar');
-    const playPauseBtn = document.getElementById('play-pause-btn');
-    const timeDisplay = document.getElementById('time-display');
-    const muteBtn = document.getElementById('mute-btn');
-    const fullscreenBtn = document.getElementById('fullscreen-btn');
     
-    if (!progressOverlay || !progressBar || !playPauseBtn || !timeDisplay || !muteBtn || !fullscreenBtn) {
-        console.log('Custom control elements not found');
+    if (!progressOverlay || !progressBar) {
+        console.log('Custom progress elements not found');
         return;
     }
     
-    // Format time helper
-    function formatTime(seconds) {
-        const mins = Math.floor(seconds / 60);
-        const secs = Math.floor(seconds % 60);
-        return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-    }
-    
-    // Update progress bar and time
+    // Update progress bar
     function updateProgress() {
         const duration = player.duration();
         const currentTime = player.currentTime();
@@ -274,18 +263,7 @@ videojs.registerPlugin('customControls', function(options = {}) {
         if (duration > 0) {
             const progress = (currentTime / duration) * 100;
             progressBar.style.width = progress + '%';
-            timeDisplay.textContent = `${formatTime(currentTime)} / ${formatTime(duration)}`;
         }
-    }
-    
-    // Update play/pause button
-    function updatePlayButton() {
-        playPauseBtn.textContent = player.paused() ? '▶️' : '⏸️';
-    }
-    
-    // Update mute button
-    function updateMuteButton() {
-        muteBtn.textContent = player.muted() || player.volume() === 0 ? '🔇' : '🔊';
     }
     
     // Handle clicks on progress bar
@@ -302,43 +280,13 @@ videojs.registerPlugin('customControls', function(options = {}) {
         }
     });
     
-    // Play/pause button
-    playPauseBtn.addEventListener('click', function() {
-        if (player.paused()) {
-            player.play();
-        } else {
-            player.pause();
-        }
-    });
-    
-    // Mute button
-    muteBtn.addEventListener('click', function() {
-        player.muted(!player.muted());
-    });
-    
-    // Fullscreen button
-    fullscreenBtn.addEventListener('click', function() {
-        if (player.isFullscreen()) {
-            player.exitFullscreen();
-        } else {
-            player.requestFullscreen();
-        }
-    });
-    
-    // Update controls during playback
+    // Update progress during playback
     player.on('timeupdate', updateProgress);
     player.on('seeking', updateProgress);
     player.on('seeked', updateProgress);
-    player.on('play', updatePlayButton);
-    player.on('pause', updatePlayButton);
-    player.on('volumechange', updateMuteButton);
     
-    // Initial updates
-    player.ready(() => {
-        updateProgress();
-        updatePlayButton();
-        updateMuteButton();
-    });
+    // Initial update
+    player.ready(updateProgress);
 });
 
 // Main initialization function
@@ -348,9 +296,19 @@ window.initVideoJSPlayer = function(videoElement, options = {}) {
     console.log('initVideoJSPlayer called with options:', options);
     
     const playerOptions = {
-        controls: false, // Disable default controls
+        controls: true,
         responsive: true,
         fluid: true,
+        controlBar: {
+            children: [
+                'playToggle',
+                'currentTimeDisplay', 
+                'timeDivider',
+                'durationDisplay',
+                'muteToggle',
+                'fullscreenToggle'
+            ]
+        },
         plugins: {
             seekingControl: {
                 startPosition: options.startPosition || 0
@@ -361,7 +319,7 @@ window.initVideoJSPlayer = function(videoElement, options = {}) {
                 completeUrl: options.completeUrl
             },
             visibilityControl: {},
-            customControls: {}
+            customProgressOverlay: {}
         }
     };
     
