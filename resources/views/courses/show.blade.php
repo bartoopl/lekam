@@ -82,7 +82,7 @@
 
     .progress-bar-container {
         position: relative;
-        height: 80px;
+        height: 120px;
         width: 100%;
         overflow: visible;
         margin: 20px 0;
@@ -90,7 +90,7 @@
 
     .sinusoidal-progress {
         width: 100%;
-        height: 80px;
+        height: 120px;
         overflow: visible;
     }
 
@@ -621,7 +621,7 @@
             <div class="progress-percentage">{{ $progressPercentage }}%</div>
         </div>
         <div class="progress-bar-container">
-            <svg class="sinusoidal-progress" viewBox="0 0 800 80" preserveAspectRatio="none">
+            <svg class="sinusoidal-progress" viewBox="0 0 800 120" preserveAspectRatio="none">
                 <!-- Gradient definitions -->
                 <defs>
                     <linearGradient id="progressGradient" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -636,32 +636,30 @@
                 
                 <!-- Background path -->
                 <path id="progress-path-bg" class="progress-path-bg" 
-                      d="M 0 40 
-                         C 80 15, 120 65, 160 35
-                         C 200 5, 240 70, 280 50
-                         C 320 25, 360 60, 400 30
-                         C 440 10, 480 55, 520 45
-                         C 560 75, 600 15, 640 35
-                         C 680 65, 720 25, 760 50
-                         C 780 35, 790 60, 800 40" />
+                      d="M 0 60 
+                         C 50 20, 100 100, 150 40
+                         C 200 -10, 250 130, 300 60
+                         C 350 110, 400 10, 450 80
+                         C 500 40, 550 120, 600 30
+                         C 650 90, 700 40, 750 70
+                         C 775 50, 790 90, 800 60" />
                 
                 <!-- Progress path -->
                 <path id="progress-path" class="progress-path" 
                       stroke="url(#progressGradient)"
-                      d="M 0 40 
-                         C 80 15, 120 65, 160 35
-                         C 200 5, 240 70, 280 50
-                         C 320 25, 360 60, 400 30
-                         C 440 10, 480 55, 520 45
-                         C 560 75, 600 15, 640 35
-                         C 680 65, 720 25, 760 50
-                         C 780 35, 790 60, 800 40" />
+                      d="M 0 60 
+                         C 50 20, 100 100, 150 40
+                         C 200 -10, 250 130, 300 60
+                         C 350 110, 400 10, 450 80
+                         C 500 40, 550 120, 600 30
+                         C 650 90, 700 40, 750 70
+                         C 775 50, 790 90, 800 60" />
                 
                 <!-- Animated pulse -->
-                <circle class="progress-pulse" cx="0" cy="40" fill="url(#progressGradient)" />
+                <circle class="progress-pulse" cx="0" cy="60" fill="url(#progressGradient)" />
                 
                 <!-- Progress dot -->
-                <circle class="progress-dot" cx="0" cy="40" fill="url(#dotGradient)" stroke="#ffffff" stroke-width="2" />
+                <circle class="progress-dot" cx="0" cy="60" fill="url(#dotGradient)" stroke="#ffffff" stroke-width="2" />
             </svg>
         </div>
         <div class="mt-4 text-sm text-gray-600">
