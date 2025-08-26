@@ -1239,12 +1239,34 @@ function updateNavigationButtons() {
             }
         }
     } else {
-        nextBtn.disabled = true;
-        nextBtn.className = 'btn btn-primary flex items-center justify-center opacity-50 cursor-not-allowed';
-        nextBtn.style.cssText = 'min-width: 150px; height: 50px;';
-        nextBtn.innerHTML = 'Następna →';
-        nextBtn.onclick = null;
-        console.log('Next lesson disabled');
+        // No next lesson - check if this is the last lesson with materials and if it's completed
+        const hasDownloadMaterials = document.querySelector('.material-download') || 
+                                   document.querySelector('[data-download-timer]') ||
+                                   document.querySelector('#timer-display') ||
+                                   document.querySelector('#countdown-timer');
+        
+        const lessonCompleted = document.querySelector('.bg-green-50 .text-green-600') && 
+                              document.querySelector('.bg-green-50 .text-green-600').textContent.includes('Timer zakończony');
+        
+        console.log('Last lesson - Has materials:', !!hasDownloadMaterials, 'Completed:', lessonCompleted);
+        
+        if (hasDownloadMaterials && lessonCompleted) {
+            // Last lesson with materials is completed - show quiz button
+            nextBtn.disabled = false;
+            nextBtn.className = 'btn btn-primary flex items-center justify-center';
+            nextBtn.style.cssText = 'min-width: 200px; height: 50px; background: #2563eb !important; border-color: #2563eb !important;';
+            nextBtn.innerHTML = 'Przejdź do testu końcowego →';
+            nextBtn.onclick = () => navigateToQuiz();
+            console.log('Quiz button enabled for completed last lesson');
+        } else {
+            // Default: disable next button
+            nextBtn.disabled = true;
+            nextBtn.className = 'btn btn-primary flex items-center justify-center opacity-50 cursor-not-allowed';
+            nextBtn.style.cssText = 'min-width: 150px; height: 50px;';
+            nextBtn.innerHTML = 'Następna →';
+            nextBtn.onclick = null;
+            console.log('Next lesson disabled');
+        }
     }
 }
 
