@@ -33,7 +33,16 @@ class UserProgress extends Model
     // Debug logging for lesson 19
     protected static function booted()
     {
+        // Test if booted is called
+        \Log::info("🔍 DEBUG UserProgress booted() called");
+        
         static::creating(function (UserProgress $progress) {
+            \Log::info("🔍 DEBUG UserProgress CREATING any lesson", [
+                'lesson_id' => $progress->lesson_id,
+                'user_id' => $progress->user_id,
+                'is_completed' => $progress->is_completed
+            ]);
+            
             if ($progress->lesson_id == 19) {
                 \Log::info("🔍 DEBUG UserProgress CREATING for lesson 19", [
                     'user_id' => $progress->user_id,
@@ -44,6 +53,12 @@ class UserProgress extends Model
         });
 
         static::updating(function (UserProgress $progress) {
+            \Log::info("🔍 DEBUG UserProgress UPDATING any lesson", [
+                'lesson_id' => $progress->lesson_id,
+                'user_id' => $progress->user_id,
+                'is_completed' => $progress->is_completed
+            ]);
+            
             if ($progress->lesson_id == 19) {
                 \Log::info("🔍 DEBUG UserProgress UPDATING for lesson 19", [
                     'user_id' => $progress->user_id,
