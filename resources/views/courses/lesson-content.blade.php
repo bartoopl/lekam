@@ -1022,8 +1022,8 @@ function checkQuizAvailability() {
                     }
                 }
             } else {
-                // Timer is still running, show countdown
-                showActiveTimer(canProceedAfter);
+                // Timer is still running - let server-side timer handle display
+                console.log('Timer still running, server-side timer will handle countdown');
             }
         @else
             console.log('No user progress or can_proceed_after not set');
@@ -1032,16 +1032,7 @@ function checkQuizAvailability() {
         console.log('No timer configured or timer is 0 minutes');
     @endif
     
-    // Alternative approach: try to find countdown timer and set it manually if data exists
-    const countdownTimer = document.getElementById('countdown-timer');
-    if (countdownTimer && countdownTimer.textContent === '--:--') {
-        console.log('Found countdown timer with --:--, trying to set time...');
-        // Check if we have timer data in the page
-        @if($userProgress && $userProgress->can_proceed_after)
-            const altCanProceedAfter = new Date('{{ $userProgress->can_proceed_after->toISOString() }}');
-            showActiveTimer(altCanProceedAfter);
-        @endif
-    }
+    // Server-side timer handles all countdown display - no need for client-side timer
 }
 
 // Show active countdown timer
