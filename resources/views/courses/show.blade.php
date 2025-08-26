@@ -1424,7 +1424,17 @@ function initializeCountdownTimer() {
             const scriptContent = script.textContent;
             if (scriptContent && scriptContent.includes('can_proceed_after')) {
                 console.log('🔍 DEBUG: Script', index, 'contains can_proceed_after');
-                const dateMatch = scriptContent.match(/can_proceed_after.*?new Date\('([^']+)'\)/);
+                console.log('🔍 DEBUG: Script content preview:', scriptContent.substring(0, 500));
+                
+                // Try multiple regex patterns
+                let dateMatch = scriptContent.match(/can_proceed_after.*?new Date\('([^']+)'\)/);
+                if (!dateMatch) {
+                    dateMatch = scriptContent.match(/canProceedAfter = new Date\('([^']+)'\)/);
+                }
+                if (!dateMatch) {
+                    dateMatch = scriptContent.match(/new Date\('([^']+)'\)/);
+                }
+                
                 if (dateMatch) {
                     canProceedAfter = new Date(dateMatch[1]);
                     console.log('🔍 DEBUG: Found existing can_proceed_after:', canProceedAfter);
@@ -1432,6 +1442,7 @@ function initializeCountdownTimer() {
                     console.log('🔍 DEBUG: Time difference (ms):', canProceedAfter - new Date());
                 } else {
                     console.log('🔍 DEBUG: Script contains can_proceed_after but no date match found');
+                    console.log('🔍 DEBUG: Full script content:', scriptContent);
                 }
             }
         });
