@@ -1382,20 +1382,26 @@ function setupMaterialDownloadHandlers(lessonId) {
 
 // Initialize countdown timer for download materials
 function initializeCountdownTimer() {
-    console.log('initializeCountdownTimer called');
+    console.log('🔍 DEBUG: initializeCountdownTimer called');
     const countdownTimer = document.getElementById('countdown-timer');
     const timerDisplay = document.getElementById('timer-display');
     const quizSection = document.getElementById('quiz-start-section');
+    
+    console.log('🔍 DEBUG: countdown-timer element:', countdownTimer);
+    console.log('🔍 DEBUG: timer-display element:', timerDisplay);
+    console.log('🔍 DEBUG: quiz-start-section element:', quizSection);
     
     // Check for either countdown-timer or timer-display
     const activeTimer = countdownTimer || timerDisplay;
     
     if (!activeTimer) {
-        console.log('No countdown timer found');
+        console.log('🔍 DEBUG: No countdown timer found');
         return;
     }
     
-    console.log('Timer found:', activeTimer.id);
+    console.log('🔍 DEBUG: Timer found:', activeTimer.id);
+    console.log('🔍 DEBUG: Timer content:', activeTimer.textContent);
+    console.log('🔍 DEBUG: Timer HTML:', activeTimer.outerHTML);
     
     // If it's timer-display, it already has JavaScript in lesson-content.blade.php
     if (activeTimer.id === 'timer-display') {
@@ -1405,18 +1411,27 @@ function initializeCountdownTimer() {
     
     // If countdown-timer shows --:--, it means PHP didn't initialize it properly
     if (activeTimer.id === 'countdown-timer' && activeTimer.textContent === '--:--') {
-        console.log('countdown-timer shows --:--, trying to find lesson timer data...');
+        console.log('🔍 DEBUG: countdown-timer shows --:--, trying to find lesson timer data...');
+        console.log('🔍 DEBUG: Current page URL:', window.location.href);
+        console.log('🔍 DEBUG: Document title:', document.title);
         
         // First check if there's existing can_proceed_after data from server
         let canProceedAfter = null;
         const scriptTags = document.querySelectorAll('script');
-        scriptTags.forEach(script => {
+        console.log('🔍 DEBUG: Found', scriptTags.length, 'script tags');
+        
+        scriptTags.forEach((script, index) => {
             const scriptContent = script.textContent;
             if (scriptContent && scriptContent.includes('can_proceed_after')) {
+                console.log('🔍 DEBUG: Script', index, 'contains can_proceed_after');
                 const dateMatch = scriptContent.match(/can_proceed_after.*?new Date\('([^']+)'\)/);
                 if (dateMatch) {
                     canProceedAfter = new Date(dateMatch[1]);
-                    console.log('Found existing can_proceed_after:', canProceedAfter);
+                    console.log('🔍 DEBUG: Found existing can_proceed_after:', canProceedAfter);
+                    console.log('🔍 DEBUG: Current time:', new Date());
+                    console.log('🔍 DEBUG: Time difference (ms):', canProceedAfter - new Date());
+                } else {
+                    console.log('🔍 DEBUG: Script contains can_proceed_after but no date match found');
                 }
             }
         });
@@ -1424,20 +1439,27 @@ function initializeCountdownTimer() {
         if (canProceedAfter && canProceedAfter > new Date()) {
             // Use existing timer from database
             const remainingSeconds = Math.floor((canProceedAfter - new Date()) / 1000);
-            console.log('Using existing timer with', remainingSeconds, 'seconds remaining');
+            console.log('🔍 DEBUG: Using existing timer with', remainingSeconds, 'seconds remaining');
             startCountdownFromSeconds(remainingSeconds, null);
             return;
+        } else {
+            console.log('🔍 DEBUG: No valid can_proceed_after found or timer expired');
         }
         
         // Look for download buttons to get timer duration (fallback for new downloads)
         const downloadButtons = document.querySelectorAll('.material-download');
+        console.log('🔍 DEBUG: Found', downloadButtons.length, 'download buttons');
+        
         if (downloadButtons.length > 0) {
             const timerMinutes = parseInt(downloadButtons[0].dataset.downloadTimer) || 2;
-            console.log('Found download timer:', timerMinutes, 'minutes');
+            console.log('🔍 DEBUG: Found download timer:', timerMinutes, 'minutes');
+            console.log('🔍 DEBUG: Download button dataset:', downloadButtons[0].dataset);
             
             // Start countdown from the download timer value
             startCountdownFromMinutes(timerMinutes, downloadButtons[0].dataset.completeLessonUrl);
             return;
+        } else {
+            console.log('🔍 DEBUG: No download buttons found');
         }
     }
     
@@ -1579,9 +1601,13 @@ function startCountdownTimer(endTime, timerElement, quizSection) {
 // Timer function for remaining seconds from database
 function startCountdownFromSeconds(totalSeconds, completeUrl) {
     const countdownTimer = document.getElementById('countdown-timer');
-    if (!countdownTimer) return;
+    if (!countdownTimer) {
+        console.log('🔍 DEBUG: startCountdownFromSeconds - no countdown timer found');
+        return;
+    }
     
-    console.log('Starting countdown from', totalSeconds, 'seconds');
+    console.log('🔍 DEBUG: startCountdownFromSeconds called with', totalSeconds, 'seconds');
+    console.log('🔍 DEBUG: completeUrl:', completeUrl);
     
     function updateDisplay() {
         const mins = Math.floor(totalSeconds / 60);

@@ -597,10 +597,15 @@
                 
                 <script>
                     // Server-side timer with real-time countdown display
+                    console.log('🔍 DEBUG: lesson-content timer script loading');
                     const timerDisplay = document.getElementById('timer-display');
                     const timerInfo = document.getElementById('timer-info');
                     let remainingTime = {{ $remainingSeconds }};
                     let countdownInterval = null;
+                    
+                    console.log('🔍 DEBUG: timerDisplay element:', timerDisplay);
+                    console.log('🔍 DEBUG: timerInfo element:', timerInfo);
+                    console.log('🔍 DEBUG: remainingTime from server:', remainingTime);
                     
                     function updateTimerDisplay() {
                         if (remainingTime <= 0) {
@@ -694,9 +699,11 @@
                     
                     // Start the countdown if timer is still running
                     if (remainingTime > 0) {
+                        console.log('🔍 DEBUG: Starting timer countdown with', remainingTime, 'seconds');
                         updateTimerDisplay(); // Update immediately
                         countdownInterval = setInterval(updateTimerDisplay, 1000); // Update every second
                     } else if (remainingTime <= 0) {
+                        console.log('🔍 DEBUG: Timer already expired on page load, completing lesson');
                         // Timer already expired on page load
                         completeTimerLesson();
                     }
