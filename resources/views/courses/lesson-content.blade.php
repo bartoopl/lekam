@@ -676,7 +676,7 @@
                                 
                                 // Update local navigation buttons
                                 setTimeout(() => {
-                                    updateLocalNavigationButtons();
+                                    updateLocalNavigationButtons(true); // Pass true to indicate lesson completed
                                 }, 500);
                             } else {
                                 console.error('Failed to complete lesson');
@@ -808,7 +808,7 @@
                                 
                                 // Update local navigation buttons
                                 setTimeout(() => {
-                                    updateLocalNavigationButtons();
+                                    updateLocalNavigationButtons(true); // Pass true to indicate lesson completed
                                 }, 500);
                                 
                                 // Reload after short delay to update quiz status
@@ -1067,8 +1067,8 @@ function showActiveTimer(endTime) {
 }
 
 // Function to update local navigation buttons
-function updateLocalNavigationButtons() {
-    console.log('updateLocalNavigationButtons called');
+function updateLocalNavigationButtons(forceCompleted = false) {
+    console.log('updateLocalNavigationButtons called, forceCompleted:', forceCompleted);
     
     // Get navigation buttons
     const nextBtn = document.getElementById('lesson-next-btn');
@@ -1079,9 +1079,14 @@ function updateLocalNavigationButtons() {
         return;
     }
     
-    // Check if lesson is completed by looking for completion indicators
-    const timerCompleted = document.querySelector('.bg-green-50 .text-green-600');
-    const lessonCompleted = timerCompleted && timerCompleted.textContent.includes('Timer zakończony');
+    // Check if lesson is completed
+    let lessonCompleted = forceCompleted;
+    
+    if (!lessonCompleted) {
+        // Check by looking for completion indicators in DOM
+        const timerCompleted = document.querySelector('.bg-green-50 .text-green-600');
+        lessonCompleted = timerCompleted && timerCompleted.textContent.includes('Timer zakończony');
+    }
     
     console.log('Lesson completed:', lessonCompleted);
     
@@ -1098,6 +1103,9 @@ function updateLocalNavigationButtons() {
                 window.parent.navigateToQuiz();
             } else {
                 console.log('navigateToQuiz function not available in parent');
+                // Fallback: try to navigate to quiz URL directly
+                const quizUrl = '/courses/{{ $course->id }}/quiz';
+                window.parent.location.href = quizUrl;
             }
         };
         
