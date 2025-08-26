@@ -1407,7 +1407,29 @@ function initializeCountdownTimer() {
     if (activeTimer.id === 'countdown-timer' && activeTimer.textContent === '--:--') {
         console.log('countdown-timer shows --:--, trying to find lesson timer data...');
         
-        // Look for download buttons to get timer duration
+        // First check if there's existing can_proceed_after data from server
+        let canProceedAfter = null;
+        const scriptTags = document.querySelectorAll('script');
+        scriptTags.forEach(script => {
+            const scriptContent = script.textContent;
+            if (scriptContent && scriptContent.includes('can_proceed_after')) {
+                const dateMatch = scriptContent.match(/can_proceed_after.*?new Date\('([^']+)'\)/);
+                if (dateMatch) {
+                    canProceedAfter = new Date(dateMatch[1]);
+                    console.log('Found existing can_proceed_after:', canProceedAfter);
+                }
+            }
+        });
+        
+        if (canProceedAfter && canProceedAfter > new Date()) {
+            // Use existing timer from database
+            const remainingSeconds = Math.floor((canProceedAfter - new Date()) / 1000);
+            console.log('Using existing timer with', remainingSeconds, 'seconds remaining');
+            startCountdownFromSeconds(remainingSeconds, null);
+            return;
+        }
+        
+        // Look for download buttons to get timer duration (fallback for new downloads)
         const downloadButtons = document.querySelectorAll('.material-download');
         if (downloadButtons.length > 0) {
             const timerMinutes = parseInt(downloadButtons[0].dataset.downloadTimer) || 2;
@@ -1552,6 +1574,46 @@ function startCountdownTimer(endTime, timerElement, quizSection) {
     // Update immediately and then every second
     updateCountdown();
     window.countdownInterval = setInterval(updateCountdown, 1000);
+}
+
+// Timer function for remaining seconds from database
+function startCountdownFromSeconds(totalSeconds, completeUrl) {
+    const countdownTimer = document.getElementById('countdown-timer');
+    if (!countdownTimer) return;
+    
+    console.log('Starting countdown from', totalSeconds, 'seconds');
+    
+    function updateDisplay() {
+        const mins = Math.floor(totalSeconds / 60);
+        const secs = totalSeconds % 60;
+        const display = mins + ':' + (secs < 10 ? '0' : '') + secs;
+        
+        countdownTimer.textContent = display;
+        
+        if (totalSeconds <= 0) {
+            console.log('Timer finished');
+            countdownTimer.textContent = 'Ukończono!';
+            clearInterval(window.timerInterval);
+            
+            // Show quiz section if available
+            const quizSection = document.getElementById('quiz-start-section');
+            if (quizSection) {
+                quizSection.style.display = 'block';
+            }
+            
+            return;
+        }
+        
+        totalSeconds--;
+    }
+    
+    // Clear any existing interval
+    if (window.timerInterval) {
+        clearInterval(window.timerInterval);
+    }
+    
+    updateDisplay();
+    window.timerInterval = setInterval(updateDisplay, 1000);
 }
 
 // Working timer function for download materials
