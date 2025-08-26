@@ -625,7 +625,9 @@
                     }
                     
                     function completeTimerLesson() {
-                        console.log('Timer expired, completing lesson...');
+                        console.log('*** completeTimerLesson() CALLED - Timer expired, completing lesson...');
+                        console.log('*** Timer info element:', timerInfo);
+                        console.log('*** Current remainingTime:', remainingTime);
                         
                         // Complete lesson automatically
                         fetch('{{ route("courses.complete-lesson", ["course" => $course, "lesson" => $lesson]) }}', {
@@ -1068,7 +1070,8 @@ function showActiveTimer(endTime) {
 
 // Function to update local navigation buttons
 function updateLocalNavigationButtons(forceCompleted = false) {
-    console.log('updateLocalNavigationButtons called, forceCompleted:', forceCompleted);
+    console.log('*** updateLocalNavigationButtons called, forceCompleted:', forceCompleted);
+    console.log('*** Looking for timer completion indicators...');
     
     // Get navigation buttons
     const nextBtn = document.getElementById('lesson-next-btn');

@@ -1248,7 +1248,13 @@ function updateNavigationButtons() {
         const lessonCompleted = document.querySelector('.bg-green-50 .text-green-600') && 
                               document.querySelector('.bg-green-50 .text-green-600').textContent.includes('Timer zakończony');
         
-        console.log('Last lesson - Has materials:', !!hasDownloadMaterials, 'Completed:', lessonCompleted);
+        console.log('*** LAST LESSON CHECK ***');
+        console.log('*** Has materials:', !!hasDownloadMaterials);
+        console.log('*** Completed:', lessonCompleted);
+        console.log('*** Timer completed element:', document.querySelector('.bg-green-50 .text-green-600'));
+        if (document.querySelector('.bg-green-50 .text-green-600')) {
+            console.log('*** Timer text:', document.querySelector('.bg-green-50 .text-green-600').textContent);
+        }
         
         if (hasDownloadMaterials && lessonCompleted) {
             // Last lesson with materials is completed - show quiz button
