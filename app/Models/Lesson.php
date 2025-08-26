@@ -240,8 +240,11 @@ class Lesson extends Model
         );
 
         // Only auto-complete if lesson has actual downloadable materials and no timer
-        // Don't auto-complete lessons without real materials (demo files only)
-        if ($this->hasDownloadableMaterials() && (!$this->download_timer_minutes || $this->download_timer_minutes <= 0)) {
+        // AND if requires_download_completion is not set (old behavior for non-timed lessons)
+        // Don't auto-complete lessons that require download completion - they need timer to finish
+        if ($this->hasDownloadableMaterials() && 
+            (!$this->download_timer_minutes || $this->download_timer_minutes <= 0) &&
+            !$this->requires_download_completion) {
             $this->markAsCompleted($user);
         }
     }
