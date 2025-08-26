@@ -350,6 +350,11 @@
                             if (parent && parent !== window && typeof parent.refreshLessonsAccessibility === 'function') {
                                 parent.refreshLessonsAccessibility();
                             }
+                            
+                            // Update local navigation buttons
+                            setTimeout(() => {
+                                updateLocalNavigationButtons();
+                            }, 500);
                         } else {
                             console.error('Failed to complete lesson');
                             // Show error notification
@@ -792,6 +797,8 @@
                                         if (parent && parent !== window && typeof parent.updateNavigationButtons === 'function') {
                                             parent.updateNavigationButtons();
                                         }
+                                        // Also update local navigation buttons
+                                        updateLocalNavigationButtons();
                                     }, 1500);
                                 } else {
                                     console.error('Failed to complete lesson');
@@ -843,6 +850,11 @@
                                         statusElement.textContent = '✓ Ukończona';
                                     }
                                 }
+                                
+                                // Update local navigation buttons
+                                setTimeout(() => {
+                                    updateLocalNavigationButtons();
+                                }, 500);
                                 
                                 // Reload after short delay to update quiz status
                                 setTimeout(() => {
@@ -963,6 +975,11 @@
                             if (parent && parent !== window && typeof parent.refreshLessonsAccessibility === 'function') {
                                 parent.refreshLessonsAccessibility();
                             }
+                            
+                            // Update local navigation buttons
+                            setTimeout(() => {
+                                updateLocalNavigationButtons();
+                            }, 500);
                         } else {
                             console.error('Failed to complete lesson');
                             // Show error notification
@@ -1197,11 +1214,59 @@ function showActiveTimer(endTime) {
     window.timerInterval = intervalId;
 }
 
+// Function to update local navigation buttons
+function updateLocalNavigationButtons() {
+    console.log('updateLocalNavigationButtons called');
+    
+    // Get navigation buttons
+    const nextBtn = document.getElementById('lesson-next-btn');
+    const prevBtn = document.getElementById('lesson-prev-btn');
+    
+    if (!nextBtn || !prevBtn) {
+        console.log('Navigation buttons not found');
+        return;
+    }
+    
+    // Check if lesson is completed by looking for completion indicators
+    const timerCompleted = document.querySelector('.bg-green-50 .text-green-600');
+    const lessonCompleted = timerCompleted && timerCompleted.textContent.includes('Timer zakończony');
+    
+    console.log('Lesson completed:', lessonCompleted);
+    
+    if (lessonCompleted) {
+        // Enable and update next button to show "Przejdź do testu końcowego"
+        nextBtn.disabled = false;
+        nextBtn.className = 'inline-flex items-center justify-center px-6 py-3 bg-blue-600 border-2 border-blue-600 rounded-full font-semibold text-sm text-white tracking-wide cursor-pointer transition-all duration-300 shadow-lg hover:shadow-xl hover:bg-blue-700';
+        nextBtn.style.cssText = 'background: #2563eb !important; border-color: #2563eb !important; min-width: 200px; height: 50px; color: white !important;';
+        nextBtn.innerHTML = 'Przejdź do testu końcowego →';
+        
+        // Add click handler to navigate to quiz
+        nextBtn.onclick = function() {
+            if (window.parent && typeof window.parent.navigateToQuiz === 'function') {
+                window.parent.navigateToQuiz();
+            } else {
+                console.log('navigateToQuiz function not available in parent');
+            }
+        };
+        
+        console.log('Next button updated to show "Przejdź do testu końcowego"');
+    }
+}
+
 // Check immediately when page loads
-document.addEventListener('DOMContentLoaded', checkQuizAvailability);
+document.addEventListener('DOMContentLoaded', function() {
+    checkQuizAvailability();
+    // Also check navigation buttons when page loads
+    setTimeout(() => {
+        updateLocalNavigationButtons();
+    }, 1000);
+});
 
 // Check every 30 seconds for timer expiration
-setInterval(checkQuizAvailability, 30000);
+setInterval(() => {
+    checkQuizAvailability();
+    updateLocalNavigationButtons();
+}, 30000);
 </script>
 
 
