@@ -204,10 +204,17 @@ class Lesson extends Model
      */
     public function isCompletedByUser(User $user): bool
     {
-        return $this->userProgress()
+        $isCompleted = $this->userProgress()
             ->where('user_id', $user->id)
             ->where('is_completed', true)
             ->exists();
+            
+        // Debug for material lessons
+        if ($this->requires_download_completion || stripos($this->title, 'materiały') !== false) {
+            \Log::info("🔍 DEBUG isCompletedByUser for lesson: {$this->id} ({$this->title}) = " . ($isCompleted ? 'true' : 'false'));
+        }
+        
+        return $isCompleted;
     }
 
     /**
@@ -313,16 +320,30 @@ class Lesson extends Model
     {
         $progress = $this->userProgress()->where('user_id', $user->id)->first();
         
+        // Debug logging
+        \Log::info("🔍 DEBUG checkAndCompleteIfTimerExpired for lesson: {$this->id} ({$this->title})");
+        \Log::info("🔍 DEBUG progress exists: " . ($progress ? 'yes' : 'no'));
+        if ($progress) {
+            \Log::info("🔍 DEBUG progress data:", [
+                'file_downloaded_at' => $progress->file_downloaded_at,
+                'is_completed' => $progress->is_completed,
+                'can_proceed_after' => $progress->can_proceed_after
+            ]);
+        }
+        
         if (!$progress || !$progress->file_downloaded_at || $progress->is_completed) {
+            \Log::info("🔍 DEBUG early return - no progress or already completed");
             return false;
         }
 
         // Check if timer has expired
         if ($progress->can_proceed_after && now()->isAfter($progress->can_proceed_after)) {
+            \Log::info("🔍 DEBUG timer expired - marking as completed");
             $this->markAsCompleted($user);
             return true;
         }
 
+        \Log::info("🔍 DEBUG timer not expired yet");
         return false;
     }
 }
