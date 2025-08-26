@@ -30,6 +30,31 @@ class UserProgress extends Model
         'can_proceed_after' => 'datetime',
     ];
 
+    // Debug logging for lesson 19
+    protected static function booted()
+    {
+        static::creating(function (UserProgress $progress) {
+            if ($progress->lesson_id == 19) {
+                \Log::info("🔍 DEBUG UserProgress CREATING for lesson 19", [
+                    'user_id' => $progress->user_id,
+                    'is_completed' => $progress->is_completed,
+                    'trace' => debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 8)
+                ]);
+            }
+        });
+
+        static::updating(function (UserProgress $progress) {
+            if ($progress->lesson_id == 19) {
+                \Log::info("🔍 DEBUG UserProgress UPDATING for lesson 19", [
+                    'user_id' => $progress->user_id,
+                    'is_completed' => $progress->is_completed,
+                    'original_is_completed' => $progress->getOriginal('is_completed'),
+                    'trace' => debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 8)
+                ]);
+            }
+        });
+    }
+
     /**
      * Get the user that owns the progress
      */
