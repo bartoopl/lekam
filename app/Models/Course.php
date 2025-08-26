@@ -120,11 +120,25 @@ class Course extends Model
     }
 
     /**
-     * Check if user can access materials (after last lesson completion)
+     * Check if user can access materials (after completing lessons except the material lesson)
      */
     public function canUserAccessMaterials(User $user): bool
     {
-        return $this->isCompletedByUser($user);
+        // Get all lessons except the last lesson (which is the materials lesson)
+        $lessons = $this->lessons()->where('is_last_lesson', false)->get();
+        
+        if ($lessons->count() === 0) {
+            return false;
+        }
+        
+        // Check if all non-material lessons are completed
+        foreach ($lessons as $lesson) {
+            if (!$lesson->isCompletedByUser($user)) {
+                return false;
+            }
+        }
+        
+        return true;
     }
 
     /**
