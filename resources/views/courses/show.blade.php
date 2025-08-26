@@ -1,6 +1,15 @@
 @extends('layouts.app')
 
 @section('content')
+
+<!-- Motivational Popup System -->
+<div id="motivational-popup" class="motivational-popup hidden">
+    <div class="popup-content">
+        <div class="popup-icon">🎉</div>
+        <div class="popup-text"></div>
+        <div class="popup-close">&times;</div>
+    </div>
+</div>
 <style>
     html, body {
         background-image: url('/images/backgrounds/bg.jpg');
@@ -1839,5 +1848,185 @@ document.addEventListener('DOMContentLoaded', function() {
         updateSinusoidalProgress(progressPercentage);
     }, 100);
 });
+
+// Motivational Popup System
+const motivationalMessages = [
+    { text: "Świetnie Ci idzie! 💪", icon: "🎉" },
+    { text: "Jesteś na dobrej drodze! 🌟", icon: "✨" },
+    { text: "Tak trzymaj! 🚀", icon: "🔥" },
+    { text: "Doskonała robota! 👏", icon: "🎊" },
+    { text: "Imponująca koncentracja! 🧠", icon: "💡" },
+    { text: "Uczysz się szybko! ⚡", icon: "🎯" },
+    { text: "Brawo! Kontynuuj! 🌈", icon: "🏆" },
+    { text: "Jesteś coraz bliżej celu! 🎯", icon: "🎪" },
+    { text: "Fantastyczny postęp! 📈", icon: "🌟" },
+    { text: "Nie poddawaj się! 💪", icon: "🦋" }
+];
+
+let lastMotivationalShow = 0;
+let motivationalCounter = 0;
+
+function showMotivationalPopup() {
+    const now = Date.now();
+    // Nie częściej niż co 2 minuty
+    if (now - lastMotivationalShow < 120000) return;
+    
+    const popup = document.getElementById('motivational-popup');
+    if (!popup || popup.classList.contains('show')) return;
+    
+    const randomMessage = motivationalMessages[Math.floor(Math.random() * motivationalMessages.length)];
+    
+    popup.querySelector('.popup-text').textContent = randomMessage.text;
+    popup.querySelector('.popup-icon').textContent = randomMessage.icon;
+    
+    popup.classList.remove('hidden');
+    setTimeout(() => popup.classList.add('show'), 10);
+    
+    lastMotivationalShow = now;
+    motivationalCounter++;
+    
+    // Auto-hide po 4 sekundach
+    setTimeout(() => {
+        hideMotivationalPopup();
+    }, 4000);
+}
+
+function hideMotivationalPopup() {
+    const popup = document.getElementById('motivational-popup');
+    if (!popup) return;
+    
+    popup.classList.remove('show');
+    setTimeout(() => popup.classList.add('hidden'), 300);
+}
+
+// Event listeners
+document.addEventListener('DOMContentLoaded', function() {
+    const closeBtn = document.querySelector('.popup-close');
+    if (closeBtn) {
+        closeBtn.addEventListener('click', hideMotivationalPopup);
+    }
+    
+    // Random triggers
+    setTimeout(() => {
+        if (Math.random() < 0.3) showMotivationalPopup();
+    }, Math.random() * 30000 + 10000); // 10-40s po załadowaniu
+    
+    // Periodic random shows
+    setInterval(() => {
+        if (Math.random() < 0.1) showMotivationalPopup(); // 10% szansy co minutę
+    }, 60000);
+});
+
+// Trigger na akcje użytkownika
+function triggerMotivationalChance() {
+    if (Math.random() < 0.15) { // 15% szansy
+        setTimeout(() => showMotivationalPopup(), 1000 + Math.random() * 3000);
+    }
+}
+
+// Hook do istniejących event handlerów
+const originalLessonLoad = window.loadLesson;
+window.loadLesson = function(...args) {
+    if (originalLessonLoad) originalLessonLoad.apply(this, args);
+    triggerMotivationalChance();
+};
+
+// Hook do ukończenia lekcji  
+document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('lesson-item') || e.target.closest('.lesson-item')) {
+        triggerMotivationalChance();
+    }
+});
 </script>
+
+<style>
+.motivational-popup {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    max-width: 320px;
+    transition: all 0.3s ease-in-out;
+}
+
+.motivational-popup.hidden {
+    opacity: 0;
+    transform: translateX(100px) translateY(-20px);
+    pointer-events: none;
+}
+
+.motivational-popup.show {
+    opacity: 1;
+    transform: translateX(0) translateY(0);
+}
+
+.popup-content {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 16px 20px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    animation: bounce 0.5s ease-out;
+}
+
+.popup-content::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: -8px;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    border: 8px solid transparent;
+    border-left-color: #667eea;
+}
+
+.popup-icon {
+    font-size: 24px;
+    animation: pulse 1.5s infinite;
+}
+
+.popup-text {
+    flex: 1;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.popup-close {
+    cursor: pointer;
+    font-size: 20px;
+    opacity: 0.8;
+    transition: opacity 0.2s;
+}
+
+.popup-close:hover {
+    opacity: 1;
+}
+
+@keyframes bounce {
+    0% { transform: scale(0.8) translateY(20px); opacity: 0; }
+    50% { transform: scale(1.05) translateY(-5px); opacity: 0.8; }
+    100% { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+@media (max-width: 768px) {
+    .motivational-popup {
+        top: 10px;
+        right: 10px;
+        left: 10px;
+        max-width: none;
+    }
+}
+</style>
+
 @endsection
