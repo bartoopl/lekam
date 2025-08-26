@@ -263,13 +263,10 @@
                 })
             });
             
-            // Start timer if configured
-            if (timerMinutes > 0) {
-                startDownloadTimer(timerMinutes, completeUrl);
-            } else {
-                // Complete immediately if no timer
-                setTimeout(() => completeLesson(completeUrl), 1000);
-            }
+            // After download, reload page to show server-side timer
+            setTimeout(() => {
+                window.location.reload();
+            }, 1000);
         }
         
         // Add event listeners to all material download buttons when DOM is ready
@@ -283,103 +280,7 @@
             });
         });
         
-        window.startDownloadTimer = function(minutes, completeUrl) {
-            const timerInfo = document.getElementById('timer-info');
-            const timerDisplay = document.getElementById('timer-display');
-            
-            if (timerInfo) {
-                timerInfo.style.display = 'block';
-                timerInfo.className = 'mb-4 p-4 bg-blue-50 border border-blue-200 rounded-lg';
-            }
-            
-            let totalSeconds = minutes * 60;
-            
-            function updateDisplay() {
-                const mins = Math.floor(totalSeconds / 60);
-                const secs = totalSeconds % 60;
-                const display = `${mins}:${secs.toString().padStart(2, '0')}`;
-                
-                if (timerDisplay) {
-                    timerDisplay.textContent = display;
-                }
-                
-                if (totalSeconds <= 0) {
-                    clearInterval(countdownInterval);
-                    
-                    // Complete lesson automatically
-                    fetch(completeUrl, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                        }
-                    }).then(response => {
-                        if (response.ok) {
-                            // Update timer display to show completion
-                            if (timerInfo) {
-                                timerInfo.innerHTML = `
-                                    <div class="flex items-center text-green-600">
-                                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                                        </svg>
-                                        <span class="font-bold">Timer zakończony! Lekcja została ukończona.</span>
-                                    </div>
-                                    <div class="mt-2 text-sm text-green-700">
-                                        Zakończono: ${new Date().toLocaleDateString('pl-PL')} ${new Date().toLocaleTimeString('pl-PL', {hour: '2-digit', minute: '2-digit'})}
-                                    </div>
-                                `;
-                                timerInfo.className = 'mb-4 p-4 bg-green-50 border border-green-200 rounded-lg';
-                            }
-                            
-                            // Update lesson status in sidebar
-                            const lessonItem = document.querySelector('.lesson-item.active');
-                            if (lessonItem) {
-                                lessonItem.classList.add('completed');
-                                const statusElement = lessonItem.querySelector('.lesson-status');
-                                if (statusElement) {
-                                    statusElement.textContent = '✓ Ukończona';
-                                }
-                            }
-                            
-                            // Show success notification
-                            if (window.showSuccessMessage) {
-                                showSuccessMessage('Timer zakończony! Lekcja została ukończona.');
-                            }
-                            
-                            // Notify parent window to refresh lessons status
-                            if (parent && parent !== window && typeof parent.refreshLessonsAccessibility === 'function') {
-                                parent.refreshLessonsAccessibility();
-                            }
-                            
-                            // Update local navigation buttons
-                            setTimeout(() => {
-                                updateLocalNavigationButtons();
-                            }, 500);
-                        } else {
-                            console.error('Failed to complete lesson');
-                            // Show error notification
-                            if (window.showSuccessMessage) {
-                                showSuccessMessage('Błąd przy ukończeniu lekcji. Odśwież stronę.');
-                            }
-                        }
-                    }).catch(error => {
-                        console.error('Error completing lesson:', error);
-                        // Show error notification
-                        if (window.showSuccessMessage) {
-                            showSuccessMessage('Błąd przy ukończeniu lekcji. Odśwież stronę.');
-                        }
-                    });
-                    
-                    return;
-                }
-                
-                totalSeconds--;
-            }
-            
-            // Update immediately and then every second
-            updateDisplay();
-            countdownInterval = setInterval(updateDisplay, 1000);
-        }
+        // Client-side timer removed - using server-side implementation only
         
         window.completeLesson = function(completeUrl) {
             fetch(completeUrl, {
@@ -695,55 +596,109 @@
                 </div>
                 
                 <script>
-                    // Server-side timer - just refresh page periodically to update display
+                    // Server-side timer with real-time countdown display
                     const timerDisplay = document.getElementById('timer-display');
                     const timerInfo = document.getElementById('timer-info');
                     let remainingTime = {{ $remainingSeconds }};
+                    let countdownInterval = null;
                     
-                    // Auto-refresh lesson content every 30 seconds to get updated timer from server
-                    let refreshInterval = null;
-                    
-                    function refreshLessonState() {
-                        // Only refresh if timer is still active
-                        if (remainingTime > 0) {
-                            // Soft refresh - fetch lesson progress without full page reload
-                            fetch(window.location.href, {
-                                method: 'GET',
-                                headers: {
-                                    'X-Requested-With': 'XMLHttpRequest',
-                                    'Accept': 'application/json'
-                                }
-                            }).then(response => {
-                                if (!response.ok) {
-                                    // If request fails, do a full page refresh as fallback
-                                    window.location.reload();
-                                }
-                            }).catch(() => {
-                                // If fetch fails, try again in next interval
-                            });
-                        } else {
-                            // Timer finished, stop refreshing
-                            if (refreshInterval) {
-                                clearInterval(refreshInterval);
+                    function updateTimerDisplay() {
+                        if (remainingTime <= 0) {
+                            // Timer expired - complete lesson and update display
+                            if (countdownInterval) {
+                                clearInterval(countdownInterval);
                             }
+                            completeTimerLesson();
+                            return;
                         }
+                        
+                        // Update display
+                        const minutes = Math.floor(remainingTime / 60);
+                        const seconds = remainingTime % 60;
+                        const display = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+                        
+                        if (timerDisplay) {
+                            timerDisplay.textContent = display;
+                        }
+                        
+                        remainingTime--;
                     }
                     
-                    // Start periodic refresh
-                    refreshInterval = setInterval(refreshLessonState, 30000); // Every 30 seconds
+                    function completeTimerLesson() {
+                        console.log('Timer expired, completing lesson...');
+                        
+                        // Complete lesson automatically
+                        fetch('{{ route("courses.complete-lesson", ["course" => $course, "lesson" => $lesson]) }}', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                            }
+                        }).then(response => response.json()).then(data => {
+                            if (data.success) {
+                                console.log('Lesson completed after timer expiry');
+                                
+                                // Update timer display to show completion
+                                if (timerInfo) {
+                                    timerInfo.innerHTML = `
+                                        <div class="flex items-center text-green-600">
+                                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                            </svg>
+                                            <span class="font-bold">Timer zakończony! Lekcja została ukończona.</span>
+                                        </div>
+                                        <div class="mt-2 text-sm text-green-700">
+                                            Zakończono: ${new Date().toLocaleDateString('pl-PL')} ${new Date().toLocaleTimeString('pl-PL', {hour: '2-digit', minute: '2-digit'})}
+                                        </div>
+                                    `;
+                                    timerInfo.className = 'mt-4 p-4 bg-green-50 border border-green-200 rounded-lg';
+                                }
+                                
+                                // Update lesson status in sidebar
+                                const lessonItem = document.querySelector('.lesson-item.active');
+                                if (lessonItem) {
+                                    lessonItem.classList.add('completed');
+                                    const statusElement = lessonItem.querySelector('.lesson-status');
+                                    if (statusElement) {
+                                        statusElement.textContent = '✓ Ukończona';
+                                    }
+                                }
+                                
+                                // Show success notification
+                                if (window.showSuccessMessage) {
+                                    showSuccessMessage('Timer zakończony! Lekcja została ukończona.');
+                                }
+                                
+                                // Notify parent window to refresh lessons status and update buttons
+                                if (parent && parent !== window && typeof parent.refreshLessonsAccessibility === 'function') {
+                                    parent.refreshLessonsAccessibility();
+                                }
+                                
+                                // Update local navigation buttons
+                                setTimeout(() => {
+                                    updateLocalNavigationButtons();
+                                }, 500);
+                            } else {
+                                console.error('Failed to complete lesson');
+                                // Fallback: reload page to update UI
+                                window.location.reload();
+                            }
+                        }).catch(error => {
+                            console.error('Error completing lesson:', error);
+                            // Fallback: reload page to update UI
+                            window.location.reload();
+                        });
+                    }
                     
-                    // Cleanup intervals when page is unloaded
-                    window.addEventListener('beforeunload', () => {
-                        if (countdown) clearInterval(countdown);
-                        if (refreshInterval) clearInterval(refreshInterval);
-                    });
-                    
-                    // Auto-refresh every 30 seconds to get updated timer from server
-                    refreshInterval = setInterval(refreshLessonState, 30000);
-                    
-                    // Check immediately if timer has expired
-                    if (remainingTime <= 0) {
-                        console.log('Timer already expired, completing lesson...');
+                    // Start the countdown if timer is still running
+                    if (remainingTime > 0) {
+                        updateTimerDisplay(); // Update immediately
+                        countdownInterval = setInterval(updateTimerDisplay, 1000); // Update every second
+                    } else if (remainingTime <= 0) {
+                        // Timer already expired on page load
+                        completeTimerLesson();
+                    }
+                </script>
                         
                         // Complete lesson automatically
                         fetch('{{ route("courses.complete-lesson", ["course" => $course, "lesson" => $lesson]) }}', {
@@ -904,107 +859,13 @@
                 Pobrano - Timer aktywny
             `;
             
-            // Start timer
-            startDownloadTimer(timerMinutes, completeUrl);
+            // After mock download, reload page to show server-side timer
+            setTimeout(() => {
+                window.location.reload();
+            }, 1000);
         }
         
-        window.startDownloadTimer = function(minutes, completeUrl) {
-            const timerInfo = document.getElementById('timer-info');
-            const timerDisplay = document.getElementById('timer-display');
-            
-            if (timerInfo) {
-                timerInfo.style.display = 'block';
-                timerInfo.className = 'mb-4 p-4 bg-blue-50 border border-blue-200 rounded-lg';
-            }
-            
-            let totalSeconds = minutes * 60;
-            
-            function updateDisplay() {
-                const mins = Math.floor(totalSeconds / 60);
-                const secs = totalSeconds % 60;
-                const display = `${mins}:${secs.toString().padStart(2, '0')}`;
-                
-                if (timerDisplay) {
-                    timerDisplay.textContent = display;
-                }
-                
-                if (totalSeconds <= 0) {
-                    clearInterval(countdownInterval);
-                    
-                    // Complete lesson automatically
-                    fetch(completeUrl, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                        }
-                    }).then(response => {
-                        if (response.ok) {
-                            // Update timer display to show completion
-                            if (timerInfo) {
-                                timerInfo.innerHTML = `
-                                    <div class="flex items-center text-green-600">
-                                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                                        </svg>
-                                        <span class="font-bold">Timer zakończony! Lekcja została ukończona.</span>
-                                    </div>
-                                    <div class="mt-2 text-sm text-green-700">
-                                        Zakończono: ${new Date().toLocaleDateString('pl-PL')} ${new Date().toLocaleTimeString('pl-PL', {hour: '2-digit', minute: '2-digit'})}
-                                    </div>
-                                `;
-                                timerInfo.className = 'mb-4 p-4 bg-green-50 border border-green-200 rounded-lg';
-                            }
-                            
-                            // Update lesson status in sidebar
-                            const lessonItem = document.querySelector('.lesson-item.active');
-                            if (lessonItem) {
-                                lessonItem.classList.add('completed');
-                                const statusElement = lessonItem.querySelector('.lesson-status');
-                                if (statusElement) {
-                                    statusElement.textContent = '✓ Ukończona';
-                                }
-                            }
-                            
-                            // Show success notification
-                            if (window.showSuccessMessage) {
-                                showSuccessMessage('Timer zakończony! Lekcja została ukończona.');
-                            }
-                            
-                            // Notify parent window to refresh lessons status
-                            if (parent && parent !== window && typeof parent.refreshLessonsAccessibility === 'function') {
-                                parent.refreshLessonsAccessibility();
-                            }
-                            
-                            // Update local navigation buttons
-                            setTimeout(() => {
-                                updateLocalNavigationButtons();
-                            }, 500);
-                        } else {
-                            console.error('Failed to complete lesson');
-                            // Show error notification
-                            if (window.showSuccessMessage) {
-                                showSuccessMessage('Błąd przy ukończeniu lekcji. Odśwież stronę.');
-                            }
-                        }
-                    }).catch(error => {
-                        console.error('Error completing lesson:', error);
-                        // Show error notification
-                        if (window.showSuccessMessage) {
-                            showSuccessMessage('Błąd przy ukończeniu lekcji. Odśwież stronę.');
-                        }
-                    });
-                    
-                    return;
-                }
-                
-                totalSeconds--;
-            }
-            
-            // Update immediately and then every second
-            updateDisplay();
-            countdownInterval = setInterval(updateDisplay, 1000);
-        }
+        // Second client-side timer implementation also removed
         
         window.completeLesson = function(completeUrl) {
             fetch(completeUrl, {
