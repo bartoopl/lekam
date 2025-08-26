@@ -703,9 +703,10 @@
                         updateTimerDisplay(); // Update immediately
                         countdownInterval = setInterval(updateTimerDisplay, 1000); // Update every second
                     } else if (remainingTime <= 0) {
-                        console.log('🔍 DEBUG: Timer already expired on page load, completing lesson');
-                        // Timer already expired on page load
-                        completeTimerLesson();
+                        console.log('🔍 DEBUG: Timer already expired on page load, but NOT auto-completing');
+                        // Timer already expired on page load - DO NOT auto-complete
+                        // The lesson should be completed only through manual timer expiry
+                        // completeTimerLesson(); // REMOVED - this was causing infinite loop
                     }
                 </script>
             @else
