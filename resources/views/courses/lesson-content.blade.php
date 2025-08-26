@@ -709,6 +709,20 @@
                         // completeTimerLesson(); // REMOVED - this was causing infinite loop
                     }
                 </script>
+                
+                <script>
+                // Listen for messages from parent window
+                window.addEventListener('message', function(event) {
+                    if (event.data.action === 'showQuizSection') {
+                        console.log('Received message to show quiz section');
+                        const quizSection = document.getElementById('quiz-start-section');
+                        if (quizSection) {
+                            quizSection.style.display = 'block';
+                            console.log('Quiz section shown via message');
+                        }
+                    }
+                });
+                </script>
             @else
                 <!-- Timer expired -->
                 <div id="timer-info" class="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg">

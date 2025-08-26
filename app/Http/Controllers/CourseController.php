@@ -403,12 +403,20 @@ class CourseController extends Controller
             })->count();
             $progressPercentage = $totalLessons > 0 ? round(($completedLessons / $totalLessons) * 100) : 0;
 
+            // Check if quiz should be unlocked
+            $quiz = $course->quiz;
+            $quizUnlocked = false;
+            if ($quiz && $quiz->is_active && $course->canUserAccessQuiz($user)) {
+                $quizUnlocked = true;
+            }
+
             return response()->json([
                 'success' => true,
                 'lessons' => $lessonsData,
                 'progress_percentage' => $progressPercentage,
                 'completed_lessons' => $completedLessons,
-                'total_lessons' => $totalLessons
+                'total_lessons' => $totalLessons,
+                'quiz_unlocked' => $quizUnlocked
             ]);
         } catch (\Exception $e) {
             return response()->json([

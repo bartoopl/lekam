@@ -1157,6 +1157,26 @@ function refreshLessonsAccessibility() {
                 }
             }
             
+            // Check if quiz should be unlocked after lesson update
+            console.log('Checking quiz unlock status from server response...');
+            if (data.quiz_unlocked) {
+                console.log('Quiz was unlocked - showing quiz section in iframe');
+                const iframe = document.querySelector('#lesson-content iframe');
+                if (iframe) {
+                    try {
+                        const quizSection = iframe.contentDocument.getElementById('quiz-start-section');
+                        if (quizSection) {
+                            quizSection.style.display = 'block';
+                            console.log('Quiz section shown in iframe');
+                        }
+                    } catch (e) {
+                        console.log('Cannot access iframe content, sending message to iframe');
+                        // Send message to iframe to show quiz section
+                        iframe.contentWindow.postMessage({action: 'showQuizSection'}, '*');
+                    }
+                }
+            }
+            
             // After updating all lessons, update navigation buttons
             console.log('Lessons updated, now updating navigation buttons');
             updateNavigationButtons();
@@ -1187,6 +1207,21 @@ function updateNavigationButtons() {
     }
     
     console.log('Active lesson found, updating buttons');
+    
+    // Check if current lesson is materials lesson - hide buttons if it is
+    const currentLessonTitle = activeLesson.querySelector('.lesson-title');
+    if (currentLessonTitle && 
+        (currentLessonTitle.textContent.toLowerCase().includes('materiały do pobrania') || 
+         currentLessonTitle.textContent.toLowerCase().includes('materialy do pobrania'))) {
+        console.log('Current lesson is materials lesson - hiding navigation buttons');
+        prevBtn.style.display = 'none';
+        nextBtn.style.display = 'none';
+        return;
+    } else {
+        // Show buttons for non-materials lessons
+        prevBtn.style.display = 'inline-flex';
+        nextBtn.style.display = 'inline-flex';
+    }
     
     // Find previous lesson
     const prevLesson = findPreviousAccessibleLesson(activeLesson);
