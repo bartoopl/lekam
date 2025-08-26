@@ -222,6 +222,14 @@ class Lesson extends Model
      */
     public function markAsCompleted(User $user): void
     {
+        // Debug logging
+        if ($this->requires_download_completion || stripos($this->title, 'materiały') !== false) {
+            \Log::info("🔍 DEBUG markAsCompleted called for lesson: {$this->id} ({$this->title})");
+            \Log::info("🔍 DEBUG markAsCompleted stack trace:", [
+                'trace' => debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 5)
+            ]);
+        }
+        
         $this->userProgress()->updateOrCreate(
             ['user_id' => $user->id],
             [
