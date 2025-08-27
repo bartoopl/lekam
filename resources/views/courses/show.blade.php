@@ -33,8 +33,17 @@
         font-size: 2.5rem;
         font-weight: 700;
         color: #21235F;
-        margin-bottom: 1.5rem;
+        margin-bottom: 1rem;
         font-family: 'Poppins', sans-serif;
+    }
+
+    .course-description {
+        font-size: 1.1rem;
+        line-height: 1.6;
+        color: #4A5568;
+        margin-bottom: 1.5rem;
+        padding: 1rem 0;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     }
 
     .breadcrumbs {
@@ -573,6 +582,11 @@
             font-size: 2rem;
         }
 
+        .course-description {
+            font-size: 1rem;
+            padding: 0.75rem 0;
+        }
+
         .quiz-header {
             flex-direction: column;
             gap: 1rem;
@@ -605,6 +619,12 @@
         </div>
         
         <h1 class="course-title">{{ $course->title }}</h1>
+        
+        @if($course->description)
+            <div class="course-description">
+                {{ $course->description }}
+            </div>
+        @endif
     </div>
 
     <!-- Progress Section -->
