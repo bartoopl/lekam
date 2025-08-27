@@ -1671,11 +1671,22 @@ function startCountdownFromSeconds(totalSeconds, completeUrl) {
             countdownTimer.textContent = 'Ukończono!';
             clearInterval(window.timerInterval);
             
+            // Unlock quiz when timer finishes
+            canTakeQuiz = true;
+            console.log('Quiz unlocked after timer completion');
+            
             // Show quiz section if available
             const quizSection = document.getElementById('quiz-start-section');
             if (quizSection) {
                 quizSection.style.display = 'block';
             }
+            
+            // Update navigation buttons to show quiz option
+            setTimeout(() => {
+                if (typeof updateNavigationButtons === 'function') {
+                    updateNavigationButtons();
+                }
+            }, 500);
             
             return;
         }
@@ -1711,6 +1722,10 @@ function startCountdownFromMinutes(minutes, completeUrl) {
         if (totalSeconds <= 0) {
             console.log('Timer finished, completing lesson...');
             
+            // Always unlock quiz when timer finishes
+            canTakeQuiz = true;
+            console.log('Quiz unlocked after timer completion');
+            
             // Complete lesson
             if (completeUrl) {
                 fetch(completeUrl, {
@@ -1723,6 +1738,12 @@ function startCountdownFromMinutes(minutes, completeUrl) {
                     if (data.success) {
                         console.log('Lesson completed after timer');
                         countdownTimer.textContent = 'Ukończono!';
+                        
+                        // Unlock quiz when lesson completes after timer
+                        if (data.quiz_unlocked) {
+                            canTakeQuiz = true;
+                            console.log('Quiz unlocked after lesson completion');
+                        }
                         
                         // Update lesson status in sidebar
                         const lessonItem = document.querySelector('.lesson-item.active');
@@ -1755,6 +1776,19 @@ function startCountdownFromMinutes(minutes, completeUrl) {
                 }).catch(error => {
                     console.error('Error completing lesson after timer:', error);
                 });
+            } else {
+                // No completeUrl but timer finished - still show quiz section and update buttons
+                const quizSection = document.getElementById('quiz-start-section');
+                if (quizSection) {
+                    quizSection.style.display = 'block';
+                }
+                
+                // Update navigation buttons to show quiz option
+                setTimeout(() => {
+                    if (typeof updateNavigationButtons === 'function') {
+                        updateNavigationButtons();
+                    }
+                }, 500);
             }
             
             return;
