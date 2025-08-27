@@ -123,27 +123,6 @@
         transition: cx 1s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    .progress-pulse {
-        r: 8;
-        opacity: 0.4;
-        animation: progressPulse 2s ease-in-out infinite;
-        animation-play-state: paused;
-    }
-    
-    .progress-pulse.animating {
-        animation-play-state: running;
-    }
-
-    @keyframes progressPulse {
-        0%, 100% {
-            transform: scale(1);
-            opacity: 0.4;
-        }
-        50% {
-            transform: scale(1.5);
-            opacity: 0.1;
-        }
-    }
 
     .quiz-section {
         background: rgba(255, 255, 255, 0.1);
@@ -688,9 +667,6 @@
                          Q 675 45, 700 70
                          Q 725 95, 750 85
                          Q 775 75, 800 60" />
-                
-                <!-- Animated pulse -->
-                <circle class="progress-pulse" cx="0" cy="60" fill="url(#progressGradient)" />
                 
                 <!-- Progress dot -->
                 <circle class="progress-dot" cx="0" cy="60" fill="url(#dotGradient)" stroke="#ffffff" stroke-width="2" />
@@ -1798,7 +1774,6 @@ let lastProgressPercentage = -1;
 function updateSinusoidalProgress(percentage) {
     const progressPath = document.querySelector('#progress-path');
     const progressDot = document.querySelector('.progress-dot');
-    const progressPulse = document.querySelector('.progress-pulse');
     
     if (!progressPath || !progressDot) return;
     
@@ -1817,20 +1792,6 @@ function updateSinusoidalProgress(percentage) {
         
         // Update gradient color based on progress
         updateProgressGradient(progress);
-        
-        // Control pulse animation - only animate when progress changes
-        if (progressPulse) {
-            if (isProgressChanging && progress > 0) {
-                progressPulse.classList.add('animating');
-                // Stop animating after 3 seconds
-                setTimeout(() => {
-                    progressPulse.classList.remove('animating');
-                }, 3000);
-            } else if (progress === 0) {
-                // Always stop animation when at start
-                progressPulse.classList.remove('animating');
-            }
-        }
         
         // Get point along path for dot position with bounds checking
         if (progress > 0 && progressLength > 0) {
@@ -1851,11 +1812,6 @@ function updateSinusoidalProgress(percentage) {
                 progressDot.setAttribute('cx', x);
                 progressDot.setAttribute('cy', y);
                 
-                if (progressPulse) {
-                    progressPulse.setAttribute('cx', x);
-                    progressPulse.setAttribute('cy', y);
-                }
-                
                 // Update dot color based on progress
                 updateDotGradient(progress);
             } else {
@@ -1865,23 +1821,12 @@ function updateSinusoidalProgress(percentage) {
             // Position at start when progress is 0
             progressDot.setAttribute('cx', 0);
             progressDot.setAttribute('cy', 60);
-            
-            if (progressPulse) {
-                progressPulse.setAttribute('cx', 0);
-                progressPulse.setAttribute('cy', 60);
-            }
         }
     } catch (error) {
         console.error('Error updating progress:', error);
         // Fallback to start position
         progressDot.setAttribute('cx', 0);
         progressDot.setAttribute('cy', 60);
-        
-        if (progressPulse) {
-            progressPulse.setAttribute('cx', 0);
-            progressPulse.setAttribute('cy', 60);
-            progressPulse.classList.remove('animating');
-        }
     }
 }
 
