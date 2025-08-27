@@ -996,12 +996,19 @@ function showSuccessMessage(message) {
 let canTakeQuiz = {{ $canTakeQuiz ? 'true' : 'false' }};
 
 function navigateToQuiz() {
+    console.log('navigateToQuiz called, canTakeQuiz:', canTakeQuiz);
+    
     if(canTakeQuiz) {
-        // Update active state
+        // Update active state - remove active from all lessons
         document.querySelectorAll('.lesson-item').forEach(item => {
             item.classList.remove('active');
         });
-        event.target.closest('.lesson-item').classList.add('active');
+        
+        // Find quiz lesson item and activate it (if it exists)
+        const quizLessonItem = document.querySelector('.lesson-item[onclick*="navigateToQuiz"]');
+        if (quizLessonItem) {
+            quizLessonItem.classList.add('active');
+        }
         
         // Load quiz content via AJAX
         fetch(`/courses/{{ $course->id }}/quiz/content`)
@@ -1015,6 +1022,7 @@ function navigateToQuiz() {
                 window.location.href = '{{ route("quizzes.show", $course) }}';
             });
     } else {
+        console.log('Quiz not available, showing alert');
         alert('Test jest niedostępny. Ukończ wszystkie lekcje aby przystąpić do testu.');
     }
 }
@@ -1693,12 +1701,15 @@ function startCountdownFromSeconds(totalSeconds, completeUrl) {
             
             // Unlock quiz when timer finishes
             canTakeQuiz = true;
-            console.log('Quiz unlocked after timer completion');
+            console.log('Quiz unlocked after timer completion, canTakeQuiz is now:', canTakeQuiz);
             
             // Show quiz section if available
             const quizSection = document.getElementById('quiz-start-section');
             if (quizSection) {
                 quizSection.style.display = 'block';
+                console.log('Quiz section shown');
+            } else {
+                console.log('Quiz section not found');
             }
             
             // Update navigation buttons to show quiz option
@@ -1744,7 +1755,7 @@ function startCountdownFromMinutes(minutes, completeUrl) {
             
             // Always unlock quiz when timer finishes
             canTakeQuiz = true;
-            console.log('Quiz unlocked after timer completion');
+            console.log('Quiz unlocked after timer completion, canTakeQuiz is now:', canTakeQuiz);
             
             // Complete lesson
             if (completeUrl) {
