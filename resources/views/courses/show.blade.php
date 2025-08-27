@@ -93,14 +93,14 @@
         position: relative;
         height: 120px;
         width: 100%;
-        overflow: visible;
+        overflow: hidden;
         margin: 20px 0;
     }
 
     .sinusoidal-progress {
         width: 100%;
         height: 120px;
-        overflow: visible;
+        overflow: hidden;
     }
 
     .progress-path-bg {
@@ -646,29 +646,43 @@
                 <!-- Background path -->
                 <path id="progress-path-bg" class="progress-path-bg" 
                       d="M 0 60 
-                         C 50 20, 100 20, 150 60
-                         C 180 80, 180 100, 150 100
-                         C 120 100, 120 80, 150 60
-                         C 200 40, 250 40, 300 60
-                         C 330 20, 370 20, 400 60
-                         C 420 100, 420 40, 400 60
-                         C 450 80, 500 80, 550 60
-                         C 580 20, 620 100, 650 60
-                         C 700 40, 750 80, 800 60" />
+                         Q 25 45, 50 40
+                         Q 75 35, 100 45
+                         Q 125 55, 150 70
+                         Q 175 85, 200 90
+                         Q 225 95, 250 85
+                         Q 275 75, 300 65
+                         Q 325 55, 350 30
+                         Q 375 5, 400 15
+                         Q 425 25, 450 50
+                         Q 475 75, 500 85
+                         Q 525 95, 550 75
+                         Q 575 55, 600 30
+                         Q 625 5, 650 25
+                         Q 675 45, 700 70
+                         Q 725 95, 750 85
+                         Q 775 75, 800 60" />
                 
                 <!-- Progress path -->
                 <path id="progress-path" class="progress-path" 
                       stroke="url(#progressGradient)"
                       d="M 0 60 
-                         C 50 20, 100 20, 150 60
-                         C 180 80, 180 100, 150 100
-                         C 120 100, 120 80, 150 60
-                         C 200 40, 250 40, 300 60
-                         C 330 20, 370 20, 400 60
-                         C 420 100, 420 40, 400 60
-                         C 450 80, 500 80, 550 60
-                         C 580 20, 620 100, 650 60
-                         C 700 40, 750 80, 800 60" />
+                         Q 25 45, 50 40
+                         Q 75 35, 100 45
+                         Q 125 55, 150 70
+                         Q 175 85, 200 90
+                         Q 225 95, 250 85
+                         Q 275 75, 300 65
+                         Q 325 55, 350 30
+                         Q 375 5, 400 15
+                         Q 425 25, 450 50
+                         Q 475 75, 500 85
+                         Q 525 95, 550 75
+                         Q 575 55, 600 30
+                         Q 625 5, 650 25
+                         Q 675 45, 700 70
+                         Q 725 95, 750 85
+                         Q 775 75, 800 60" />
                 
                 <!-- Animated pulse -->
                 <circle class="progress-pulse" cx="0" cy="60" fill="url(#progressGradient)" />
@@ -1781,27 +1795,67 @@ function updateSinusoidalProgress(percentage) {
     
     if (!progressPath || !progressDot) return;
     
-    // Get path length and calculate progress
-    const pathLength = progressPath.getTotalLength();
-    const progress = Math.max(0, Math.min(100, percentage)) / 100;
-    const progressLength = pathLength * progress;
-    
-    // Set stroke-dasharray to show progress
-    progressPath.style.strokeDasharray = `${progressLength} ${pathLength}`;
-    
-    // Update gradient color based on progress
-    updateProgressGradient(progress);
-    
-    // Get point along path for dot position
-    if (progress > 0) {
-        const point = progressPath.getPointAtLength(progressLength);
-        progressDot.setAttribute('cx', point.x);
-        progressDot.setAttribute('cy', point.y);
-        progressPulse.setAttribute('cx', point.x);
-        progressPulse.setAttribute('cy', point.y);
+    try {
+        // Get path length and calculate progress
+        const pathLength = progressPath.getTotalLength();
+        const progress = Math.max(0, Math.min(100, percentage)) / 100;
+        const progressLength = Math.max(0, Math.min(pathLength, pathLength * progress));
         
-        // Update dot color based on progress
-        updateDotGradient(progress);
+        // Set stroke-dasharray to show progress
+        progressPath.style.strokeDasharray = `${progressLength} ${pathLength}`;
+        
+        // Update gradient color based on progress
+        updateProgressGradient(progress);
+        
+        // Get point along path for dot position with bounds checking
+        if (progress > 0 && progressLength > 0) {
+            const point = progressPath.getPointAtLength(progressLength);
+            
+            // Validate coordinates and apply bounds
+            const svgRect = progressPath.closest('svg').getBoundingClientRect();
+            const viewBox = progressPath.closest('svg').getAttribute('viewBox').split(' ');
+            const maxX = parseFloat(viewBox[2]) || 800;
+            const maxY = parseFloat(viewBox[3]) || 120;
+            
+            // Clamp coordinates within valid bounds
+            const x = Math.max(0, Math.min(maxX, point.x || 0));
+            const y = Math.max(0, Math.min(maxY, point.y || 60));
+            
+            // Only update if coordinates are valid numbers
+            if (!isNaN(x) && !isNaN(y) && isFinite(x) && isFinite(y)) {
+                progressDot.setAttribute('cx', x);
+                progressDot.setAttribute('cy', y);
+                
+                if (progressPulse) {
+                    progressPulse.setAttribute('cx', x);
+                    progressPulse.setAttribute('cy', y);
+                }
+                
+                // Update dot color based on progress
+                updateDotGradient(progress);
+            } else {
+                console.warn('Invalid coordinates calculated:', {x, y, point});
+            }
+        } else {
+            // Position at start when progress is 0
+            progressDot.setAttribute('cx', 0);
+            progressDot.setAttribute('cy', 60);
+            
+            if (progressPulse) {
+                progressPulse.setAttribute('cx', 0);
+                progressPulse.setAttribute('cy', 60);
+            }
+        }
+    } catch (error) {
+        console.error('Error updating progress:', error);
+        // Fallback to start position
+        progressDot.setAttribute('cx', 0);
+        progressDot.setAttribute('cy', 60);
+        
+        if (progressPulse) {
+            progressPulse.setAttribute('cx', 0);
+            progressPulse.setAttribute('cy', 60);
+        }
     }
 }
 
@@ -1879,9 +1933,24 @@ function updateDotGradient(progress) {
 // Initialize progress on page load
 document.addEventListener('DOMContentLoaded', function() {
     const progressPercentage = {{ $progressPercentage }};
+    
+    // Initialize progress with validation
     setTimeout(() => {
-        updateSinusoidalProgress(progressPercentage);
+        // Ensure percentage is a valid number
+        const validPercentage = Math.max(0, Math.min(100, progressPercentage || 0));
+        console.log('Initializing progress with:', validPercentage + '%');
+        updateSinusoidalProgress(validPercentage);
     }, 100);
+    
+    // Add resize listener to recalculate positions if needed
+    let resizeTimeout;
+    window.addEventListener('resize', function() {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+            const validPercentage = Math.max(0, Math.min(100, progressPercentage || 0));
+            updateSinusoidalProgress(validPercentage);
+        }, 200);
+    });
 });
 
 // Motivational Popup System
