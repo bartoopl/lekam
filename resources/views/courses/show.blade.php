@@ -127,6 +127,11 @@
         r: 8;
         opacity: 0.4;
         animation: progressPulse 2s ease-in-out infinite;
+        animation-play-state: paused;
+    }
+    
+    .progress-pulse.animating {
+        animation-play-state: running;
     }
 
     @keyframes progressPulse {
@@ -1788,6 +1793,8 @@ function startCountdownFromMinutes(minutes, completeUrl) {
 }
 
 // Sinusoidal Progress Bar Functions
+let lastProgressPercentage = -1;
+
 function updateSinusoidalProgress(percentage) {
     const progressPath = document.querySelector('#progress-path');
     const progressDot = document.querySelector('.progress-dot');
@@ -1796,6 +1803,10 @@ function updateSinusoidalProgress(percentage) {
     if (!progressPath || !progressDot) return;
     
     try {
+        // Check if progress actually changed
+        const isProgressChanging = lastProgressPercentage !== percentage;
+        lastProgressPercentage = percentage;
+        
         // Get path length and calculate progress
         const pathLength = progressPath.getTotalLength();
         const progress = Math.max(0, Math.min(100, percentage)) / 100;
@@ -1806,6 +1817,20 @@ function updateSinusoidalProgress(percentage) {
         
         // Update gradient color based on progress
         updateProgressGradient(progress);
+        
+        // Control pulse animation - only animate when progress changes
+        if (progressPulse) {
+            if (isProgressChanging && progress > 0) {
+                progressPulse.classList.add('animating');
+                // Stop animating after 3 seconds
+                setTimeout(() => {
+                    progressPulse.classList.remove('animating');
+                }, 3000);
+            } else if (progress === 0) {
+                // Always stop animation when at start
+                progressPulse.classList.remove('animating');
+            }
+        }
         
         // Get point along path for dot position with bounds checking
         if (progress > 0 && progressLength > 0) {
@@ -1855,6 +1880,7 @@ function updateSinusoidalProgress(percentage) {
         if (progressPulse) {
             progressPulse.setAttribute('cx', 0);
             progressPulse.setAttribute('cy', 60);
+            progressPulse.classList.remove('animating');
         }
     }
 }
