@@ -27,8 +27,8 @@
 
                             <!-- Email -->
                             <div>
-                                <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-                                <input type="email" name="email" id="email" value="{{ old('email') }}" required
+                                <label for="email" class="block text-sm font-medium text-gray-700">Email (opcjonalnie)</label>
+                                <input type="email" name="email" id="email" value="{{ old('email') }}"
                                     class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
                                 @error('email')
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -37,7 +37,7 @@
 
                             <!-- Specialization -->
                             <div>
-                                <label for="specialization" class="block text-sm font-medium text-gray-700">Specjalizacja</label>
+                                <label for="specialization" class="block text-sm font-medium text-gray-700">Specjalizacja (opcjonalnie)</label>
                                 <input type="text" name="specialization" id="specialization" value="{{ old('specialization') }}"
                                     class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
                                 @error('specialization')
@@ -47,7 +47,7 @@
 
                             <!-- Bio -->
                             <div>
-                                <label for="bio" class="block text-sm font-medium text-gray-700">Biografia</label>
+                                <label for="bio" class="block text-sm font-medium text-gray-700">Biografia (opcjonalnie)</label>
                                 <textarea name="bio" id="bio" rows="4"
                                     class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">{{ old('bio') }}</textarea>
                                 @error('bio')
@@ -57,7 +57,7 @@
 
                             <!-- Photo -->
                             <div>
-                                <label for="photo" class="block text-sm font-medium text-gray-700">Zdjęcie</label>
+                                <label for="photo" class="block text-sm font-medium text-gray-700">Zdjęcie (opcjonalnie)</label>
                                 <input type="file" name="photo" id="photo" accept="image/*"
                                     class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
                                 @error('photo')

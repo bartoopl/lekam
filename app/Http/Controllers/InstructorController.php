@@ -35,7 +35,7 @@ class InstructorController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:instructors,email',
+            'email' => 'nullable|email|unique:instructors,email',
             'bio' => 'nullable|string',
             'specialization' => 'nullable|string|max:255',
             'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
@@ -82,7 +82,7 @@ class InstructorController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:instructors,email,' . $instructor->id,
+            'email' => 'nullable|email|unique:instructors,email,' . $instructor->id,
             'bio' => 'nullable|string',
             'specialization' => 'nullable|string|max:255',
             'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
