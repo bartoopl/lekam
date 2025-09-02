@@ -87,7 +87,17 @@
                      data-complete-lesson-url="{{ route('courses.complete-lesson', ['course' => $course, 'lesson' => $lesson]) }}"
                      @if($userProgress && $userProgress->video_position && !$userProgress->is_completed) data-start-position="{{ $userProgress->video_position }}" @endif
                      data-setup='{}'>
-                <source src="{{ $lesson->video_url ?: (str_starts_with($lesson->video_file, 'http') ? $lesson->video_file : Storage::url($lesson->video_file)) }}" type="video/mp4">
+                <source src="{{ 
+                    $lesson->video_url ? 
+                        (str_starts_with($lesson->video_url, 'http://') ? 
+                            route('video.proxy', ['url' => $lesson->video_url]) : 
+                            $lesson->video_url
+                        ) : 
+                        (str_starts_with($lesson->video_file, 'http') ? 
+                            $lesson->video_file : 
+                            Storage::url($lesson->video_file)
+                        ) 
+                }}" type="video/mp4">
                 @if($lesson->video_url && $lesson->video_file)
                     <source src="{{ str_starts_with($lesson->video_file, 'http') ? $lesson->video_file : Storage::url($lesson->video_file) }}" type="video/mp4">
                 @endif
