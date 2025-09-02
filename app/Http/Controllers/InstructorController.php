@@ -51,6 +51,16 @@ class InstructorController extends Controller
         // Handle boolean field
         $validated['is_active'] = $request->has('is_active');
 
+        // Clean up empty values
+        $validated = array_filter($validated, function($value) {
+            return $value !== null && $value !== '';
+        });
+        
+        // Ensure required fields are set
+        if (!isset($validated['is_active'])) {
+            $validated['is_active'] = true;
+        }
+
         Instructor::create($validated);
 
         return redirect()->route('admin.instructors.index')
