@@ -129,31 +129,31 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     
     Route::get('/certificates', [AdminController::class, 'certificates'])->name('certificates');
     Route::get('/statistics', [AdminController::class, 'statistics'])->name('statistics');
-    
-    // Video proxy for HTTPS compatibility
-    Route::get('/video-proxy', function(Illuminate\Http\Request $request) {
-        $url = $request->query('url');
-        if (!$url || !filter_var($url, FILTER_VALIDATE_URL)) {
-            abort(400, 'Invalid URL');
-        }
-        
-        // Security check - only allow specific domains
-        $allowedDomains = ['grupaneo.beep.pl'];
-        $parsedUrl = parse_url($url);
-        if (!in_array($parsedUrl['host'], $allowedDomains)) {
-            abort(403, 'Domain not allowed');
-        }
-        
-        return response()->stream(function() use ($url) {
-            $stream = fopen($url, 'r');
-            fpassthru($stream);
-            fclose($stream);
-        }, 200, [
-            'Content-Type' => 'video/mp4',
-            'Accept-Ranges' => 'bytes'
-        ]);
-    })->name('video.proxy');
 });
+
+// Video proxy for HTTPS compatibility (requires auth)
+Route::get('/video-proxy', function(Illuminate\Http\Request $request) {
+    $url = $request->query('url');
+    if (!$url || !filter_var($url, FILTER_VALIDATE_URL)) {
+        abort(400, 'Invalid URL');
+    }
+    
+    // Security check - only allow specific domains
+    $allowedDomains = ['grupaneo.beep.pl'];
+    $parsedUrl = parse_url($url);
+    if (!in_array($parsedUrl['host'], $allowedDomains)) {
+        abort(403, 'Domain not allowed');
+    }
+    
+    return response()->stream(function() use ($url) {
+        $stream = fopen($url, 'r');
+        fpassthru($stream);
+        fclose($stream);
+    }, 200, [
+        'Content-Type' => 'video/mp4',
+        'Accept-Ranges' => 'bytes'
+    ]);
+})->middleware('auth')->name('video.proxy');
 
 // Default Laravel Breeze routes
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
