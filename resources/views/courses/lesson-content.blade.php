@@ -12,7 +12,7 @@
     @endif
 </div>
 
-@if($lesson->video_file)
+@if($lesson->video_file || $lesson->video_url)
     <style>
         /* Custom Video Layout - Progress on video, controls below */
         .video-container {
@@ -87,7 +87,7 @@
                      data-complete-lesson-url="{{ route('courses.complete-lesson', ['course' => $course, 'lesson' => $lesson]) }}"
                      @if($userProgress && $userProgress->video_position && !$userProgress->is_completed) data-start-position="{{ $userProgress->video_position }}" @endif
                      data-setup='{}'>
-                <source src="{{ str_starts_with($lesson->video_file, 'http') ? $lesson->video_file : Storage::url($lesson->video_file) }}" type="video/mp4">
+                <source src="{{ $lesson->video_url ?: (str_starts_with($lesson->video_file, 'http') ? $lesson->video_file : Storage::url($lesson->video_file)) }}" type="video/mp4">
                 <p class="vjs-no-js">
                     To view this video please enable JavaScript, and consider upgrading to a web browser that
                     <a href="https://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>.

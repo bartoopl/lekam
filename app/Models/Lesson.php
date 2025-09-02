@@ -14,6 +14,7 @@ class Lesson extends Model
         'chapter_id',
         'title',
         'content',
+        'video_url',
         'order',
         'instructor_id',
         'downloadable_materials',
