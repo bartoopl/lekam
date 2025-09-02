@@ -88,9 +88,15 @@
                      @if($userProgress && $userProgress->video_position && !$userProgress->is_completed) data-start-position="{{ $userProgress->video_position }}" @endif
                      data-setup='{}'>
                 <source src="{{ $lesson->video_url ?: (str_starts_with($lesson->video_file, 'http') ? $lesson->video_file : Storage::url($lesson->video_file)) }}" type="video/mp4">
+                @if($lesson->video_url && $lesson->video_file)
+                    <source src="{{ str_starts_with($lesson->video_file, 'http') ? $lesson->video_file : Storage::url($lesson->video_file) }}" type="video/mp4">
+                @endif
                 <p class="vjs-no-js">
                     To view this video please enable JavaScript, and consider upgrading to a web browser that
                     <a href="https://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>.
+                </p>
+                <p style="color: red; font-size: 14px; margin-top: 10px; display: none;" id="video-error-message">
+                    ⚠️ Problem z ładowaniem video z zewnętrznego serwera. Sprawdź połączenie internetowe lub skontaktuj się z administratorem.
                 </p>
             </video-js>
             <!-- Custom progress bar overlay on video -->
@@ -1080,6 +1086,30 @@ setInterval(() => {
     checkQuizAvailability();
     updateLocalNavigationButtons();
 }, 30000);
+
+// Handle video loading errors
+document.addEventListener('DOMContentLoaded', function() {
+    const video = document.getElementById('lesson-video');
+    const errorMessage = document.getElementById('video-error-message');
+    
+    if (video && errorMessage) {
+        video.addEventListener('error', function(e) {
+            console.error('Video loading error:', e);
+            errorMessage.style.display = 'block';
+        });
+        
+        // VideoJS specific error handling
+        if (typeof videojs !== 'undefined') {
+            videojs.ready(function() {
+                const player = videojs('lesson-video');
+                player.on('error', function() {
+                    console.error('VideoJS error:', player.error());
+                    errorMessage.style.display = 'block';
+                });
+            });
+        }
+    }
+});
 </script>
 
 
