@@ -229,6 +229,81 @@ ob_start();
                 padding: 2rem;
             }
         }
+
+        /* Login Footer */
+        .login-footer {
+            margin-top: 3rem;
+            padding: 2rem 0;
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .login-footer-content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .login-footer-link {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 400;
+            transition: color 0.3s ease;
+        }
+
+        .login-footer-link:hover {
+            color: white;
+            text-decoration: underline;
+        }
+
+        .login-footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: rgba(255, 255, 255, 0.6);
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.8rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .login-footer-admin {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .login-footer-admin img {
+            height: 20px;
+            opacity: 0.8;
+        }
+
+        .login-footer-admin a {
+            color: rgba(255, 255, 255, 0.6);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .login-footer-admin a:hover {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        @media (max-width: 768px) {
+            .login-footer-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .login-footer-bottom {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
     </style>
 </head>
 <body>
@@ -288,6 +363,26 @@ ob_start();
                     </a>
                 @endif
             </form>
+
+            <!-- Login Footer -->
+            <footer class="login-footer">
+                <div class="login-footer-content">
+                    <a href="{{ route('privacy') }}" class="login-footer-link">Polityka Prywatności</a>
+                    <a href="{{ route('cookies') }}" class="login-footer-link">Polityka Cookies</a>
+                    <a href="{{ route('contact') }}" class="login-footer-link">Kontakt</a>
+                </div>
+                <div class="login-footer-bottom">
+                    <div>
+                        <span>&copy; 2025 Wszelkie Prawa zastrzeżone</span>
+                    </div>
+                    <div class="login-footer-admin">
+                        <span>Administrator serwisu:</span>
+                        <a href="https://neoart.pl" target="_blank">
+                            <img src="/images/icons/neoart.png" alt="Neoart">
+                        </a>
+                    </div>
+                </div>
+            </footer>
         </div>
     </div>
     

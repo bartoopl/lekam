@@ -128,7 +128,6 @@
 
     .progress-dot {
         r: 8;
-        filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
         transition: cx 1s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
@@ -641,8 +640,9 @@
                         <stop offset="0%" stop-color="#21235F" />
                         <stop offset="100%" stop-color="#22C55E" />
                     </linearGradient>
-                    <radialGradient id="dotGradient" cx="50%" cy="30%">
-                        <stop offset="0%" stop-color="#ffffff" stop-opacity="0.8"/>
+                    <!-- Solid dot gradient (no glow effect) -->
+                    <radialGradient id="dotGradient" cx="50%" cy="50%">
+                        <stop offset="0%" stop-color="#21235F" stop-opacity="1"/>
                         <stop offset="100%" stop-color="#21235F" stop-opacity="1"/>
                     </radialGradient>
                 </defs>
@@ -689,7 +689,7 @@
                          Q 775 75, 800 60" />
                 
                 <!-- Progress dot -->
-                <circle class="progress-dot" cx="0" cy="60" fill="url(#dotGradient)" stroke="#ffffff" stroke-width="2" />
+                <circle class="progress-dot" cx="0" cy="60" fill="#21235F" stroke="#ffffff" stroke-width="2" />
             </svg>
         </div>
         <div class="mt-4 text-sm text-gray-600">
@@ -1878,7 +1878,7 @@ function updateSinusoidalProgress(percentage) {
                 progressDot.setAttribute('cy', y);
                 
                 // Update dot color based on progress
-                updateDotGradient(progress);
+                updateDotColor(progress);
             } else {
                 console.warn('Invalid coordinates calculated:', {x, y, point});
             }
@@ -1932,38 +1932,13 @@ function updateProgressGradient(progress) {
     }
 }
 
-function updateDotGradient(progress) {
-    // Create or update dynamic dot gradient
-    const defs = document.querySelector('defs');
-    let dynamicGradient = document.querySelector('#dotGradient-dynamic');
-    
-    if (!dynamicGradient) {
-        dynamicGradient = document.createElementNS('http://www.w3.org/2000/svg', 'radialGradient');
-        dynamicGradient.setAttribute('id', 'dotGradient-dynamic');
-        dynamicGradient.setAttribute('cx', '50%');
-        dynamicGradient.setAttribute('cy', '30%');
-        
-        const stop1 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
-        stop1.setAttribute('offset', '0%');
-        stop1.setAttribute('stop-color', '#ffffff');
-        stop1.setAttribute('stop-opacity', '0.9');
-        
-        const stop2 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
-        stop2.setAttribute('offset', '100%');
-        stop2.setAttribute('stop-opacity', '1');
-        
-        dynamicGradient.appendChild(stop1);
-        dynamicGradient.appendChild(stop2);
-        defs.appendChild(dynamicGradient);
-    }
-    
-    const stop2 = dynamicGradient.querySelector('stop:last-child');
-    const dotColor = interpolateColor('#21235F', '#22C55E', progress);
-    stop2.setAttribute('stop-color', dotColor);
-    
-    // Update dot to use dynamic gradient
+function updateDotColor(progress) {
+    // Update dot with solid color based on progress
     const progressDot = document.querySelector('.progress-dot');
-    progressDot.setAttribute('fill', 'url(#dotGradient-dynamic)');
+    if (!progressDot) return;
+
+    const dotColor = interpolateColor('#21235F', '#22C55E', progress);
+    progressDot.setAttribute('fill', dotColor);
 }
 
 // Initialize progress on page load

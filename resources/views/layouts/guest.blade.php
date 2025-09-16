@@ -160,6 +160,69 @@
                 text-decoration: underline;
             }
 
+            /* Guest Footer */
+            .guest-footer {
+                margin-top: 3rem;
+                padding: 2rem 0;
+                text-align: center;
+                border-top: 1px solid rgba(255, 255, 255, 0.2);
+            }
+
+            .guest-footer-content {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 2rem;
+                margin-bottom: 1rem;
+                flex-wrap: wrap;
+            }
+
+            .guest-footer-link {
+                color: rgba(255, 255, 255, 0.8);
+                text-decoration: none;
+                font-family: 'Poppins', sans-serif;
+                font-size: 0.9rem;
+                font-weight: 400;
+                transition: color 0.3s ease;
+            }
+
+            .guest-footer-link:hover {
+                color: white;
+                text-decoration: underline;
+            }
+
+            .guest-footer-bottom {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                color: rgba(255, 255, 255, 0.6);
+                font-family: 'Poppins', sans-serif;
+                font-size: 0.8rem;
+                flex-wrap: wrap;
+                gap: 1rem;
+            }
+
+            .guest-footer-admin {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+
+            .guest-footer-admin img {
+                height: 20px;
+                opacity: 0.8;
+            }
+
+            .guest-footer-admin a {
+                color: rgba(255, 255, 255, 0.6);
+                text-decoration: none;
+                transition: color 0.3s ease;
+            }
+
+            .guest-footer-admin a:hover {
+                color: rgba(255, 255, 255, 0.9);
+            }
+
             @media (max-width: 768px) {
                 .guest-container {
                     padding: 1rem;
@@ -171,6 +234,16 @@
 
                 .logo-container img {
                     width: 120px;
+                }
+
+                .guest-footer-content {
+                    flex-direction: column;
+                    gap: 1rem;
+                }
+
+                .guest-footer-bottom {
+                    flex-direction: column;
+                    text-align: center;
                 }
             }
         </style>
@@ -190,6 +263,26 @@
             <div class="back-link">
                 <a href="{{ route('home') }}">← Powrót do strony głównej</a>
             </div>
+
+            <!-- Guest Footer -->
+            <footer class="guest-footer">
+                <div class="guest-footer-content">
+                    <a href="{{ route('privacy') }}" class="guest-footer-link">Polityka Prywatności</a>
+                    <a href="{{ route('cookies') }}" class="guest-footer-link">Polityka Cookies</a>
+                    <a href="{{ route('contact') }}" class="guest-footer-link">Kontakt</a>
+                </div>
+                <div class="guest-footer-bottom">
+                    <div>
+                        <span>&copy; 2025 Wszelkie Prawa zastrzeżone</span>
+                    </div>
+                    <div class="guest-footer-admin">
+                        <span>Administrator serwisu:</span>
+                        <a href="https://neoart.pl" target="_blank">
+                            <img src="/images/icons/neoart.png" alt="Neoart">
+                        </a>
+                    </div>
+                </div>
+            </footer>
         </div>
     </body>
 </html>
