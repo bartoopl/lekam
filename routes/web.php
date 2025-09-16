@@ -27,6 +27,7 @@ Route::get('/about', [HomeController::class, 'about'])->name('about');
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
 Route::get('/terms', [HomeController::class, 'terms'])->name('terms');
 Route::get('/privacy', [HomeController::class, 'privacy'])->name('privacy');
+Route::get('/cookies', [HomeController::class, 'cookies'])->name('cookies');
 Route::get('/courses', [HomeController::class, 'courses'])->name('courses');
 
 // Representative registration route

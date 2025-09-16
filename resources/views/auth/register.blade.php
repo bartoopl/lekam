@@ -176,9 +176,10 @@ ob_start();
         
         .consent-checkbox {
             margin-top: 0.25rem;
-            width: 18px;
-            height: 18px;
+            width: 20px;
+            height: 20px;
             accent-color: #21235F;
+            flex-shrink: 0;
         }
         
         .consent-label {
@@ -470,21 +471,21 @@ ob_start();
                     <div class="consent-item">
                         <input type="checkbox" id="consent_1" name="consent_1" required class="consent-checkbox">
                         <label for="consent_1" class="consent-label">
-                            Wyrażam zgodę na przetwarzanie moich danych osobowych w celu świadczenia usług edukacyjnych przez LEK-AM Akademię.
+                            <strong>*Obowiązkowe:</strong> Potwierdzam, że administratorem moich danych osobowych w akademialekam.pl jest Grupa NeoArt, 02-819 Warszawa, ul. Puławska 314. Dane będą przetwarzane w celu założenia i obsługi konta oraz umożliwienia korzystania z treści serwisu (szkolenia, webinary) – jako niezbędne do wykonania umowy o świadczenie usług drogą elektroniczną. Podanie danych jest dobrowolne, jednak ich niepodanie może uniemożliwić rejestrację lub spowodować ograniczenia w korzystaniu z serwisu. Zapoznałam/Zapoznałem się z <a href="/privacy" target="_blank" style="color: #21235F; text-decoration: underline;">Polityką prywatności</a>
                         </label>
                     </div>
-                    
+
                     <div class="consent-item">
-                        <input type="checkbox" id="consent_2" name="consent_2" required class="consent-checkbox">
+                        <input type="checkbox" id="consent_2" name="consent_2" class="consent-checkbox">
                         <label for="consent_2" class="consent-label">
-                            Wyrażam zgodę na otrzymywanie informacji handlowych i marketingowych drogą elektroniczną.
+                            Wyrażam zgodę na przetwarzanie moich danych osobowych przez Przedsiębiorstwo Farmaceutyczne LEK-AM Sp. z o.o., ul. Ostrzykowizna 14A, 05-170 Zakroczym, w celach marketingowych, w tym na przesyłanie informacji handlowych drogą elektroniczną (e-mail) na podany adres. Zgodę mogę wycofać w każdym czasie. Zapoznałam/Zapoznałem się z <a href="/privacy" target="_blank" style="color: #21235F; text-decoration: underline;">Polityką prywatności</a>
                         </label>
                     </div>
-                    
+
                     <div class="consent-item">
-                        <input type="checkbox" id="consent_3" name="consent_3" required class="consent-checkbox">
+                        <input type="checkbox" id="consent_3" name="consent_3" class="consent-checkbox">
                         <label for="consent_3" class="consent-label">
-                            Akceptuję regulamin serwisu i politykę prywatności LEK-AM Akademii.
+                            Wyrażam zgodę na przetwarzanie moich danych osobowych przez Grupę NeoArt, 02-819 Warszawa, ul. Puławska 314, w celach marketingowych, w tym na przesyłanie informacji handlowych drogą elektroniczną (e-mail) na podany adres. Zgodę mogę wycofać w każdym czasie. Zapoznałam/Zapoznałem się z <a href="/privacy" target="_blank" style="color: #21235F; text-decoration: underline;">Polityką prywatności</a>
                         </label>
                     </div>
                 </div>

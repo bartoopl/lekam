@@ -59,4 +59,12 @@ class HomeController extends Controller
     {
         return view('privacy');
     }
+
+    /**
+     * Show the cookies policy page
+     */
+    public function cookies()
+    {
+        return view('cookies');
+    }
 }
