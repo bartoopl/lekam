@@ -751,6 +751,7 @@ Treści są merytoryczne, zawsze zgodne z aktualną wiedzą, a zajęcia prowadzo
                 <ul class="footer-links">
                     <li><a href="{{ route('privacy') }}" class="footer-link">Polityka Prywatności</a></li>
                     <li><a href="{{ route('cookies') }}" class="footer-link">Polityka Plików Cookies</a></li>
+                    <li><a href="#" onclick="openCookieModal(); return false;" class="footer-link">Zarządzanie cookies</a></li>
                 </ul>
             </div>
             
@@ -780,7 +781,11 @@ Treści są merytoryczne, zawsze zgodne z aktualną wiedzą, a zajęcia prowadzo
             </div>
         </div>
     </footer>
-    
+
+    <!-- Cookie Consent Banner -->
+    @include('components.cookie-banner')
+
+    <script src="{{ asset('js/cookie-consent.js') }}"></script>
     <script>
         // Hide PHP errors immediately when page loads
         document.addEventListener('DOMContentLoaded', function() {
