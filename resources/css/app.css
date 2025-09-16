@@ -11,10 +11,21 @@
         background-repeat: no-repeat;
         min-height: 100vh;
     }
-    
+
     body {
         background-color: transparent;
         min-height: 100vh;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    /* Ensure all headings use Poppins font */
+    h1, h2, h3, h4, h5, h6 {
+        font-family: 'Poppins', sans-serif;
+        font-weight: 600;
+    }
+
+    h1 {
+        font-weight: 700;
     }
 }
 

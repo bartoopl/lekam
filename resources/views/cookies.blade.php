@@ -87,6 +87,7 @@ ob_start();
         }
 
         .content h2 {
+            font-family: 'Poppins', sans-serif;
             font-weight: 600;
             font-size: 1.5rem;
             color: #21235F;
@@ -94,6 +95,7 @@ ob_start();
         }
 
         .content h3 {
+            font-family: 'Poppins', sans-serif;
             font-weight: 600;
             font-size: 1.25rem;
             color: #21235F;
