@@ -401,7 +401,6 @@
         <div class="footer-center">
             <h3 class="footer-section-title">Ważne odnośniki</h3>
             <ul class="footer-links">
-                <li><a href="{{ route('terms') }}" class="footer-link">Regulamin Serwisu</a></li>
                 <li><a href="{{ route('privacy') }}" class="footer-link">Polityka Prywatności</a></li>
                 <li><a href="{{ route('cookies') }}" class="footer-link">Polityka Plików Cookies</a></li>
             </ul>
