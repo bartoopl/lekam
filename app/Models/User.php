@@ -21,6 +21,7 @@ class User extends Authenticatable
         'email',
         'password',
         'user_type',
+        'is_admin',
         'license_number',
         'bio',
         'phone',
@@ -52,6 +53,7 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'is_admin' => 'boolean',
         ];
     }
 
@@ -108,8 +110,12 @@ class User extends Authenticatable
      */
     public function isAdmin(): bool
     {
-        // For now, we'll consider users with email containing 'admin' as administrators
-        // In production, you should add an 'is_admin' column to the users table
+        // Check the is_admin column first, fallback to email check for backwards compatibility
+        if (isset($this->is_admin)) {
+            return $this->is_admin;
+        }
+
+        // Fallback for users without is_admin column set
         return str_contains(strtolower($this->email), 'admin') || $this->email === 'bartosz@creativetrust.pl' || $this->email === 'bartosz.lysniewski@gmail.com';
     }
 

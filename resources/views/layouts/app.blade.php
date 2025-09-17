@@ -126,5 +126,10 @@
                 @yield('content')
             </main>
         </div>
+
+        <!-- Cookie Consent Banner -->
+        @include('components.cookie-banner')
+
+        <script src="{{ asset('js/cookie-consent.js') }}"></script>
     </body>
 </html>

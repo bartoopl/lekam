@@ -242,6 +242,10 @@ ob_start();
         </div>
     </div>
 
+    <!-- Cookie Consent Banner -->
+    @include('components.cookie-banner')
+
+    <script src="{{ asset('js/cookie-consent.js') }}"></script>
     <script>
         // Hide PHP errors immediately when page loads
         document.addEventListener('DOMContentLoaded', function() {

@@ -140,6 +140,9 @@
                                             Typ
                                         </th>
                                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Status
+                                        </th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                             Liczba certyfikatów
                                         </th>
                                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -169,12 +172,23 @@
                                                 </div>
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap">
-                                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full
                                                     @if($user->user_type === 'farmaceuta') bg-blue-100 text-blue-800
                                                     @else bg-green-100 text-green-800
                                                     @endif">
                                                     {{ $user->user_type === 'farmaceuta' ? 'Farmaceuta' : 'Technik farmacji' }}
                                                 </span>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                @if($user->is_admin)
+                                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                                                        Administrator
+                                                    </span>
+                                                @else
+                                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">
+                                                        Użytkownik
+                                                    </span>
+                                                @endif
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                                 {{ $user->certificates->count() }}
@@ -183,8 +197,8 @@
                                                 {{ $user->created_at->format('d.m.Y H:i') }}
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                                <a href="#" class="table-button view">
-                                                    Podgląd
+                                                <a href="{{ route('admin.users.edit', $user) }}" class="table-button view">
+                                                    Edytuj
                                                 </a>
                                             </td>
                                         </tr>

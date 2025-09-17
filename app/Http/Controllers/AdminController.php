@@ -44,6 +44,41 @@ class AdminController extends Controller
     }
 
     /**
+     * Show user edit form
+     */
+    public function userEdit(User $user)
+    {
+        return view('admin.users.edit', compact('user'));
+    }
+
+    /**
+     * Update user information
+     */
+    public function userUpdate(Request $request, User $user)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
+            'user_type' => 'required|in:farmaceuta,technik_farmacji',
+            'is_admin' => 'boolean',
+        ]);
+
+        // Prevent the current admin from removing their own admin privileges
+        if ($user->id === auth()->id() && !$request->has('is_admin')) {
+            return redirect()->back()->with('error', 'Nie możesz usunąć własnych uprawnień administratora.');
+        }
+
+        $user->update([
+            'name' => $request->name,
+            'email' => $request->email,
+            'user_type' => $request->user_type,
+            'is_admin' => $request->has('is_admin'),
+        ]);
+
+        return redirect()->route('admin.users')->with('success', 'Użytkownik został zaktualizowany pomyślnie.');
+    }
+
+    /**
      * Show courses management
      */
     public function courses()

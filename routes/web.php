@@ -82,6 +82,8 @@ Route::middleware('auth')->group(function () {
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [AdminController::class, 'dashboard'])->name('dashboard');
     Route::get('/users', [AdminController::class, 'users'])->name('users');
+    Route::get('/users/{user}/edit', [AdminController::class, 'userEdit'])->name('users.edit');
+    Route::put('/users/{user}', [AdminController::class, 'userUpdate'])->name('users.update');
     Route::get('/courses', [AdminController::class, 'courses'])->name('courses');
     Route::get('/courses/create', [AdminController::class, 'courseCreate'])->name('courses.create');
     Route::post('/courses', [AdminController::class, 'courseStore'])->name('courses.store');

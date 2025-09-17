@@ -301,6 +301,74 @@
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
     }
 
+    /* Mobile Sidebar Overlay */
+    .mobile-sidebar-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+        backdrop-filter: blur(5px);
+    }
+
+    .mobile-sidebar-overlay.show {
+        display: block;
+    }
+
+    /* Mobile Hamburger Button */
+    .mobile-menu-button {
+        display: none;
+        position: fixed;
+        top: 140px;
+        right: 20px;
+        width: 50px;
+        height: 50px;
+        background: rgba(33, 35, 95, 0.9);
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+        z-index: 1001;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        transition: all 0.3s ease;
+    }
+
+    .mobile-menu-button:hover {
+        background: rgba(33, 35, 95, 1);
+        transform: scale(1.1);
+    }
+
+    .hamburger-icon {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        gap: 3px;
+    }
+
+    .hamburger-icon span {
+        width: 20px;
+        height: 2px;
+        background: white;
+        transition: all 0.3s ease;
+        border-radius: 1px;
+    }
+
+    .mobile-menu-button.active .hamburger-icon span:nth-child(1) {
+        transform: rotate(45deg) translate(5px, 5px);
+    }
+
+    .mobile-menu-button.active .hamburger-icon span:nth-child(2) {
+        opacity: 0;
+    }
+
+    .mobile-menu-button.active .hamburger-icon span:nth-child(3) {
+        transform: rotate(-45deg) translate(7px, -6px);
+    }
+
     .chapters-title {
         font-size: 1.1rem;
         font-weight: 700;
@@ -573,12 +641,36 @@
 
     /* Mobile responsive */
     @media (max-width: 768px) {
+        .breadcrumbs {
+            display: none;
+        }
+
+        .mobile-menu-button {
+            display: block;
+        }
+
         .course-content {
             grid-template-columns: 1fr;
         }
-        
+
+        .chapters-sidebar {
+            position: fixed;
+            top: 0;
+            left: -100%;
+            width: 300px;
+            height: 100vh;
+            z-index: 1000;
+            transition: left 0.3s ease;
+            overflow-y: auto;
+            padding-top: 80px;
+        }
+
+        .chapters-sidebar.show {
+            left: 0;
+        }
+
         .course-title {
-            font-size: 2rem;
+            font-size: 1.5rem;
         }
 
         .course-description {
@@ -712,6 +804,18 @@
 
 
     <!-- Course Content -->
+    <!-- Mobile Menu Button -->
+    <button class="mobile-menu-button" onclick="toggleMobileSidebar()">
+        <div class="hamburger-icon">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </button>
+
+    <!-- Mobile Sidebar Overlay -->
+    <div class="mobile-sidebar-overlay" onclick="closeMobileSidebar()"></div>
+
     <div class="course-content">
         <!-- Chapters Sidebar -->
         <div class="chapters-sidebar">
@@ -2044,7 +2148,30 @@ const originalLessonLoad = window.loadLesson;
 window.loadLesson = function(...args) {
     if (originalLessonLoad) originalLessonLoad.apply(this, args);
     triggerMotivationalChance();
+    // Close mobile sidebar when lesson is loaded
+    closeMobileSidebar();
 };
+
+// Mobile Sidebar Functions
+function toggleMobileSidebar() {
+    const sidebar = document.querySelector('.chapters-sidebar');
+    const overlay = document.querySelector('.mobile-sidebar-overlay');
+    const button = document.querySelector('.mobile-menu-button');
+
+    sidebar.classList.toggle('show');
+    overlay.classList.toggle('show');
+    button.classList.toggle('active');
+}
+
+function closeMobileSidebar() {
+    const sidebar = document.querySelector('.chapters-sidebar');
+    const overlay = document.querySelector('.mobile-sidebar-overlay');
+    const button = document.querySelector('.mobile-menu-button');
+
+    sidebar.classList.remove('show');
+    overlay.classList.remove('show');
+    button.classList.remove('active');
+}
 
 // Hook do ukończenia lekcji  
 document.addEventListener('click', function(e) {
@@ -2142,6 +2269,179 @@ document.addEventListener('click', function(e) {
         max-width: none;
     }
 }
+
+/* Dark Footer Styles */
+.footer.dark-footer {
+    background: linear-gradient(135deg, #1a1c3a 0%, #2a2d5a 100%);
+    position: relative;
+    margin-top: 3rem;
+    padding: 3rem 0 1.5rem;
+    overflow: hidden;
+}
+
+.footer.dark-footer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('/images/backgrounds/bg.jpg');
+    background-size: cover;
+    background-position: center;
+    opacity: 0.1;
+    z-index: 0;
+}
+
+.footer.dark-footer .footer-content {
+    position: relative;
+    z-index: 1;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 3rem;
+    color: white;
+}
+
+.footer.dark-footer .footer-left {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.footer.dark-footer .footer-logo-icon {
+    width: 120px;
+    height: auto;
+    filter: brightness(0) invert(1);
+}
+
+.footer.dark-footer .footer-description {
+    color: rgba(255, 255, 255, 0.8);
+    font-family: 'Poppins', sans-serif;
+    font-size: 1rem;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.footer.dark-footer .footer-center,
+.footer.dark-footer .footer-right {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.footer.dark-footer .footer-section-title {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: white;
+    margin: 0;
+    margin-bottom: 0.5rem;
+}
+
+.footer.dark-footer .footer-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.footer.dark-footer .footer-link {
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.9rem;
+    transition: color 0.3s ease;
+}
+
+.footer.dark-footer .footer-link:hover {
+    color: white;
+    text-decoration: underline;
+}
+
+.footer.dark-footer .footer-bottom {
+    position: relative;
+    z-index: 1;
+    max-width: 1200px;
+    margin: 2rem auto 0;
+    padding: 1.5rem 2rem 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    color: rgba(255, 255, 255, 0.7);
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.9rem;
+}
+
+.footer.dark-footer .footer-admin-link:hover {
+    opacity: 0.8;
+}
+
+@media (max-width: 768px) {
+    .footer.dark-footer .footer-content {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+        text-align: center;
+    }
+
+    .footer.dark-footer .footer-bottom {
+        flex-direction: column;
+        text-align: center;
+    }
+}
 </style>
+
+<!-- Footer -->
+<footer class="footer dark-footer">
+    <div class="footer-content">
+        <div class="footer-left">
+            <div class="footer-logo">
+                <img src="/images/logos/logo.svg" alt="Lekam Akademia" class="footer-logo-icon">
+            </div>
+            <p class="footer-description">Zdobywaj wiedzę i punkty edukacyjne w Akademii Lekam</p>
+        </div>
+
+        <div class="footer-center">
+            <h3 class="footer-section-title">Ważne odnośniki</h3>
+            <ul class="footer-links">
+                <li><a href="{{ route('privacy') }}" class="footer-link">Polityka Prywatności</a></li>
+                <li><a href="{{ route('cookies') }}" class="footer-link">Polityka Plików Cookies</a></li>
+                <li><a href="#" onclick="openCookieModal(); return false;" class="footer-link">Zarządzanie cookies</a></li>
+            </ul>
+        </div>
+
+        <div class="footer-right">
+            <h3 class="footer-section-title">Linki</h3>
+            <ul class="footer-links">
+                <li><a href="{{ route('courses') }}" class="footer-link">Szkolenia</a></li>
+                <li><a href="{{ route('contact') }}" class="footer-link">Kontakt</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="footer-bottom">
+        <div class="footer-bottom-left">
+            <div style="display: flex; align-items: center;">
+                <span>&copy; 2025 Wszelkie Prawa zastrzeżone</span>
+                <img src="/images/icons/lekam.png" alt="Lekam" style="height: 24px; margin-left: 8px;">
+            </div>
+        </div>
+        <div class="footer-bottom-right">
+            <div style="display: flex; align-items: center; justify-content: flex-end;">
+                <span>Administrator serwisu:</span>
+                <a href="https://neoart.pl" target="_blank" class="footer-admin-link" style="margin-left: 8px;">
+                    <img src="/images/icons/neoart.png" alt="Neoart" style="height: 24px;">
+                </a>
+            </div>
+        </div>
+    </div>
+</footer>
 
 @endsection
