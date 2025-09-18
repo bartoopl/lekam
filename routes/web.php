@@ -134,7 +134,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/statistics', [AdminController::class, 'statistics'])->name('statistics');
 });
 
-// Video proxy for HTTPS compatibility (requires auth or valid referer)
+// Video proxy for HTTPS compatibility (requires auth)
 Route::get('/video-proxy', function(Illuminate\Http\Request $request) {
     $url = $request->query('url');
     if (!$url || !filter_var($url, FILTER_VALIDATE_URL)) {
@@ -148,46 +148,17 @@ Route::get('/video-proxy', function(Illuminate\Http\Request $request) {
         abort(403, 'Domain not allowed');
     }
     
-    // Check if user is authenticated OR request comes from our domain (for VideoJS)
-    $isAuthenticated = auth()->check();
-    $referer = $request->header('referer');
-    $isValidReferer = $referer && (
-        str_contains($referer, 'lekam.tojest.dev') || 
-        str_contains($referer, 'localhost') ||
-        str_contains($referer, '127.0.0.1')
-    );
-    
-    if (!$isAuthenticated && !$isValidReferer) {
-        abort(403, 'Access denied');
-    }
-    
-    return response()->stream(function() use ($url, $request) {
-        // Create context with proper headers for external video server
-        $context = stream_context_create([
-            'http' => [
-                'method' => 'GET',
-                'header' => [
-                    'User-Agent: ' . ($request->header('user-agent') ?: 'Mozilla/5.0 (compatible; VideoProxy/1.0)'),
-                    'Accept: video/mp4,video/*,*/*',
-                    'Accept-Encoding: identity',
-                    'Connection: close'
-                ],
-                'timeout' => 30,
-                'ignore_errors' => false
-            ]
-        ]);
-        
-        $stream = fopen($url, 'r', false, $context);
+    return response()->stream(function() use ($url) {
+        $stream = fopen($url, 'r');
         if ($stream) {
             fpassthru($stream);
             fclose($stream);
         }
     }, 200, [
         'Content-Type' => 'video/mp4',
-        'Accept-Ranges' => 'bytes',
-        'Cache-Control' => 'public, max-age=3600'
+        'Accept-Ranges' => 'bytes'
     ]);
-})->name('video.proxy');
+})->middleware('auth')->name('video.proxy');
 
 // Default Laravel Breeze routes
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
