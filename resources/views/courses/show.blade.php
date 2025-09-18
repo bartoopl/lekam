@@ -2281,69 +2281,74 @@ document.addEventListener('click', function(e) {
     }
 }
 
-/* Dark Footer Styles */
-.footer.dark-footer {
-    background: linear-gradient(135deg, #1a1c3a 0%, #2a2d5a 100%);
+/* Main Footer Styles (same as welcome page) */
+.footer {
+    background-image: url('/images/backgrounds/wave.png');
+    background-size: cover;
+    background-position: center;
+    background-color: #21235F;
+    background-blend-mode: overlay;
     position: relative;
-    margin-top: 3rem;
-    padding: 3rem 0 1.5rem;
-    overflow: hidden;
+    color: white;
+    padding: 4rem 0 2rem 0;
 }
 
-.footer.dark-footer::before {
+.footer::before {
     content: '';
     position: absolute;
     top: 0;
     left: 0;
-    right: 0;
-    bottom: 0;
-    background: url('/images/backgrounds/bg.jpg');
-    background-size: cover;
-    background-position: center;
-    opacity: 0.1;
-    z-index: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #21235F 0%, #2a2d7a 100%);
+    opacity: 0.2;
+    z-index: 1;
 }
 
-.footer.dark-footer .footer-content {
-    position: relative;
-    z-index: 1;
+.footer-content {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 2rem;
     display: grid;
     grid-template-columns: 2fr 1fr 1fr;
     gap: 3rem;
-    color: white;
+    position: relative;
+    z-index: 2;
 }
 
-.footer.dark-footer .footer-left {
+.footer-left {
     display: flex;
     flex-direction: column;
     gap: 1rem;
 }
 
-.footer.dark-footer .footer-logo-icon {
+.footer-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.footer-logo-icon {
     width: 120px;
     height: auto;
     filter: brightness(0) invert(1);
 }
 
-.footer.dark-footer .footer-description {
-    color: rgba(255, 255, 255, 0.8);
+.footer-description {
     font-family: 'Poppins', sans-serif;
     font-size: 1rem;
     line-height: 1.6;
+    color: rgba(255, 255, 255, 0.9);
     margin: 0;
 }
 
-.footer.dark-footer .footer-center,
-.footer.dark-footer .footer-right {
+.footer-center, .footer-right {
     display: flex;
     flex-direction: column;
     gap: 1rem;
 }
 
-.footer.dark-footer .footer-section-title {
+.footer-section-title {
     font-family: 'Poppins', sans-serif;
     font-weight: 600;
     font-size: 1.1rem;
@@ -2352,7 +2357,7 @@ document.addEventListener('click', function(e) {
     margin-bottom: 0.5rem;
 }
 
-.footer.dark-footer .footer-links {
+.footer-links {
     list-style: none;
     padding: 0;
     margin: 0;
@@ -2361,48 +2366,48 @@ document.addEventListener('click', function(e) {
     gap: 0.5rem;
 }
 
-.footer.dark-footer .footer-link {
-    color: rgba(255, 255, 255, 0.7);
+.footer-link {
+    color: rgba(255, 255, 255, 0.8);
     text-decoration: none;
     font-family: 'Poppins', sans-serif;
     font-size: 0.9rem;
     transition: color 0.3s ease;
 }
 
-.footer.dark-footer .footer-link:hover {
+.footer-link:hover {
     color: white;
     text-decoration: underline;
 }
 
-.footer.dark-footer .footer-bottom {
-    position: relative;
-    z-index: 1;
+.footer-bottom {
     max-width: 1200px;
     margin: 2rem auto 0;
-    padding: 1.5rem 2rem 0;
-    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 2rem 2rem 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.3);
     display: flex;
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
     gap: 1rem;
-    color: rgba(255, 255, 255, 0.7);
+    position: relative;
+    z-index: 2;
+    color: rgba(255, 255, 255, 0.8);
     font-family: 'Poppins', sans-serif;
     font-size: 0.9rem;
 }
 
-.footer.dark-footer .footer-admin-link:hover {
+.footer-admin-link:hover {
     opacity: 0.8;
 }
 
 @media (max-width: 768px) {
-    .footer.dark-footer .footer-content {
+    .footer-content {
         grid-template-columns: 1fr;
         gap: 2rem;
         text-align: center;
     }
 
-    .footer.dark-footer .footer-bottom {
+    .footer-bottom {
         flex-direction: column;
         text-align: center;
     }
@@ -2410,7 +2415,7 @@ document.addEventListener('click', function(e) {
 </style>
 
 <!-- Footer -->
-<footer class="footer dark-footer">
+<footer class="footer">
     <div class="footer-content">
         <div class="footer-left">
             <div class="footer-logo">
