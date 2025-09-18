@@ -157,7 +157,21 @@ Route::get('/video-proxy', function(Illuminate\Http\Request $request) {
         str_contains($referer, '127.0.0.1')
     );
     
+    // Log for debugging
+    \Log::info('Video proxy request', [
+        'url' => $url,
+        'isAuthenticated' => $isAuthenticated,
+        'referer' => $referer,
+        'isValidReferer' => $isValidReferer,
+        'userAgent' => $request->header('user-agent')
+    ]);
+    
     if (!$isAuthenticated && !$isValidReferer) {
+        \Log::error('Video proxy access denied', [
+            'url' => $url,
+            'referer' => $referer,
+            'isAuthenticated' => $isAuthenticated
+        ]);
         abort(403, 'Access denied');
     }
     
