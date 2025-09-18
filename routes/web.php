@@ -175,11 +175,31 @@ Route::get('/video-proxy', function(Illuminate\Http\Request $request) {
         abort(403, 'Access denied');
     }
     
-    return response()->stream(function() use ($url) {
-        $stream = fopen($url, 'r');
+    return response()->stream(function() use ($url, $request) {
+        // Create context with proper headers for external video server
+        $context = stream_context_create([
+            'http' => [
+                'method' => 'GET',
+                'header' => [
+                    'User-Agent: ' . ($request->header('user-agent') ?: 'Mozilla/5.0 (compatible; VideoProxy/1.0)'),
+                    'Accept: video/mp4,video/*,*/*',
+                    'Accept-Encoding: identity',
+                    'Connection: close'
+                ],
+                'timeout' => 30,
+                'ignore_errors' => false
+            ]
+        ]);
+        
+        $stream = fopen($url, 'r', false, $context);
         if ($stream) {
             fpassthru($stream);
             fclose($stream);
+        } else {
+            \Log::error('Video proxy fopen failed', [
+                'url' => $url,
+                'error' => error_get_last()
+            ]);
         }
     }, 200, [
         'Content-Type' => 'video/mp4',
