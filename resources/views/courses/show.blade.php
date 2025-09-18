@@ -326,22 +326,25 @@
     .mobile-menu-button {
         display: none;
         position: fixed;
-        top: 140px;
-        right: 20px;
-        width: 50px;
-        height: 50px;
-        background: rgba(33, 35, 95, 0.9);
+        top: 50%;
+        left: 0;
+        transform: translateY(-50%);
+        width: 45px;
+        height: 80px;
+        background: rgba(33, 35, 95, 0.95);
         border: none;
-        border-radius: 50%;
+        border-radius: 0 15px 15px 0;
         cursor: pointer;
         z-index: 1001;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        box-shadow: 2px 0 15px rgba(0, 0, 0, 0.3);
         transition: all 0.3s ease;
+        backdrop-filter: blur(10px);
     }
 
     .mobile-menu-button:hover {
         background: rgba(33, 35, 95, 1);
-        transform: scale(1.1);
+        transform: translateY(-50%) translateX(5px);
+        box-shadow: 5px 0 20px rgba(0, 0, 0, 0.4);
     }
 
     .hamburger-icon {
@@ -661,12 +664,16 @@
             position: fixed;
             top: 0;
             left: -100%;
-            width: 300px;
+            width: 320px;
             height: 100vh;
             z-index: 1000;
             transition: left 0.3s ease;
             overflow-y: auto;
             padding-top: 80px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-right: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 5px 0 30px rgba(0, 0, 0, 0.2);
         }
 
         .chapters-sidebar.show {

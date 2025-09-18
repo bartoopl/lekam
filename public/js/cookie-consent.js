@@ -362,6 +362,13 @@ window.hasFunctionalConsent = function() {
     return window.CookieConsent.isFunctionalAllowed();
 };
 
+// Global function for opening cookie modal (used in footer links)
+window.openCookieModal = function() {
+    if (window.CookieConsent) {
+        window.CookieConsent.showModal();
+    }
+};
+
 // Example usage for future analytics integration:
 //
 // Google Analytics 4 Integration:
