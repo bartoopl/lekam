@@ -6,30 +6,63 @@ videojs.registerPlugin('seekingControl', function(options = {}) {
     const player = this;
     let maxReachedTime = parseFloat(options.startPosition) || 0;
     let isUserSeeking = false;
+    let seekingTimeout = null;
+    
+    // Expose methods for other plugins
+    this.updateMaxReachedTime = function(time) {
+        maxReachedTime = Math.max(maxReachedTime, time);
+        console.log('Max reached time updated externally to:', maxReachedTime);
+    };
+    
+    this.getMaxReachedTime = function() {
+        return maxReachedTime;
+    };
     
     console.log('seekingControl plugin initialized, startPosition:', options.startPosition, 'maxReachedTime:', maxReachedTime);
     
-    // Handle seeking events
+    // Handle seeking events with debounce to prevent video restart
     player.on('seeking', function() {
         const currentTime = player.currentTime();
         console.log('Seeking to:', currentTime, 'Max reached:', maxReachedTime);
         
         if (currentTime > maxReachedTime) {
-            console.log('Forward seeking blocked, reverting to max reached:', maxReachedTime);
+            console.log('Forward seeking blocked, will revert to max reached:', maxReachedTime);
+            isUserSeeking = true;
+            
+            // Use setTimeout to avoid immediate currentTime changes that cause restart
+            if (seekingTimeout) {
+                clearTimeout(seekingTimeout);
+            }
+            
+            seekingTimeout = setTimeout(() => {
+                if (player.currentTime() > maxReachedTime) {
+                    console.log('Reverting to max reached time:', maxReachedTime);
+                    player.currentTime(maxReachedTime);
+                }
+                isUserSeeking = false;
+            }, 100);
+        }
+    });
+    
+    // Handle seeked event to ensure we don't go beyond max time
+    player.on('seeked', function() {
+        const currentTime = player.currentTime();
+        if (currentTime > maxReachedTime && !isUserSeeking) {
+            console.log('Seeked beyond max time, correcting to:', maxReachedTime);
             player.currentTime(maxReachedTime);
         }
     });
     
     // Track user interactions
     player.on('useractive', function() {
-        isUserSeeking = true;
+        // Don't set seeking flag immediately, let the timeout handle it
     });
     
     // Update max reached time during normal playback
     player.on('timeupdate', function() {
         const currentTime = player.currentTime();
         // Always update max reached time if video is playing normally (not seeking)
-        if (currentTime > maxReachedTime && !player.seeking() && !player.paused()) {
+        if (currentTime > maxReachedTime && !player.seeking() && !player.paused() && !isUserSeeking) {
             maxReachedTime = currentTime;
             console.log('Max reached time updated to:', maxReachedTime.toFixed(2));
         }
@@ -103,7 +136,7 @@ videojs.registerPlugin('positionSaver', function(options = {}) {
         }
     }
     
-    // Set start position
+    // Set start position and update seeking control
     if (options.startPosition) {
         player.ready(() => {
             const position = parseInt(options.startPosition);
@@ -112,6 +145,11 @@ videojs.registerPlugin('positionSaver', function(options = {}) {
             if (player.duration() && position < safeMaxPosition) {
                 player.currentTime(position);
                 console.log('Set video position to:', position);
+                
+                // Update maxReachedTime in seekingControl plugin
+                if (player.seekingControl && player.seekingControl.updateMaxReachedTime) {
+                    player.seekingControl.updateMaxReachedTime(position);
+                }
             }
         });
     }
