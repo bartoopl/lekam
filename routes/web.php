@@ -154,7 +154,10 @@ Route::get('/video-proxy', function(Illuminate\Http\Request $request) {
         fclose($stream);
     }, 200, [
         'Content-Type' => 'video/mp4',
-        'Accept-Ranges' => 'bytes'
+        'Accept-Ranges' => 'bytes',
+        'Cache-Control' => 'no-cache, no-store, must-revalidate',
+        'Pragma' => 'no-cache',
+        'Expires' => '0'
     ]);
 })->middleware('auth')->name('video.proxy');
 
