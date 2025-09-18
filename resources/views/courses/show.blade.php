@@ -322,8 +322,8 @@
         display: block;
     }
 
-    /* Mobile Hamburger Button */
-    .mobile-menu-button {
+    /* Course Lessons Mobile Button */
+    .course-lessons-mobile-button {
         display: none;
         position: fixed;
         top: 50%;
@@ -335,13 +335,13 @@
         border: none;
         border-radius: 0 15px 15px 0;
         cursor: pointer;
-        z-index: 1001;
+        z-index: 999;
         box-shadow: 2px 0 15px rgba(0, 0, 0, 0.3);
         transition: all 0.3s ease;
         backdrop-filter: blur(10px);
     }
 
-    .mobile-menu-button:hover {
+    .course-lessons-mobile-button:hover {
         background: rgba(33, 35, 95, 1);
         transform: translateY(-50%) translateX(5px);
         box-shadow: 5px 0 20px rgba(0, 0, 0, 0.4);
@@ -364,15 +364,15 @@
         border-radius: 1px;
     }
 
-    .mobile-menu-button.active .hamburger-icon span:nth-child(1) {
+    .course-lessons-mobile-button.active .hamburger-icon span:nth-child(1) {
         transform: rotate(45deg) translate(5px, 5px);
     }
 
-    .mobile-menu-button.active .hamburger-icon span:nth-child(2) {
+    .course-lessons-mobile-button.active .hamburger-icon span:nth-child(2) {
         opacity: 0;
     }
 
-    .mobile-menu-button.active .hamburger-icon span:nth-child(3) {
+    .course-lessons-mobile-button.active .hamburger-icon span:nth-child(3) {
         transform: rotate(-45deg) translate(7px, -6px);
     }
 
@@ -652,7 +652,7 @@
             display: none;
         }
 
-        .mobile-menu-button {
+        .course-lessons-mobile-button {
             display: block;
         }
 
@@ -815,8 +815,8 @@
 
 
     <!-- Course Content -->
-    <!-- Mobile Menu Button -->
-    <button class="mobile-menu-button" onclick="toggleMobileSidebar()">
+    <!-- Course Lessons Mobile Menu Button -->
+    <button class="course-lessons-mobile-button" onclick="toggleMobileSidebar()">
         <div class="hamburger-icon">
             <span></span>
             <span></span>
@@ -2163,11 +2163,11 @@ window.loadLesson = function(...args) {
     closeMobileSidebar();
 };
 
-// Mobile Sidebar Functions
+// Mobile Sidebar Functions for Course Lessons
 function toggleMobileSidebar() {
     const sidebar = document.querySelector('.chapters-sidebar');
     const overlay = document.querySelector('.mobile-sidebar-overlay');
-    const button = document.querySelector('.mobile-menu-button');
+    const button = document.querySelector('.course-lessons-mobile-button');
 
     sidebar.classList.toggle('show');
     overlay.classList.toggle('show');
@@ -2177,7 +2177,7 @@ function toggleMobileSidebar() {
 function closeMobileSidebar() {
     const sidebar = document.querySelector('.chapters-sidebar');
     const overlay = document.querySelector('.mobile-sidebar-overlay');
-    const button = document.querySelector('.mobile-menu-button');
+    const button = document.querySelector('.course-lessons-mobile-button');
 
     sidebar.classList.remove('show');
     overlay.classList.remove('show');
