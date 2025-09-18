@@ -131,5 +131,28 @@
         @include('components.cookie-banner')
 
         <script src="{{ asset('js/cookie-consent.js') }}"></script>
+
+        <!-- Ensure openCookieModal is available globally -->
+        <script>
+            // Wait for cookie consent script to load, then ensure openCookieModal is available
+            document.addEventListener('DOMContentLoaded', function() {
+                // Backup function in case cookie-consent.js hasn't loaded yet
+                if (typeof window.openCookieModal === 'undefined') {
+                    window.openCookieModal = function() {
+                        if (window.CookieConsent && window.CookieConsent.showModal) {
+                            window.CookieConsent.showModal();
+                        } else {
+                            console.error('CookieConsent not initialized yet');
+                            // Try again after a short delay
+                            setTimeout(function() {
+                                if (window.CookieConsent && window.CookieConsent.showModal) {
+                                    window.CookieConsent.showModal();
+                                }
+                            }, 100);
+                        }
+                    };
+                }
+            });
+        </script>
     </body>
 </html>
