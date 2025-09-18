@@ -78,8 +78,9 @@
     <div class="lesson-video">
         <h3 class="materials-title">Wideo</h3>
         <div class="video-container">
-            <video-js id="lesson-video" 
-                     class="vjs-default-skin" 
+            <video id="lesson-video" 
+                     class="video-js vjs-default-skin" 
+                     controls
                      preload="metadata"
                      data-lesson-id="{{ $lesson->id }}" 
                      data-course-id="{{ $course->id }}"
@@ -108,7 +109,7 @@
                 <p style="color: red; font-size: 14px; margin-top: 10px; display: none;" id="video-error-message">
                     ⚠️ Problem z ładowaniem video z zewnętrznego serwera. Sprawdź połączenie internetowe lub skontaktuj się z administratorem.
                 </p>
-            </video-js>
+            </video>
             <!-- Custom progress bar overlay on video -->
             <div class="custom-progress-overlay" id="custom-progress-overlay">
                 <div class="custom-progress-bar" id="custom-progress-bar"></div>
