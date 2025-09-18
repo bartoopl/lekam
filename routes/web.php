@@ -150,8 +150,14 @@ Route::get('/video-proxy', function(Illuminate\Http\Request $request) {
     
     return response()->stream(function() use ($url) {
         $stream = fopen($url, 'r');
-        fpassthru($stream);
-        fclose($stream);
+        if ($stream) {
+            fpassthru($stream);
+            fclose($stream);
+        } else {
+            // Log error but don't crash
+            \Log::error('Video proxy failed to open URL', ['url' => $url, 'error' => error_get_last()]);
+            echo ''; // Empty response instead of crashing
+        }
     }, 200, [
         'Content-Type' => 'video/mp4',
         'Accept-Ranges' => 'bytes',
