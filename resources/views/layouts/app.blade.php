@@ -134,21 +134,35 @@
 
         <!-- Ensure openCookieModal is available globally -->
         <script>
-            // Wait for cookie consent script to load, then ensure openCookieModal is available
+            // Define openCookieModal immediately to avoid ReferenceError
+            window.openCookieModal = function() {
+                if (window.CookieConsent && window.CookieConsent.showModal) {
+                    window.CookieConsent.showModal();
+                } else {
+                    console.log('Waiting for CookieConsent to initialize...');
+                    // Try multiple times with increasing delays
+                    let attempts = 0;
+                    const tryAgain = function() {
+                        attempts++;
+                        if (window.CookieConsent && window.CookieConsent.showModal) {
+                            window.CookieConsent.showModal();
+                        } else if (attempts < 10) {
+                            setTimeout(tryAgain, attempts * 100);
+                        } else {
+                            console.error('CookieConsent failed to initialize after 10 attempts');
+                        }
+                    };
+                    setTimeout(tryAgain, 100);
+                }
+            };
+
+            // Also ensure it's available after DOMContentLoaded
             document.addEventListener('DOMContentLoaded', function() {
-                // Backup function in case cookie-consent.js hasn't loaded yet
+                // Make sure openCookieModal is still available
                 if (typeof window.openCookieModal === 'undefined') {
                     window.openCookieModal = function() {
                         if (window.CookieConsent && window.CookieConsent.showModal) {
                             window.CookieConsent.showModal();
-                        } else {
-                            console.error('CookieConsent not initialized yet');
-                            // Try again after a short delay
-                            setTimeout(function() {
-                                if (window.CookieConsent && window.CookieConsent.showModal) {
-                                    window.CookieConsent.showModal();
-                                }
-                            }, 100);
                         }
                     };
                 }

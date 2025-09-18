@@ -21,8 +21,7 @@ ob_start();
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Tailwind CSS is included via Vite build process -->
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -786,6 +785,32 @@ Treści są merytoryczne, zawsze zgodne z aktualną wiedzą, a zajęcia prowadzo
     @include('components.cookie-banner')
 
     <script src="{{ asset('js/cookie-consent.js') }}"></script>
+
+    <!-- Ensure openCookieModal is available globally -->
+    <script>
+        // Define openCookieModal immediately to avoid ReferenceError
+        window.openCookieModal = function() {
+            if (window.CookieConsent && window.CookieConsent.showModal) {
+                window.CookieConsent.showModal();
+            } else {
+                console.log('Waiting for CookieConsent to initialize...');
+                // Try multiple times with increasing delays
+                let attempts = 0;
+                const tryAgain = function() {
+                    attempts++;
+                    if (window.CookieConsent && window.CookieConsent.showModal) {
+                        window.CookieConsent.showModal();
+                    } else if (attempts < 10) {
+                        setTimeout(tryAgain, attempts * 100);
+                    } else {
+                        console.error('CookieConsent failed to initialize after 10 attempts');
+                    }
+                };
+                setTimeout(tryAgain, 100);
+            }
+        };
+    </script>
+
     <script>
         // Hide PHP errors immediately when page loads
         document.addEventListener('DOMContentLoaded', function() {
@@ -803,7 +828,7 @@ Treści są merytoryczne, zawsze zgodne z aktualną wiedzą, a zajęcia prowadzo
                 }
             });
         });
-        
+
         // Also hide immediately for faster hiding
         window.addEventListener('load', function() {
             const elements = document.querySelectorAll('br, b');
