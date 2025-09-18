@@ -543,6 +543,14 @@ ob_start();
                 
                 <!-- Consent Section -->
                 <div class="consent-group">
+                    <!-- Select All Checkbox -->
+                    <div class="consent-item" style="border-bottom: 1px solid rgba(255, 255, 255, 0.2); margin-bottom: 1.5rem; padding-bottom: 1rem;">
+                        <input type="checkbox" id="select_all_consents" class="consent-checkbox">
+                        <label for="select_all_consents" class="consent-label" style="font-weight: 600; color: #21235F;">
+                            Zaznacz wszystkie zgody
+                        </label>
+                    </div>
+                    
                     <div class="consent-item">
                         <input type="checkbox" id="consent_1" name="consent_1" required class="consent-checkbox">
                         <label for="consent_1" class="consent-label">
@@ -601,6 +609,32 @@ ob_start();
 
     <script src="{{ asset('js/cookie-consent.js') }}"></script>
     <script>
+        // Select All Consents functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const selectAllCheckbox = document.getElementById('select_all_consents');
+            const consentCheckboxes = document.querySelectorAll('input[name^="consent_"]');
+            
+            // Handle select all checkbox
+            selectAllCheckbox.addEventListener('change', function() {
+                consentCheckboxes.forEach(function(checkbox) {
+                    checkbox.checked = selectAllCheckbox.checked;
+                });
+            });
+            
+            // Handle individual checkboxes
+            consentCheckboxes.forEach(function(checkbox) {
+                checkbox.addEventListener('change', function() {
+                    // Check if all individual checkboxes are checked
+                    const allChecked = Array.from(consentCheckboxes).every(cb => cb.checked);
+                    selectAllCheckbox.checked = allChecked;
+                    
+                    // Handle indeterminate state
+                    const someChecked = Array.from(consentCheckboxes).some(cb => cb.checked);
+                    selectAllCheckbox.indeterminate = someChecked && !allChecked;
+                });
+            });
+        });
+        
         // Hide PHP errors immediately when page loads
         document.addEventListener('DOMContentLoaded', function() {
             // Hide any PHP error messages
