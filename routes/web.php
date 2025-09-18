@@ -148,21 +148,10 @@ Route::get('/video-proxy', function(Illuminate\Http\Request $request) {
         abort(403, 'Domain not allowed');
     }
     
-    return response()->stream(function() use ($url, $request) {
-        // Create stream context with proper User-Agent (may be required by video server)
-        $context = stream_context_create([
-            'http' => [
-                'method' => 'GET',
-                'header' => 'User-Agent: ' . ($request->header('user-agent') ?: 'Mozilla/5.0 (compatible; LaravelProxy/1.0)'),
-                'timeout' => 30
-            ]
-        ]);
-        
-        $stream = fopen($url, 'r', false, $context);
-        if ($stream) {
-            fpassthru($stream);
-            fclose($stream);
-        }
+    return response()->stream(function() use ($url) {
+        $stream = fopen($url, 'r');
+        fpassthru($stream);
+        fclose($stream);
     }, 200, [
         'Content-Type' => 'video/mp4',
         'Accept-Ranges' => 'bytes'
