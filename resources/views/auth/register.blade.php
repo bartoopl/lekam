@@ -554,7 +554,7 @@ ob_start();
                     <div class="consent-item">
                         <input type="checkbox" id="consent_1" name="consent_1" required class="consent-checkbox">
                         <label for="consent_1" class="consent-label">
-                            <strong>*Obowiązkowe:</strong> Potwierdzam, że administratorem moich danych osobowych w akademialekam.pl jest Grupa NeoArt, 02-819 Warszawa, ul. Puławska 314. Dane będą przetwarzane w celu założenia i obsługi konta oraz umożliwienia korzystania z treści serwisu (szkolenia, webinary) – jako niezbędne do wykonania umowy o świadczenie usług drogą elektroniczną. Podanie danych jest dobrowolne, jednak ich niepodanie może uniemożliwić rejestrację lub spowodować ograniczenia w korzystaniu z serwisu. Zapoznałam/Zapoznałem się z <a href="/privacy" target="_blank" style="color: #21235F; text-decoration: underline;">Polityką prywatności</a>
+                            <strong>*</strong> Potwierdzam, że administratorem moich danych osobowych w akademialekam.pl jest Grupa NeoArt, 02-819 Warszawa, ul. Puławska 314. Dane będą przetwarzane w celu założenia i obsługi konta oraz umożliwienia korzystania z treści serwisu (szkolenia, webinary) – jako niezbędne do wykonania umowy o świadczenie usług drogą elektroniczną. Podanie danych jest dobrowolne, jednak ich niepodanie może uniemożliwić rejestrację lub spowodować ograniczenia w korzystaniu z serwisu. Zapoznałam/Zapoznałem się z <a href="/privacy" target="_blank" style="color: #21235F; text-decoration: underline;">Polityką prywatności</a>
                         </label>
                     </div>
 
@@ -571,8 +571,15 @@ ob_start();
                             Wyrażam zgodę na przetwarzanie moich danych osobowych przez Grupę NeoArt, 02-819 Warszawa, ul. Puławska 314, w celach marketingowych, w tym na przesyłanie informacji handlowych drogą elektroniczną (e-mail) na podany adres. Zgodę mogę wycofać w każdym czasie. Zapoznałam/Zapoznałem się z <a href="/privacy" target="_blank" style="color: #21235F; text-decoration: underline;">Polityką prywatności</a>
                         </label>
                     </div>
+
+                    <!-- Asterisk explanation -->
+                    <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(255, 255, 255, 0.2);">
+                        <p style="font-family: 'Poppins', sans-serif; font-size: 0.8rem; color: #6B7280; font-style: italic;">
+                            * - pole obowiązkowe
+                        </p>
+                    </div>
                 </div>
-                
+
                 <button type="submit" class="btn btn-primary">
                     Zarejestruj się
                 </button>
