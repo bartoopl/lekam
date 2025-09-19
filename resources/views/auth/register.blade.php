@@ -561,14 +561,14 @@ ob_start();
                     <div class="consent-item">
                         <input type="checkbox" id="consent_2" name="consent_2" class="consent-checkbox">
                         <label for="consent_2" class="consent-label">
-                            Wyrażam zgodę na przetwarzanie moich danych osobowych przez Przedsiębiorstwo Farmaceutyczne LEK-AM Sp. z o.o., ul. Ostrzykowizna 14A, 05-170 Zakroczym, w celach marketingowych, w tym na przesyłanie informacji handlowych drogą elektroniczną (e-mail) na podany adres. Zgodę mogę wycofać w każdym czasie. Zapoznałam/Zapoznałem się z <a href="/privacy" target="_blank" style="color: #21235F; text-decoration: underline;">Polityką prywatności</a>
+                            Wyrażam zgodę na przetwarzanie moich danych osobowych przez Przedsiębiorstwo Farmaceutyczne LEK-AM Sp. z o.o., ul. Ostrzykowizna 14A, 05-170 Zakroczym, w celach marketingowych, w tym na przesyłanie informacji handlowych drogą elektroniczną (e-mail) na podany adres. Zgodę mogę wycofać w każdym czasie.
                         </label>
                     </div>
 
                     <div class="consent-item">
                         <input type="checkbox" id="consent_3" name="consent_3" class="consent-checkbox">
                         <label for="consent_3" class="consent-label">
-                            Wyrażam zgodę na przetwarzanie moich danych osobowych przez Grupę NeoArt, 02-819 Warszawa, ul. Puławska 314, w celach marketingowych, w tym na przesyłanie informacji handlowych drogą elektroniczną (e-mail) na podany adres. Zgodę mogę wycofać w każdym czasie. Zapoznałam/Zapoznałem się z <a href="/privacy" target="_blank" style="color: #21235F; text-decoration: underline;">Polityką prywatności</a>
+                            Wyrażam zgodę na przetwarzanie moich danych osobowych przez Grupę NeoArt, 02-819 Warszawa, ul. Puławska 314, w celach marketingowych, w tym na przesyłanie informacji handlowych drogą elektroniczną (e-mail) na podany adres. Zgodę mogę wycofać w każdym czasie.
                         </label>
                     </div>
 
