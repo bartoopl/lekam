@@ -226,7 +226,7 @@ ob_start();
             .hero-content {
                 flex-direction: column;
                 text-align: center;
-                padding: 2rem 1rem;
+                padding: 120px 1rem 2rem 1rem;
             }
             
             .hero-right {
