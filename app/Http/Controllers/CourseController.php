@@ -323,6 +323,13 @@ class CourseController extends Controller
         $user = auth()->user();
         $userProgress = null;
 
+        \Log::info('🔍 DEBUG loadLesson called', [
+            'course_id' => $course->id,
+            'lesson_id' => $lesson->id,
+            'user_id' => $user ? $user->id : 'not authenticated',
+            'user_email' => $user ? $user->email : 'none'
+        ]);
+
         if ($user) {
             // Check if any download timer has expired and auto-complete lesson
             $lesson->checkAndCompleteIfTimerExpired($user);
