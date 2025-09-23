@@ -320,6 +320,10 @@ class CourseController extends Controller
 
     public function loadLesson(Course $course, Lesson $lesson)
     {
+        // Very loud logging
+        \Log::emergency('🚨🚨🚨 LOADLESSON CALLED! 🚨🚨🚨');
+        \Log::error('🔥 LoadLesson function executed for lesson: ' . $lesson->id);
+
         $user = auth()->user();
         $userProgress = null;
 
