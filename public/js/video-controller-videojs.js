@@ -170,20 +170,36 @@ videojs.registerPlugin('positionSaver', function(options = {}) {
     
     // Set start position and update seeking control
     if (options.startPosition) {
+        console.log('🔍 DEBUG startPosition provided:', options.startPosition);
         player.ready(() => {
             const position = parseInt(options.startPosition);
-            const safeMaxPosition = Math.max(0, player.duration() - 2);
-            
-            if (player.duration() && position < safeMaxPosition) {
+            const duration = player.duration();
+            const safeMaxPosition = Math.max(0, duration - 2);
+
+            console.log('🔍 DEBUG setting video position:', {
+                position: position,
+                duration: duration,
+                safeMaxPosition: safeMaxPosition,
+                willSet: duration && position < safeMaxPosition
+            });
+
+            if (duration && position < safeMaxPosition) {
                 player.currentTime(position);
-                console.log('Set video position to:', position);
-                
+                console.log('🔍 DEBUG Set video position to:', position);
+
                 // Update maxReachedTime in seekingControl plugin
                 if (player.seekingControl && player.seekingControl.updateMaxReachedTime) {
                     player.seekingControl.updateMaxReachedTime(position);
                 }
+            } else {
+                console.log('🔍 DEBUG NOT setting position - condition failed:', {
+                    hasDuration: !!duration,
+                    positionValid: position < safeMaxPosition
+                });
             }
         });
+    } else {
+        console.log('🔍 DEBUG No startPosition provided');
     }
     
     // Save position events
