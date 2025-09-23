@@ -1021,34 +1021,45 @@ function loadLesson(lessonId, lessonTitle) {
 }
 
 function initializeVideoControls() {
-    console.log('initializeVideoControls called');
+    console.log('🔍 DEBUG initializeVideoControls called');
     const video = document.getElementById('lesson-video');
-    console.log('Video element found:', !!video);
-    
+    console.log('🔍 DEBUG Video element found:', !!video);
+
     if (video && !video.hasAttribute('data-initialized')) {
         video.setAttribute('data-initialized', 'true');
-        console.log('Video initialized');
-        
+        console.log('🔍 DEBUG Video initialized');
+
+        // Log video data attributes
+        console.log('🔍 DEBUG Video data attributes:', {
+            savePositionUrl: video.dataset.savePositionUrl,
+            startPosition: video.dataset.startPosition,
+            completeLessonUrl: video.dataset.completeLessonUrl
+        });
+
         // Add basic controls first
         video.controls = true;
-        console.log('Basic controls added');
-        
+        console.log('🔍 DEBUG Basic controls added');
+
+        // Check if Video.js is loaded
+        console.log('🔍 DEBUG Video.js available:', typeof videojs !== 'undefined');
+
         // Try to call custom controls
         if (typeof window.initVideoJSPlayer === 'function') {
-            console.log('Video.js player function found, calling...');
+            console.log('🔍 DEBUG Video.js player function found, calling...');
             try {
                 const options = {
                     saveUrl: video.dataset.savePositionUrl,
                     startPosition: video.dataset.startPosition,
                     completeUrl: video.dataset.completeLessonUrl
                 };
+                console.log('🔍 DEBUG Calling initVideoJSPlayer with options:', options);
                 window.initVideoJSPlayer(video, options);
-                console.log('Video.js player initialized successfully');
+                console.log('🔍 DEBUG Video.js player initialized successfully');
             } catch (error) {
-                console.error('Error initializing Video.js player:', error);
+                console.error('🔍 DEBUG Error initializing Video.js player:', error);
             }
         } else {
-            console.log('Custom controls function not found, using fallback');
+            console.log('🔍 DEBUG Custom controls function not found, using fallback');
         }
         
         // Auto-complete lesson when video ends
