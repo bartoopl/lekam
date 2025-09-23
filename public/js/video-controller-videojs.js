@@ -171,7 +171,8 @@ videojs.registerPlugin('positionSaver', function(options = {}) {
     // Set start position and update seeking control
     if (options.startPosition) {
         console.log('🔍 DEBUG startPosition provided:', options.startPosition);
-        player.ready(() => {
+
+        function setVideoPosition() {
             const position = parseInt(options.startPosition);
             const duration = player.duration();
             const safeMaxPosition = Math.max(0, duration - 2);
@@ -183,7 +184,7 @@ videojs.registerPlugin('positionSaver', function(options = {}) {
                 willSet: duration && position < safeMaxPosition
             });
 
-            if (duration && position < safeMaxPosition) {
+            if (duration && !isNaN(duration) && position < safeMaxPosition) {
                 player.currentTime(position);
                 console.log('🔍 DEBUG Set video position to:', position);
 
@@ -194,7 +195,22 @@ videojs.registerPlugin('positionSaver', function(options = {}) {
             } else {
                 console.log('🔍 DEBUG NOT setting position - condition failed:', {
                     hasDuration: !!duration,
-                    positionValid: position < safeMaxPosition
+                    durationIsValid: !isNaN(duration),
+                    positionValid: duration && position < safeMaxPosition
+                });
+            }
+        }
+
+        // Wait for video metadata to load (including duration)
+        player.ready(() => {
+            if (player.duration() && !isNaN(player.duration())) {
+                console.log('🔍 DEBUG Duration available immediately, setting position');
+                setVideoPosition();
+            } else {
+                console.log('🔍 DEBUG Duration not available, waiting for loadedmetadata');
+                player.one('loadedmetadata', () => {
+                    console.log('🔍 DEBUG loadedmetadata fired, setting position');
+                    setVideoPosition();
                 });
             }
         });
