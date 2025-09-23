@@ -132,11 +132,7 @@
         shape-rendering: geometricPrecision;
         vector-effect: non-scaling-stroke;
         transform-origin: center;
-        /* Force perfect circle by compensating for SVG stretching */
-        /* Since SVG has preserveAspectRatio="none", we need to counter-scale the circle */
-        /* viewBox is 800x120, so ratio is 800/120 = 6.67 */
-        /* We need to scale Y by this ratio to make circle round */
-        transform: scaleY(6.67);
+        /* Dynamic scale will be calculated by JavaScript */
         /* Force hardware acceleration for better rendering */
         will-change: transform;
         /* Ensure visibility in Safari */
@@ -2117,7 +2113,23 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Ensure progress dot is visible before animation
         const progressDot = document.querySelector('.progress-dot');
-        if (progressDot) {
+        const progressSvg = document.querySelector('.sinusoidal-progress');
+        if (progressDot && progressSvg) {
+            // Calculate proper scale to maintain circular shape
+            const svgRect = progressSvg.getBoundingClientRect();
+            const svgWidth = svgRect.width;
+            const svgHeight = svgRect.height;
+
+            // ViewBox is 800x120, real dimensions are svgWidth x svgHeight
+            const viewBoxRatio = 800 / 120; // 6.67
+            const realRatio = svgWidth / svgHeight;
+
+            // Scale factor to compensate for stretching
+            const scaleY = viewBoxRatio / realRatio;
+
+            console.log('SVG dimensions:', svgWidth, 'x', svgHeight);
+            console.log('ViewBox ratio:', viewBoxRatio, 'Real ratio:', realRatio, 'Scale Y:', scaleY);
+
             // Force initial attributes for cross-browser compatibility
             progressDot.setAttribute('r', '8');
             progressDot.setAttribute('cx', '0');
@@ -2129,16 +2141,32 @@ document.addEventListener('DOMContentLoaded', function() {
             progressDot.setAttribute('shape-rendering', 'geometricPrecision');
             progressDot.style.opacity = '1';
             progressDot.style.visibility = 'visible';
+
+            // Apply calculated scale
+            progressDot.style.transform = `scaleY(${scaleY})`;
         }
 
         updateSinusoidalProgress(validPercentage);
     }, 100);
     
-    // Add resize listener to recalculate positions if needed
+    // Add resize listener to recalculate positions and scale if needed
     let resizeTimeout;
     window.addEventListener('resize', function() {
         clearTimeout(resizeTimeout);
         resizeTimeout = setTimeout(() => {
+            // Recalculate circle scale on resize
+            const progressDot = document.querySelector('.progress-dot');
+            const progressSvg = document.querySelector('.sinusoidal-progress');
+            if (progressDot && progressSvg) {
+                const svgRect = progressSvg.getBoundingClientRect();
+                const svgWidth = svgRect.width;
+                const svgHeight = svgRect.height;
+                const viewBoxRatio = 800 / 120;
+                const realRatio = svgWidth / svgHeight;
+                const scaleY = viewBoxRatio / realRatio;
+                progressDot.style.transform = `scaleY(${scaleY})`;
+            }
+
             const validPercentage = Math.max(0, Math.min(100, progressPercentage || 0));
             updateSinusoidalProgress(validPercentage);
         }, 200);
