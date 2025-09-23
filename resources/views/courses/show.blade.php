@@ -132,7 +132,15 @@
         shape-rendering: geometricPrecision;
         vector-effect: non-scaling-stroke;
         transform-origin: center;
-        transform: scale(1, 1);
+        /* Remove potentially problematic transform */
+        /* Ensure proper rendering across browsers */
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0);
+        /* Force hardware acceleration for better rendering */
+        will-change: transform;
+        /* Ensure visibility in Safari */
+        opacity: 1;
+        visibility: visible;
     }
 
 
@@ -792,7 +800,14 @@
                          Q 775 75, 800 60" />
                 
                 <!-- Progress dot -->
-                <circle class="progress-dot" cx="0" cy="60" fill="#21235F" stroke="#ffffff" stroke-width="2" />
+                <circle class="progress-dot"
+                        cx="0"
+                        cy="60"
+                        r="8"
+                        fill="#21235F"
+                        stroke="#ffffff"
+                        stroke-width="2"
+                        style="opacity: 1; visibility: visible;" />
             </svg>
         </div>
         <div class="mt-4 text-sm text-gray-600">
@@ -2002,7 +2017,16 @@ function updateSinusoidalProgress(percentage) {
             if (!isNaN(x) && !isNaN(y) && isFinite(x) && isFinite(y)) {
                 progressDot.setAttribute('cx', x);
                 progressDot.setAttribute('cy', y);
-                
+
+                // Ensure the circle radius is explicitly set for Chrome compatibility
+                progressDot.setAttribute('r', '8');
+
+                // Force re-render for Safari by toggling visibility
+                progressDot.style.opacity = '0.99';
+                setTimeout(() => {
+                    progressDot.style.opacity = '1';
+                }, 10);
+
                 // Update dot color based on progress
                 updateDotColor(progress);
             } else {
@@ -2065,17 +2089,39 @@ function updateDotColor(progress) {
 
     const dotColor = interpolateColor('#21235F', '#22C55E', progress);
     progressDot.setAttribute('fill', dotColor);
+
+    // Ensure stroke is visible for better definition
+    progressDot.setAttribute('stroke', '#ffffff');
+    progressDot.setAttribute('stroke-width', '2');
+
+    // Force re-render for Safari compatibility
+    progressDot.style.fill = dotColor;
 }
 
 // Initialize progress on page load
 document.addEventListener('DOMContentLoaded', function() {
     const progressPercentage = {{ $progressPercentage }};
-    
+
     // Initialize progress with validation
     setTimeout(() => {
         // Ensure percentage is a valid number
         const validPercentage = Math.max(0, Math.min(100, progressPercentage || 0));
         console.log('Initializing progress with:', validPercentage + '%');
+
+        // Ensure progress dot is visible before animation
+        const progressDot = document.querySelector('.progress-dot');
+        if (progressDot) {
+            // Force initial attributes for cross-browser compatibility
+            progressDot.setAttribute('r', '8');
+            progressDot.setAttribute('cx', '0');
+            progressDot.setAttribute('cy', '60');
+            progressDot.setAttribute('fill', '#21235F');
+            progressDot.setAttribute('stroke', '#ffffff');
+            progressDot.setAttribute('stroke-width', '2');
+            progressDot.style.opacity = '1';
+            progressDot.style.visibility = 'visible';
+        }
+
         updateSinusoidalProgress(validPercentage);
     }, 100);
     

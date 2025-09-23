@@ -290,76 +290,134 @@ ob_start();
             }
         }
 
-        /* Register Footer */
-        .register-footer {
-            margin-top: 3rem;
-            padding: 2rem 0;
-            text-align: center;
-            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        /* Main Footer Styles (same as homepage) */
+        .footer {
+            background-image: url('/images/backgrounds/wave.png');
+            background-size: cover;
+            background-position: center;
+            background-color: #21235F;
+            background-blend-mode: overlay;
+            position: relative;
+            color: white;
+            padding: 4rem 0 2rem 0;
+            margin-top: 4rem;
         }
 
-        .register-footer-content {
+        .footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #21235F 0%, #2a2d7a 100%);
+            opacity: 0.2;
+            z-index: 1;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 3rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .footer-left {
             display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 2rem;
-            margin-bottom: 1rem;
-            flex-wrap: wrap;
+            flex-direction: column;
+            gap: 1rem;
         }
 
-        .register-footer-link {
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .footer-logo-icon {
+            width: 120px;
+            height: auto;
+            filter: brightness(0) invert(1);
+        }
+
+        .footer-description {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.9);
+            margin: 0;
+        }
+
+        .footer-center, .footer-right {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .footer-section-title {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: white;
+            margin: 0;
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-links {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .footer-link {
             color: rgba(255, 255, 255, 0.8);
             text-decoration: none;
             font-family: 'Poppins', sans-serif;
             font-size: 0.9rem;
-            font-weight: 400;
             transition: color 0.3s ease;
         }
 
-        .register-footer-link:hover {
+        .footer-link:hover {
             color: white;
             text-decoration: underline;
         }
 
-        .register-footer-bottom {
+        .footer-bottom {
+            max-width: 1200px;
+            margin: 2rem auto 0;
+            padding: 2rem 2rem 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.3);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            color: rgba(255, 255, 255, 0.6);
-            font-family: 'Poppins', sans-serif;
-            font-size: 0.8rem;
             flex-wrap: wrap;
             gap: 1rem;
+            position: relative;
+            z-index: 2;
+            color: rgba(255, 255, 255, 0.8);
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.9rem;
         }
 
-        .register-footer-admin {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .register-footer-admin img {
-            height: 20px;
+        .footer-admin-link:hover {
             opacity: 0.8;
         }
 
-        .register-footer-admin a {
-            color: rgba(255, 255, 255, 0.6);
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-
-        .register-footer-admin a:hover {
-            color: rgba(255, 255, 255, 0.9);
-        }
-
         @media (max-width: 768px) {
-            .register-footer-content {
-                flex-direction: column;
-                gap: 1rem;
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+                text-align: center;
             }
 
-            .register-footer-bottom {
+            .footer-bottom {
                 flex-direction: column;
                 text-align: center;
             }
@@ -589,27 +647,54 @@ ob_start();
                 </a>
             </form>
 
-            <!-- Register Footer -->
-            <footer class="register-footer">
-                <div class="register-footer-content">
-                    <a href="{{ route('privacy') }}" class="register-footer-link">Polityka Prywatności</a>
-                    <a href="{{ route('cookies') }}" class="register-footer-link">Polityka Cookies</a>
-                    <a href="{{ route('contact') }}" class="register-footer-link">Kontakt</a>
-                </div>
-                <div class="register-footer-bottom">
-                    <div>
-                        <span>&copy; 2025 Wszelkie Prawa zastrzeżone</span>
-                    </div>
-                    <div class="register-footer-admin">
-                        <span>Administrator serwisu:</span>
-                        <a href="https://neoart.pl" target="_blank">
-                            <img src="/images/icons/neoart.png" alt="Neoart">
-                        </a>
-                    </div>
-                </div>
-            </footer>
         </div>
     </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-left">
+                <div class="footer-logo">
+                    <img src="/images/logos/logo.svg" alt="Lekam Akademia" class="footer-logo-icon">
+                </div>
+                <p class="footer-description">Zdobywaj wiedzę i punkty edukacyjne w Akademii Lekam</p>
+            </div>
+
+            <div class="footer-center">
+                <h3 class="footer-section-title">Ważne odnośniki</h3>
+                <ul class="footer-links">
+                    <li><a href="{{ route('privacy') }}" class="footer-link">Polityka Prywatności</a></li>
+                    <li><a href="{{ route('cookies') }}" class="footer-link">Polityka Plików Cookies</a></li>
+                    <li><a href="#" onclick="openCookieModal(); return false;" class="footer-link">Zarządzanie cookies</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-right">
+                <h3 class="footer-section-title">Linki</h3>
+                <ul class="footer-links">
+                    <li><a href="{{ route('courses') }}" class="footer-link">Szkolenia</a></li>
+                    <li><a href="{{ route('contact') }}" class="footer-link">Kontakt</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <div class="footer-bottom-left">
+                <div style="display: flex; align-items: center;">
+                    <span>&copy; 2025 Wszelkie Prawa zastrzeżone</span>
+                    <img src="/images/icons/lekam.png" alt="Lekam" style="height: 24px; margin-left: 8px;">
+                </div>
+            </div>
+            <div class="footer-bottom-right">
+                <div style="display: flex; align-items: center; justify-content: flex-end;">
+                    <span>Administrator serwisu:</span>
+                    <a href="https://neoart.pl" target="_blank" class="footer-admin-link" style="margin-left: 8px;">
+                        <img src="/images/icons/neoart.png" alt="Neoart" style="height: 24px;">
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
 
     <!-- Cookie Consent Banner -->
     @include('components.cookie-banner')
