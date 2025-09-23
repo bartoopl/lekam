@@ -254,9 +254,16 @@ class CourseController extends Controller
      */
     public function saveVideoPosition(Request $request, Course $course, Lesson $lesson)
     {
+        \Log::info('🔍 DEBUG saveVideoPosition called', [
+            'course_id' => $course->id,
+            'lesson_id' => $lesson->id,
+            'request_data' => $request->all()
+        ]);
+
         $user = Auth::user();
-        
+
         if (!$user) {
+            \Log::info('🔍 DEBUG saveVideoPosition unauthorized');
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 
@@ -264,12 +271,15 @@ class CourseController extends Controller
             'position' => 'required|integer|min:0',
         ]);
 
+        \Log::info('🔍 DEBUG saveVideoPosition validated data', ['position' => $validated['position']]);
+
         $userProgress = UserProgress::where('user_id', $user->id)
             ->where('course_id', $course->id)
             ->where('lesson_id', $lesson->id)
             ->first();
 
         if (!$userProgress) {
+            \Log::info('🔍 DEBUG saveVideoPosition creating new progress record');
             $userProgress = UserProgress::create([
                 'user_id' => $user->id,
                 'course_id' => $course->id,
@@ -277,9 +287,11 @@ class CourseController extends Controller
                 'video_position' => $validated['position'],
             ]);
         } else {
+            \Log::info('🔍 DEBUG saveVideoPosition updating existing progress record');
             $userProgress->update(['video_position' => $validated['position']]);
         }
 
+        \Log::info('🔍 DEBUG saveVideoPosition success', ['final_position' => $userProgress->video_position]);
         return response()->json(['success' => true]);
     }
 

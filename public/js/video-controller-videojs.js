@@ -110,10 +110,19 @@ videojs.registerPlugin('positionSaver', function(options = {}) {
     const player = this;
     const saveUrl = options.saveUrl;
     let saveInterval;
+
+    console.log('🔍 DEBUG positionSaver plugin initialized with options:', options);
     
     function savePosition() {
         const currentTime = Math.floor(player.currentTime());
+        console.log('🔍 DEBUG savePosition called', {
+            currentTime: currentTime,
+            saveUrl: saveUrl,
+            hasToken: !!document.querySelector('meta[name="csrf-token"]')
+        });
+
         if (currentTime > 0 && saveUrl) {
+            console.log('🔍 DEBUG sending AJAX request to save position');
             fetch(saveUrl, {
                 method: 'POST',
                 headers: {
@@ -127,11 +136,18 @@ videojs.registerPlugin('positionSaver', function(options = {}) {
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    console.log('Video position saved:', currentTime);
+                    console.log('🔍 DEBUG Video position saved successfully:', currentTime);
+                } else {
+                    console.error('🔍 DEBUG Save failed with response:', data);
                 }
             })
             .catch(error => {
-                console.error('Error saving video position:', error);
+                console.error('🔍 DEBUG Error saving video position:', error);
+            });
+        } else {
+            console.log('🔍 DEBUG not saving position - currentTime or saveUrl missing', {
+                currentTime: currentTime,
+                saveUrl: saveUrl
             });
         }
     }
@@ -329,9 +345,13 @@ videojs.registerPlugin('customProgressOverlay', function(options = {}) {
 
 // Main initialization function
 window.initVideoJSPlayer = function(videoElement, options = {}) {
-    if (!videoElement) return;
-    
-    console.log('initVideoJSPlayer called with options:', options);
+    if (!videoElement) {
+        console.error('🔍 DEBUG initVideoJSPlayer called with no video element');
+        return;
+    }
+
+    console.log('🔍 DEBUG initVideoJSPlayer called with video element:', videoElement);
+    console.log('🔍 DEBUG initVideoJSPlayer options:', options);
     
     const playerOptions = {
         controls: true,

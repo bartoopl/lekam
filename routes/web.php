@@ -137,14 +137,20 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 // Video proxy for HTTPS compatibility (requires auth)
 Route::get('/video-proxy', function(Illuminate\Http\Request $request) {
     $url = $request->query('url');
+    \Log::info('Video proxy request', ['url' => $url, 'raw_url' => $request->getQueryString()]);
+
     if (!$url || !filter_var($url, FILTER_VALIDATE_URL)) {
+        \Log::error('Video proxy: Invalid URL', ['url' => $url]);
         abort(400, 'Invalid URL');
     }
-    
+
     // Security check - only allow specific domains
     $allowedDomains = ['lekam.grupaneoart.pl'];
     $parsedUrl = parse_url($url);
+    \Log::info('Video proxy: Domain check', ['host' => $parsedUrl['host'], 'allowed' => $allowedDomains]);
+
     if (!in_array($parsedUrl['host'], $allowedDomains)) {
+        \Log::error('Video proxy: Domain not allowed', ['host' => $parsedUrl['host'], 'allowed' => $allowedDomains]);
         abort(403, 'Domain not allowed');
     }
     
@@ -165,7 +171,7 @@ Route::get('/video-proxy', function(Illuminate\Http\Request $request) {
         'Pragma' => 'no-cache',
         'Expires' => '0'
     ]);
-})->middleware('auth')->name('video.proxy');
+})->name('video.proxy');
 
 // Default Laravel Breeze routes
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
