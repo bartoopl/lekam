@@ -127,12 +127,9 @@
     }
 
     .progress-dot {
-        r: 8;
         transition: cx 1s cubic-bezier(0.4, 0, 0.2, 1);
         shape-rendering: geometricPrecision;
         vector-effect: non-scaling-stroke;
-        transform-origin: center;
-        /* Dynamic scale will be calculated by JavaScript */
         /* Force hardware acceleration for better rendering */
         will-change: transform;
         /* Ensure visibility in Safari */
@@ -796,11 +793,12 @@
                          Q 725 95, 750 85
                          Q 775 75, 800 60" />
                 
-                <!-- Progress dot -->
-                <circle class="progress-dot"
+                <!-- Progress dot as ellipse for better shape control -->
+                <ellipse class="progress-dot"
                         cx="0"
                         cy="60"
-                        r="8"
+                        rx="8"
+                        ry="8"
                         fill="#21235F"
                         stroke="#ffffff"
                         stroke-width="2"
@@ -2017,8 +2015,9 @@ function updateSinusoidalProgress(percentage) {
                 progressDot.setAttribute('cx', x);
                 progressDot.setAttribute('cy', y);
 
-                // Ensure the circle radius is explicitly set for Chrome compatibility
-                progressDot.setAttribute('r', '8');
+                // Ensure the ellipse radii are explicitly set for Chrome compatibility
+                if (!progressDot.getAttribute('rx')) progressDot.setAttribute('rx', '8');
+                if (!progressDot.getAttribute('ry')) progressDot.setAttribute('ry', '8');
                 progressDot.setAttribute('vector-effect', 'non-scaling-stroke');
                 progressDot.setAttribute('shape-rendering', 'geometricPrecision');
 
@@ -2115,7 +2114,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const progressDot = document.querySelector('.progress-dot');
         const progressSvg = document.querySelector('.sinusoidal-progress');
         if (progressDot && progressSvg) {
-            // Calculate proper scale to maintain circular shape
+            // Calculate proper ellipse radii to maintain circular shape
             const svgRect = progressSvg.getBoundingClientRect();
             const svgWidth = svgRect.width;
             const svgHeight = svgRect.height;
@@ -2124,14 +2123,18 @@ document.addEventListener('DOMContentLoaded', function() {
             const viewBoxRatio = 800 / 120; // 6.67
             const realRatio = svgWidth / svgHeight;
 
-            // Scale factor to compensate for stretching
-            const scaleY = viewBoxRatio / realRatio;
+            // Calculate ellipse radii to create perfect circle
+            const baseRadius = 8;
+            const rxRadius = baseRadius;
+            const ryRadius = baseRadius * (viewBoxRatio / realRatio);
 
             console.log('SVG dimensions:', svgWidth, 'x', svgHeight);
-            console.log('ViewBox ratio:', viewBoxRatio, 'Real ratio:', realRatio, 'Scale Y:', scaleY);
+            console.log('ViewBox ratio:', viewBoxRatio, 'Real ratio:', realRatio);
+            console.log('Ellipse radii: rx =', rxRadius, 'ry =', ryRadius);
 
             // Force initial attributes for cross-browser compatibility
-            progressDot.setAttribute('r', '8');
+            progressDot.setAttribute('rx', rxRadius);
+            progressDot.setAttribute('ry', ryRadius);
             progressDot.setAttribute('cx', '0');
             progressDot.setAttribute('cy', '60');
             progressDot.setAttribute('fill', '#21235F');
@@ -2141,9 +2144,6 @@ document.addEventListener('DOMContentLoaded', function() {
             progressDot.setAttribute('shape-rendering', 'geometricPrecision');
             progressDot.style.opacity = '1';
             progressDot.style.visibility = 'visible';
-
-            // Apply calculated scale
-            progressDot.style.transform = `scaleY(${scaleY})`;
         }
 
         updateSinusoidalProgress(validPercentage);
@@ -2154,7 +2154,7 @@ document.addEventListener('DOMContentLoaded', function() {
     window.addEventListener('resize', function() {
         clearTimeout(resizeTimeout);
         resizeTimeout = setTimeout(() => {
-            // Recalculate circle scale on resize
+            // Recalculate ellipse radii on resize
             const progressDot = document.querySelector('.progress-dot');
             const progressSvg = document.querySelector('.sinusoidal-progress');
             if (progressDot && progressSvg) {
@@ -2163,8 +2163,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 const svgHeight = svgRect.height;
                 const viewBoxRatio = 800 / 120;
                 const realRatio = svgWidth / svgHeight;
-                const scaleY = viewBoxRatio / realRatio;
-                progressDot.style.transform = `scaleY(${scaleY})`;
+                const baseRadius = 8;
+                const rxRadius = baseRadius;
+                const ryRadius = baseRadius * (viewBoxRatio / realRatio);
+                progressDot.setAttribute('rx', rxRadius);
+                progressDot.setAttribute('ry', ryRadius);
             }
 
             const validPercentage = Math.max(0, Math.min(100, progressPercentage || 0));
