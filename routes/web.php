@@ -142,7 +142,7 @@ Route::get('/video-proxy', function(Illuminate\Http\Request $request) {
     }
     
     // Security check - only allow specific domains
-    $allowedDomains = ['grupaneo.beep.pl'];
+    $allowedDomains = ['lekam.grupaneoart.pl'];
     $parsedUrl = parse_url($url);
     if (!in_array($parsedUrl['host'], $allowedDomains)) {
         abort(403, 'Domain not allowed');
