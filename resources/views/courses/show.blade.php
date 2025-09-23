@@ -110,6 +110,10 @@
         width: 100%;
         height: 120px;
         overflow: hidden;
+        /* Force maintain aspect ratio */
+        aspect-ratio: 800 / 120;
+        /* Prevent any distortion */
+        object-fit: contain;
     }
 
     .progress-path-bg {
@@ -141,6 +145,11 @@
         /* Ensure visibility in Safari */
         opacity: 1;
         visibility: visible;
+        /* Force perfect circle - prevent any scaling distortion */
+        width: 16px !important;
+        height: 16px !important;
+        /* Ensure the circle maintains its aspect ratio */
+        aspect-ratio: 1 / 1;
     }
 
 
@@ -744,7 +753,7 @@
             <div class="progress-percentage">{{ $progressPercentage }}%</div>
         </div>
         <div class="progress-bar-container">
-            <svg class="sinusoidal-progress" viewBox="0 0 800 120" preserveAspectRatio="none">
+            <svg class="sinusoidal-progress" viewBox="0 0 800 120" preserveAspectRatio="xMidYMid meet">
                 <!-- Gradient definitions -->
                 <defs>
                     <linearGradient id="progressGradient" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -807,6 +816,8 @@
                         fill="#21235F"
                         stroke="#ffffff"
                         stroke-width="2"
+                        vector-effect="non-scaling-stroke"
+                        shape-rendering="geometricPrecision"
                         style="opacity: 1; visibility: visible;" />
             </svg>
         </div>
@@ -2020,9 +2031,13 @@ function updateSinusoidalProgress(percentage) {
 
                 // Ensure the circle radius is explicitly set for Chrome compatibility
                 progressDot.setAttribute('r', '8');
+                progressDot.setAttribute('vector-effect', 'non-scaling-stroke');
+                progressDot.setAttribute('shape-rendering', 'geometricPrecision');
 
                 // Force re-render for Safari by toggling visibility
                 progressDot.style.opacity = '0.99';
+                progressDot.style.width = '16px';
+                progressDot.style.height = '16px';
                 setTimeout(() => {
                     progressDot.style.opacity = '1';
                 }, 10);
@@ -2093,9 +2108,13 @@ function updateDotColor(progress) {
     // Ensure stroke is visible for better definition
     progressDot.setAttribute('stroke', '#ffffff');
     progressDot.setAttribute('stroke-width', '2');
+    progressDot.setAttribute('vector-effect', 'non-scaling-stroke');
+    progressDot.setAttribute('shape-rendering', 'geometricPrecision');
 
     // Force re-render for Safari compatibility
     progressDot.style.fill = dotColor;
+    progressDot.style.width = '16px';
+    progressDot.style.height = '16px';
 }
 
 // Initialize progress on page load
@@ -2118,8 +2137,12 @@ document.addEventListener('DOMContentLoaded', function() {
             progressDot.setAttribute('fill', '#21235F');
             progressDot.setAttribute('stroke', '#ffffff');
             progressDot.setAttribute('stroke-width', '2');
+            progressDot.setAttribute('vector-effect', 'non-scaling-stroke');
+            progressDot.setAttribute('shape-rendering', 'geometricPrecision');
             progressDot.style.opacity = '1';
             progressDot.style.visibility = 'visible';
+            progressDot.style.width = '16px';
+            progressDot.style.height = '16px';
         }
 
         updateSinusoidalProgress(validPercentage);
