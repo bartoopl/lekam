@@ -322,12 +322,19 @@ class CourseController extends Controller
     {
         $user = auth()->user();
         $userProgress = null;
-        
+
         if ($user) {
             // Check if any download timer has expired and auto-complete lesson
             $lesson->checkAndCompleteIfTimerExpired($user);
-            
+
             $userProgress = $lesson->userProgress()->where('user_id', $user->id)->first();
+
+            \Log::info('🔍 DEBUG loadLesson for lesson: ' . $lesson->id, [
+                'user_id' => $user->id,
+                'userProgress_found' => !!$userProgress,
+                'video_position' => $userProgress ? $userProgress->video_position : 'none',
+                'is_completed' => $userProgress ? $userProgress->is_completed : 'none'
+            ]);
         }
 
         // Check if user can access materials
