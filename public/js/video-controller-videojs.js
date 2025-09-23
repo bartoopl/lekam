@@ -122,18 +122,34 @@ videojs.registerPlugin('positionSaver', function(options = {}) {
         });
 
         if (currentTime > 0 && saveUrl) {
+            const csrfToken = document.querySelector('meta[name="csrf-token"]');
+            const csrfValue = csrfToken ? csrfToken.getAttribute('content') : 'NO_TOKEN';
+
             console.log('🔍 DEBUG sending AJAX request to save position');
+            console.log('🔍 DEBUG CSRF token:', csrfValue);
+
             fetch(saveUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    'X-CSRF-TOKEN': csrfValue
                 },
                 body: JSON.stringify({
                     position: currentTime
                 })
             })
-            .then(response => response.json())
+            .then(response => {
+                console.log('🔍 DEBUG Response status:', response.status);
+                if (response.status === 419) {
+                    console.error('🔍 DEBUG CSRF token expired! Status 419');
+                    return Promise.reject('CSRF token expired');
+                }
+                if (!response.ok) {
+                    console.error('🔍 DEBUG HTTP error:', response.status, response.statusText);
+                    return Promise.reject(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                return response.json();
+            })
             .then(data => {
                 if (data.success) {
                     console.log('🔍 DEBUG Video position saved successfully:', currentTime);
