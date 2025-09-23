@@ -295,7 +295,7 @@ ob_start();
             background-image: url('/images/backgrounds/wave.png');
             background-size: cover;
             background-position: center;
-            background-color: #21235F;
+            background-color: #10113d;
             background-blend-mode: overlay;
             position: relative;
             color: white;
@@ -310,7 +310,7 @@ ob_start();
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, #21235F 0%, #2a2d7a 100%);
+            background: linear-gradient(135deg, #10113d 0%, #1a1e5a 100%);
             opacity: 0.2;
             z-index: 1;
         }
