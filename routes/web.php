@@ -35,8 +35,8 @@ Route::get('/register/{code}', function ($code) {
     return redirect()->route('register', ['ref' => $code]);
 })->name('register.representative');
 
-// Course routes (require authentication)
-Route::middleware(['auth'])->group(function () {
+// Course routes (require authentication and email verification)
+Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/courses/{course}', [CourseController::class, 'show'])->name('courses.show');
     Route::get('/courses/{course}/lesson/{lesson}', [CourseController::class, 'loadLesson'])->name('courses.load-lesson');
     Route::post('/courses/{course}/lesson/{lesson}/complete', [CourseController::class, 'completeLesson'])->name('courses.complete-lesson');
@@ -59,8 +59,8 @@ Route::middleware(['auth'])->group(function () {
 });
 Route::get('/courses/{course}/progress', [CourseController::class, 'progress'])->name('courses.progress');
 
-// Quiz routes (require authentication)
-Route::middleware(['auth'])->group(function () {
+// Quiz routes (require authentication and email verification)
+Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/courses/{course}/quiz', [QuizController::class, 'show'])->name('quizzes.show');
     Route::get('/courses/{course}/quiz/content', [QuizController::class, 'loadContent'])->name('quizzes.load-content');
     Route::post('/courses/{course}/quiz/start', [QuizController::class, 'start'])->name('quizzes.start');
@@ -70,16 +70,16 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/courses/{course}/quiz/result/{attempt}', [QuizController::class, 'result'])->name('quizzes.result');
 });
 
-// Certificate routes (authenticated)
-Route::middleware('auth')->group(function () {
+// Certificate routes (authenticated and verified)
+Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/certificates', [CertificateController::class, 'index'])->name('certificates.index');
     Route::get('/certificates/{certificate}', [CertificateController::class, 'show'])->name('certificates.show');
     Route::get('/certificates/{certificate}/download', [CertificateController::class, 'download'])->name('certificates.download');
     Route::post('/courses/{course}/certificate/generate', [CertificateController::class, 'generate'])->name('certificates.generate');
 });
 
-// Admin routes (authenticated and admin access)
-Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+// Admin routes (authenticated, verified and admin access)
+Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [AdminController::class, 'dashboard'])->name('dashboard');
     Route::get('/users', [AdminController::class, 'users'])->name('users');
     Route::get('/users/{user}/edit', [AdminController::class, 'userEdit'])->name('users.edit');
@@ -176,7 +176,7 @@ Route::get('/video-proxy', function(Illuminate\Http\Request $request) {
 // Default Laravel Breeze routes
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
