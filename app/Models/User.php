@@ -7,6 +7,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Notifications\VerifyEmailPolish;
+use App\Notifications\ResetPasswordPolish;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -148,5 +150,21 @@ class User extends Authenticatable implements MustVerifyEmail
     public function getScoreMultiplier(): float
     {
         return $this->user_type === 'farmaceuta' ? 1.0 : 0.8;
+    }
+
+    /**
+     * Send the email verification notification in Polish.
+     */
+    public function sendEmailVerificationNotification()
+    {
+        $this->notify(new VerifyEmailPolish);
+    }
+
+    /**
+     * Send the password reset notification in Polish.
+     */
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new ResetPasswordPolish($token));
     }
 }
