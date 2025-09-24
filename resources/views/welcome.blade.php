@@ -10,7 +10,7 @@ ob_start();
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Platforma Farmaceutyczna') }} - {{ time() }}</title>
+    <title>{{ config('app.name', 'Platforma Farmaceutyczna') }}</title>
 
     <!-- Google Fonts - Poppins -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -117,6 +117,15 @@ ob_start();
             line-height: 1.2;
             margin-bottom: 1.5rem;
             animation: fadeInUp 1s ease-out 0.6s both;
+        }
+
+        /* Show desktop title by default, hide mobile */
+        .desktop-title {
+            display: block;
+        }
+
+        .mobile-title {
+            display: none;
         }
         
         .hero-description {
@@ -241,6 +250,15 @@ ob_start();
             .hero-buttons {
                 flex-direction: column;
                 align-items: center;
+            }
+
+            /* Switch title versions on mobile */
+            .desktop-title {
+                display: none;
+            }
+
+            .mobile-title {
+                display: block;
             }
         }
         
@@ -650,7 +668,10 @@ ob_start();
                 <img src="/images/hero-left.png" alt="Hero Image" class="hero-image">
             </div>
             <div class="hero-right">
-                <h1 class="hero-title">Akademia<br>LEK-AM<br>Lepsza strona farmacji.</h1>
+                <h1 class="hero-title">
+                    <span class="desktop-title">Akademia LEK-AM<br>Lepsza strona farmacji.</span>
+                    <span class="mobile-title">Akademia<br>LEK-AM<br>Lepsza strona farmacji.</span>
+                </h1>
                 <p class="hero-description">
                 <b>Witaj w serwisie stworzonym z myślą o farmaceutach i technikach farmacji.</b> To wymagające zawody – nie tylko ze względu na codzienną pracę w aptece, ale także przez wpisaną w nie potrzebę stałego rozwoju. Akademia LEK-AM wspiera Cię w tym procesie. Zarejestruj konto, aby zyskać dostęp do bezpłatnych szkoleń, zdobywać punkty edukacyjne i poszerzać wiedzę – bez wychodzenia z domu.
                 </p>
