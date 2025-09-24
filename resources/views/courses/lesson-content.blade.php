@@ -940,7 +940,7 @@
         @endif
         <div class="instructor-details">
             <div class="instructor-name">{{ $lesson->instructor->name }}</div>
-            <div class="instructor-title">{{ $lesson->instructor->title ?? 'Wykładowca' }}</div>
+            <div class="instructor-title">{{ $lesson->instructor->specialization ?? 'Wykładowca' }}</div>
         </div>
     </div>
 @endif
