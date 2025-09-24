@@ -2,7 +2,7 @@
 
 @if($course->has_instruction && $course->instruction_content)
 <!-- Instruction Modal -->
-<div id="instructionModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 z-50 hidden">
+<div id="instructionModal" class="fixed inset-0 z-50 hidden" style="backdrop-filter: blur(2px);">
     <div class="flex items-center justify-center min-h-screen p-4">
         <div class="bg-white rounded-lg max-w-2xl w-full max-h-[80vh] overflow-y-auto shadow-xl">
             <!-- Modal Header -->
