@@ -87,8 +87,8 @@
                                                     </div>
                                                     <div class="flex space-x-2">
                                                         @if($lesson->course)
-                                                            <a href="{{ route('admin.lessons.show', $lesson) }}" class="text-blue-600 hover:text-blue-800 text-sm">
-                                                                Podgląd
+                                                            <a href="{{ route('admin.lessons.edit', [$lesson->course, $lesson]) }}" class="text-blue-600 hover:text-blue-800 text-sm">
+                                                                Edytuj
                                                             </a>
                                                         @endif
                                                     </div>
