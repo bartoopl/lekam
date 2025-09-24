@@ -124,11 +124,14 @@ class AdminController extends Controller
             'requires_sequential_lessons' => 'nullable|boolean',
             'certificate_header' => 'nullable|string',
             'certificate_footer' => 'nullable|string',
+            'has_instruction' => 'nullable|boolean',
+            'instruction_content' => 'nullable|string',
         ]);
 
         // Handle boolean fields
         $validated['is_active'] = $request->has('is_active');
         $validated['requires_sequential_lessons'] = $request->has('requires_sequential_lessons');
+        $validated['has_instruction'] = $request->has('has_instruction');
 
         // Handle image upload
         if ($request->hasFile('image')) {
@@ -166,11 +169,14 @@ class AdminController extends Controller
             'requires_sequential_lessons' => 'nullable|boolean',
             'certificate_header' => 'nullable|string',
             'certificate_footer' => 'nullable|string',
+            'has_instruction' => 'nullable|boolean',
+            'instruction_content' => 'nullable|string',
         ]);
 
         // Handle boolean fields
         $validated['is_active'] = $request->has('is_active');
         $validated['requires_sequential_lessons'] = $request->has('requires_sequential_lessons');
+        $validated['has_instruction'] = $request->has('has_instruction');
 
         // Handle image upload
         if ($request->hasFile('image')) {

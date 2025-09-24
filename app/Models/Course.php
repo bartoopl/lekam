@@ -20,6 +20,8 @@ class Course extends Model
         'technician_points',
         'certificate_header',
         'certificate_footer',
+        'has_instruction',
+        'instruction_content',
     ];
 
     protected $casts = [
@@ -27,6 +29,7 @@ class Course extends Model
         'requires_sequential_lessons' => 'boolean',
         'pharmacist_points' => 'integer',
         'technician_points' => 'integer',
+        'has_instruction' => 'boolean',
     ];
 
     /**

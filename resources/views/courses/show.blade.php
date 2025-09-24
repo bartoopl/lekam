@@ -685,6 +685,11 @@
         .course-title {
             font-size: 1.5rem;
         }
+        .course-header .flex {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1rem;
+        }
 
         .course-description {
             font-size: 1rem;
@@ -722,8 +727,22 @@
             <span class="breadcrumb-item">{{ $course->title }}</span>
         </div>
         
-        <h1 class="course-title">{{ $course->title }}</h1>
-        
+        <div class="flex items-center justify-between flex-wrap gap-4">
+            <h1 class="course-title">{{ $course->title }}</h1>
+
+            @if($course->has_instruction && $course->instruction_content)
+                <button type="button" onclick="openInstructionModal()"
+                    class="flex items-center px-4 py-2 bg-white/20 hover:bg-white/30 backdrop-blur-sm border border-white/30 rounded-full text-blue-700 font-medium transition-all duration-300 hover:scale-105 hover:shadow-lg">
+                    <div class="flex items-center justify-center w-6 h-6 bg-blue-100 rounded-full mr-2">
+                        <svg class="w-3 h-3 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    Instrukcja
+                </button>
+            @endif
+        </div>
+
         @if($course->description)
             <div class="course-description">
                 {{ $course->description }}
@@ -2556,5 +2575,8 @@ document.addEventListener('click', function(e) {
         </div>
     </div>
 </footer>
+
+<!-- Instruction Modal Component -->
+<x-instruction-modal :course="$course" />
 
 @endsection

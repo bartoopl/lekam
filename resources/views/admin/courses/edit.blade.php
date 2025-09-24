@@ -119,6 +119,32 @@
                                 </div>
                             </div>
 
+                            <!-- Instruction Settings -->
+                            <div class="border border-gray-200 rounded-lg p-4">
+                                <h3 class="text-lg font-medium text-gray-900 mb-4">Instrukcja kursu</h3>
+
+                                <div class="space-y-4">
+                                    <div class="flex items-center">
+                                        <input type="checkbox" name="has_instruction" id="has_instruction" value="1" {{ old('has_instruction', $course->has_instruction) ? 'checked' : '' }}
+                                            class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                                            onchange="toggleInstructionContent()">
+                                        <label for="has_instruction" class="ml-2 block text-sm text-gray-900">
+                                            Kurs ma instrukcję
+                                        </label>
+                                    </div>
+
+                                    <div id="instruction_content_section" class="{{ old('has_instruction', $course->has_instruction) ? '' : 'hidden' }}">
+                                        <label for="instruction_content" class="block text-sm font-medium text-gray-700">Treść instrukcji</label>
+                                        <textarea name="instruction_content" id="instruction_content" rows="8" placeholder="Wprowadź treść instrukcji kursu, która zostanie wyświetlona w modalu..."
+                                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">{{ old('instruction_content', $course->instruction_content) }}</textarea>
+                                        <p class="mt-1 text-sm text-gray-500">Treść instrukcji wyświetlana w modalu po kliknięciu przycisku "Instrukcja". Obsługuje podstawowe formatowanie HTML.</p>
+                                        @error('instruction_content')
+                                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                        @enderror
+                                    </div>
+                                </div>
+                            </div>
+
                             <!-- Certificate Settings -->
                             <div class="border border-gray-200 rounded-lg p-4">
                                 <h3 class="text-lg font-medium text-gray-900 mb-4">Ustawienia certyfikatu</h3>
@@ -220,6 +246,17 @@ function removeImage() {
             console.error('Error:', error);
             alert('Wystąpił błąd podczas usuwania obrazka.');
         });
+    }
+}
+
+function toggleInstructionContent() {
+    const checkbox = document.getElementById('has_instruction');
+    const contentSection = document.getElementById('instruction_content_section');
+
+    if (checkbox.checked) {
+        contentSection.classList.remove('hidden');
+    } else {
+        contentSection.classList.add('hidden');
     }
 }
 </script>
