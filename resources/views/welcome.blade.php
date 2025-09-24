@@ -650,7 +650,7 @@ ob_start();
                 <img src="/images/hero-left.png" alt="Hero Image" class="hero-image">
             </div>
             <div class="hero-right">
-                <h1 class="hero-title">Akademia LEK-AM<br>Lepsza strona farmacji.</h1>
+                <h1 class="hero-title">Akademia<br>LEK-AM<br>Lepsza strona farmacji.</h1>
                 <p class="hero-description">
                 <b>Witaj w serwisie stworzonym z myślą o farmaceutach i technikach farmacji.</b> To wymagające zawody – nie tylko ze względu na codzienną pracę w aptece, ale także przez wpisaną w nie potrzebę stałego rozwoju. Akademia LEK-AM wspiera Cię w tym procesie. Zarejestruj konto, aby zyskać dostęp do bezpłatnych szkoleń, zdobywać punkty edukacyjne i poszerzać wiedzę – bez wychodzenia z domu.
                 </p>
