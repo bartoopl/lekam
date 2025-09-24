@@ -1,33 +1,32 @@
 @extends('layouts.app')
 
 @section('content')
-    <x-slot name="header">
-        <div class="flex justify-between items-center">
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                {{ __('Szczegóły Kursu') }}: {{ $course->title }}
-            </h2>
-            <div class="flex space-x-3">
-                <a href="{{ route('admin.courses.edit', $course) }}" class="btn btn-primary">
-                    ✏️ Edytuj kurs
-                </a>
-                <a href="{{ route('admin.chapters.create', $course) }}" class="btn btn-info">
-                    📚 Dodaj sekcję
-                </a>
-                <a href="{{ route('admin.lessons.create', $course) }}" class="btn btn-success">
-                    ➕ Dodaj lekcję
-                </a>
-                <form action="{{ route('admin.courses.destroy', $course) }}" method="POST" class="inline">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="btn btn-danger" onclick="return confirm('Czy na pewno chcesz usunąć ten kurs?')">
-                        🗑️ Usuń kurs
-                    </button>
-                </form>
+    <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 mb-6">
+            <div class="flex justify-between items-center bg-white p-6 rounded-lg shadow-sm">
+                <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                    {{ __('Szczegóły Kursu') }}: {{ $course->title }}
+                </h2>
+                <div class="flex space-x-3">
+                    <a href="{{ route('admin.courses.edit', $course) }}" class="btn btn-primary">
+                        ✏️ Edytuj kurs
+                    </a>
+                    <a href="{{ route('admin.chapters.create', $course) }}" class="btn btn-info">
+                        📚 Dodaj sekcję
+                    </a>
+                    <a href="{{ route('admin.lessons.create', $course) }}" class="btn btn-success">
+                        ➕ Dodaj lekcję
+                    </a>
+                    <form action="{{ route('admin.courses.destroy', $course) }}" method="POST" class="inline">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-danger" onclick="return confirm('Czy na pewno chcesz usunąć ten kurs?')">
+                            🗑️ Usuń kurs
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
-    </x-slot>
-
-    <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <!-- Course Details -->
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
