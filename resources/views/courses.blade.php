@@ -190,6 +190,20 @@ ob_start();
             font-weight: 500;
             z-index: 2;
         }
+
+        .course-points {
+            position: absolute;
+            top: 3.5rem;
+            right: 1rem;
+            background: rgba(33, 35, 95, 0.9);
+            color: white;
+            padding: 0.4rem 0.8rem;
+            border-radius: 15px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 500;
+            z-index: 2;
+        }
         
         .course-content {
             padding: 2rem;
@@ -445,6 +459,15 @@ ob_start();
                             @elseif(auth()->check() && auth()->user()->hasCompletedCourse($course))
                                 <div class="course-status">Ukończony</div>
                             @endif
+                            @auth
+                                @php
+                                    $userPoints = $course->getPointsForUser(auth()->user());
+                                    $userTypeText = auth()->user()->user_type === 'farmaceuta' ? 'farmaceuta' : 'technik farmacji';
+                                @endphp
+                                @if($userPoints > 0)
+                                    <div class="course-points">{{ $userPoints }} pkt ({{ $userTypeText }})</div>
+                                @endif
+                            @endauth
                         </div>
                         <div class="course-content">
                             <h3 class="course-title">{{ $course->title }}</h3>

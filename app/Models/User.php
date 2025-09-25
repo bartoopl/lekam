@@ -138,10 +138,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function hasCompletedCourse(Course $course): bool
     {
-        return $this->progress()
-            ->where('course_id', $course->id)
-            ->where('is_completed', true)
-            ->exists();
+        return $course->isCompletedByUser($this);
     }
 
     /**
