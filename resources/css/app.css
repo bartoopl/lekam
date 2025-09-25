@@ -319,12 +319,12 @@
     }
 
     .video-controls .flex-1 {
-        @apply bg-gray-600 h-2 rounded-full cursor-pointer relative mx-3;
+        @apply bg-gray-600 h-3 rounded-full cursor-pointer relative mx-3;
         flex: 1;
     }
 
     #progress-fill {
-        @apply bg-blue-500 h-full rounded-full transition-all;
+        @apply bg-green-500 h-full rounded-full transition-all;
         max-width: 100%;
     }
 
@@ -333,7 +333,7 @@
     }
 
     .video-controls .flex-1:focus {
-        @apply outline-none ring-2 ring-blue-500;
+        @apply outline-none ring-2 ring-green-500;
     }
 }
 
