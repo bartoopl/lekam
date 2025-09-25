@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Representative;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class RepresentativeController extends Controller
 {
@@ -53,11 +54,42 @@ class RepresentativeController extends Controller
      */
     public function show(Representative $representative)
     {
-        $representative->load(['users' => function($query) {
-            $query->latest()->limit(10);
-        }]);
-        
-        return view('admin.representatives.show', compact('representative'));
+        $representative->load([
+            'users' => function($query) {
+                $query->latest()->limit(10)->with(['certificates.course']);
+            }
+        ]);
+
+        // Get course completion statistics for this representative's users
+        $userIds = $representative->users()->pluck('id');
+        $courseStats = collect();
+
+        if ($userIds->isNotEmpty()) {
+            $courseStats = DB::table('certificates')
+                ->join('courses', 'certificates.course_id', '=', 'courses.id')
+                ->join('users', 'certificates.user_id', '=', 'users.id')
+                ->whereIn('certificates.user_id', $userIds)
+                ->where('certificates.is_valid', true)
+                ->select('courses.title', 'courses.id', DB::raw('COUNT(*) as completions'))
+                ->groupBy('courses.id', 'courses.title')
+                ->orderBy('completions', 'desc')
+                ->get()
+                ->map(function ($stat) use ($userIds) {
+                    // Get user names for this course
+                    $userNames = DB::table('certificates')
+                        ->join('users', 'certificates.user_id', '=', 'users.id')
+                        ->where('certificates.course_id', $stat->id)
+                        ->whereIn('certificates.user_id', $userIds)
+                        ->where('certificates.is_valid', true)
+                        ->pluck('users.name')
+                        ->implode(', ');
+
+                    $stat->user_names = $userNames;
+                    return $stat;
+                });
+        }
+
+        return view('admin.representatives.show', compact('representative', 'courseStats'));
     }
 
     /**

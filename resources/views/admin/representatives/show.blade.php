@@ -139,6 +139,80 @@
                 @endif
             </div>
         </div>
+
+        <!-- Course Statistics Section -->
+        <div class="lg:col-span-3 mt-8">
+            <div class="bg-white shadow-md rounded-lg p-6">
+                <h2 class="text-xl font-semibold mb-4">Statystyki ukończonych kursów</h2>
+
+                @if($courseStats->count() > 0)
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Kurs</th>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Ukończenia</th>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Farmaceuci którzy ukończyli</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-200">
+                                @foreach($courseStats as $stat)
+                                    <tr>
+                                        <td class="px-4 py-2 text-sm font-medium text-gray-900">{{ $stat->title }}</td>
+                                        <td class="px-4 py-2 text-sm">
+                                            <span class="px-2 py-1 bg-green-100 text-green-800 text-xs font-semibold rounded">
+                                                {{ $stat->completions }}
+                                            </span>
+                                        </td>
+                                        <td class="px-4 py-2 text-sm text-gray-600">
+                                            {{ $stat->user_names }}
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                @else
+                    <p class="text-gray-500 text-center py-8">Brak ukończonych kursów przez użytkowników tego przedstawiciela</p>
+                @endif
+            </div>
+        </div>
+
+        <!-- Detailed User-Course Report -->
+        <div class="lg:col-span-3 mt-8">
+            <div class="bg-white shadow-md rounded-lg p-6">
+                <h2 class="text-xl font-semibold mb-4">Szczegółowy raport: Farmaceuta → Kursy</h2>
+
+                @if($representative->users->count() > 0)
+                    @foreach($representative->users as $user)
+                        @if($user->certificates->count() > 0)
+                            <div class="mb-6 p-4 bg-gray-50 rounded-lg">
+                                <h3 class="text-lg font-medium text-gray-900 mb-2">{{ $user->name }}</h3>
+                                <p class="text-sm text-gray-600 mb-3">{{ $user->email }} | {{ $user->user_type }}</p>
+
+                                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                                    @foreach($user->certificates as $certificate)
+                                        <div class="bg-white p-3 rounded border">
+                                            <h4 class="font-medium text-sm text-blue-700">{{ $certificate->course->title }}</h4>
+                                            <p class="text-xs text-gray-500 mt-1">
+                                                Ukończono: {{ $certificate->issued_at->format('d.m.Y') }}
+                                            </p>
+                                            @if($certificate->expires_at)
+                                                <p class="text-xs text-gray-500">
+                                                    Wygasa: {{ $certificate->expires_at->format('d.m.Y') }}
+                                                </p>
+                                            @endif
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                        @endif
+                    @endforeach
+                @else
+                    <p class="text-gray-500 text-center py-8">Brak użytkowników do wyświetlenia</p>
+                @endif
+            </div>
+        </div>
     </div>
 </div>
 
