@@ -9,10 +9,9 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <!-- Hero Section -->
             <div class="text-center mb-12">
-                <h1 class="text-4xl font-bold text-gray-900 mb-6">O Platformie Szkoleń Farmaceutycznych</h1>
+                <h1 class="text-4xl font-bold text-gray-900 mb-6">{{ $contents['about.hero.title']->content ?? 'O Platformie Szkoleń Farmaceutycznych' }}</h1>
                 <p class="text-xl text-gray-600 max-w-3xl mx-auto">
-                    Jesteśmy dedykowaną platformą e-learningową stworzoną specjalnie dla branży farmaceutycznej. 
-                    Naszym celem jest wspieranie rozwoju zawodowego techników farmacji i farmaceutów.
+                    {{ $contents['about.hero.description']->content ?? 'Jesteśmy dedykowaną platformą e-learningową stworzoną specjalnie dla branży farmaceutycznej. Naszym celem jest wspieranie rozwoju zawodowego techników farmacji i farmaceutów.' }}
                 </p>
             </div>
 
@@ -21,14 +20,10 @@
                 <div class="p-8">
                     <div class="grid md:grid-cols-2 gap-8 items-center">
                         <div>
-                            <h2 class="text-3xl font-bold mb-6">Nasza misja</h2>
-                            <p class="text-lg text-gray-600 mb-4">
-                                Dostarczamy wysokiej jakości szkolenia online, które pozwalają specjalistom branży farmaceutycznej 
-                                rozwijać swoje umiejętności i zdobywać nową wiedzę w wygodny i efektywny sposób.
-                            </p>
-                            <p class="text-lg text-gray-600">
-                                Wierzymy, że ciągłe kształcenie jest kluczem do sukcesu w dynamicznie rozwijającej się branży farmaceutycznej.
-                            </p>
+                            <h2 class="text-3xl font-bold mb-6">{{ $contents['about.mission.title']->content ?? 'Nasza misja' }}</h2>
+                            <div class="text-lg text-gray-600">
+                                {!! $contents['about.mission.content'] ? nl2br(e($contents['about.mission.content']->content)) : 'Dostarczamy wysokiej jakości szkolenia online, które pozwalają specjalistom branży farmaceutycznej rozwijać swoje umiejętności i zdobywać nową wiedzę w wygodny i efektywny sposób.<br><br>Wierzymy, że ciągłe kształcenie jest kluczem do sukcesu w dynamicznie rozwijającej się branży farmaceutycznej.' !!}
+                            </div>
                         </div>
                         <div class="bg-blue-50 p-8 rounded-lg">
                             <div class="text-center">

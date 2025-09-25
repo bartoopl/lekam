@@ -9,6 +9,7 @@ use App\Models\Quiz;
 use App\Models\QuizQuestion;
 use App\Models\Certificate;
 use App\Models\Representative;
+use App\Models\Content;
 use Illuminate\Http\Request;
 
 class AdminController extends Controller
@@ -481,5 +482,46 @@ class AdminController extends Controller
         ];
 
         return view('admin.statistics', compact('stats'));
+    }
+
+    /**
+     * Show content management
+     */
+    public function contentIndex()
+    {
+        $contents = Content::orderBy('page')
+            ->orderBy('section')
+            ->paginate(20);
+
+        return view('admin.content.index', compact('contents'));
+    }
+
+    /**
+     * Show content edit form
+     */
+    public function contentEdit(Content $content)
+    {
+        return view('admin.content.edit', compact('content'));
+    }
+
+    /**
+     * Update content
+     */
+    public function contentUpdate(Request $request, Content $content)
+    {
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'content' => 'required|string',
+            'is_active' => 'boolean',
+        ]);
+
+        $content->update([
+            'title' => $request->title,
+            'content' => $request->content,
+            'is_active' => $request->has('is_active'),
+        ]);
+
+        return redirect()->route('admin.content.index')
+            ->with('success', 'Treść została zaktualizowana pomyślnie.');
     }
 }

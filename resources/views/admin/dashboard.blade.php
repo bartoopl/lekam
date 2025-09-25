@@ -303,6 +303,9 @@
                 <a href="{{ route('admin.representatives.index') }}" class="action-button red">
                     📱 Zarządzaj przedstawicielami
                 </a>
+                <a href="{{ route('admin.content.index') }}" class="action-button purple">
+                    ✏️ Zarządzaj treściami
+                </a>
             </div>
         </div>
 

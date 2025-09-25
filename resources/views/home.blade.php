@@ -10,11 +10,10 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
             <div class="text-center">
                 <h1 class="text-4xl md:text-6xl font-bold mb-6">
-                    Platforma Szkoleń Farmaceutycznych
+                    {{ $contents['home.hero.title']->content ?? 'Platforma Szkoleń Farmaceutycznych' }}
                 </h1>
                 <p class="text-xl md:text-2xl mb-8 max-w-3xl mx-auto">
-                    Profesjonalne szkolenia online dla techników farmacji i farmaceutów. 
-                    Rozwijaj swoje umiejętności i zdobywaj certyfikaty.
+                    {{ $contents['home.hero.subtitle']->content ?? 'Profesjonalne szkolenia online dla techników farmacji i farmaceutów. Rozwijaj swoje umiejętności i zdobywaj certyfikaty.' }}
                 </p>
                 <div class="space-x-4">
                     <a href="{{ route('courses') }}" class="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition duration-300">
@@ -35,10 +34,10 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-12">
                 <h2 class="text-3xl font-bold text-gray-900 mb-4">
-                    Dlaczego warto wybrać naszą platformę?
+                    {{ $contents['home.features.title']->content ?? 'Dlaczego warto wybrać naszą platformę?' }}
                 </h2>
                 <p class="text-lg text-gray-600 max-w-2xl mx-auto">
-                    Oferujemy specjalistyczne szkolenia dostosowane do potrzeb branży farmaceutycznej
+                    {{ $contents['home.features.subtitle']->content ?? 'Oferujemy specjalistyczne szkolenia dostosowane do potrzeb branży farmaceutycznej' }}
                 </p>
             </div>
 
@@ -49,8 +48,8 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
                         </svg>
                     </div>
-                    <h3 class="text-xl font-semibold mb-2">Specjalistyczne kursy</h3>
-                    <p class="text-gray-600">Kursy przygotowane przez ekspertów branży farmaceutycznej</p>
+                    <h3 class="text-xl font-semibold mb-2">{{ $contents['home.features.feature1.title']->content ?? 'Specjalistyczne kursy' }}</h3>
+                    <p class="text-gray-600">{{ $contents['home.features.feature1.description']->content ?? 'Kursy przygotowane przez ekspertów branży farmaceutycznej' }}</p>
                 </div>
 
                 <div class="text-center">
@@ -59,8 +58,8 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
                     </div>
-                    <h3 class="text-xl font-semibold mb-2">Certyfikaty</h3>
-                    <p class="text-gray-600">Otrzymuj oficjalne certyfikaty po ukończeniu szkoleń</p>
+                    <h3 class="text-xl font-semibold mb-2">{{ $contents['home.features.feature2.title']->content ?? 'Certyfikaty' }}</h3>
+                    <p class="text-gray-600">{{ $contents['home.features.feature2.description']->content ?? 'Otrzymuj oficjalne certyfikaty po ukończeniu szkoleń' }}</p>
                 </div>
 
                 <div class="text-center">
@@ -69,8 +68,8 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
                     </div>
-                    <h3 class="text-xl font-semibold mb-2">Nauka w swoim tempie</h3>
-                    <p class="text-gray-600">Ucz się kiedy chcesz i gdzie chcesz</p>
+                    <h3 class="text-xl font-semibold mb-2">{{ $contents['home.features.feature3.title']->content ?? 'Nauka w swoim tempie' }}</h3>
+                    <p class="text-gray-600">{{ $contents['home.features.feature3.description']->content ?? 'Ucz się kiedy chcesz i gdzie chcesz' }}</p>
                 </div>
             </div>
         </div>
@@ -128,10 +127,10 @@
     <div class="bg-blue-600 text-white py-16">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h2 class="text-3xl font-bold mb-4">
-                Rozpocznij swoją karierę w farmacji
+                {{ $contents['home.cta.title']->content ?? 'Rozpocznij swoją karierę w farmacji' }}
             </h2>
             <p class="text-xl mb-8 max-w-2xl mx-auto">
-                Dołącz do tysięcy specjalistów, którzy już korzystają z naszej platformy
+                {{ $contents['home.cta.subtitle']->content ?? 'Dołącz do tysięcy specjalistów, którzy już korzystają z naszej platformy' }}
             </p>
             @guest
                 <a href="{{ route('register') }}" class="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition duration-300">

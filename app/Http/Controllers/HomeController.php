@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Course;
+use App\Models\Content;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -13,7 +14,8 @@ class HomeController extends Controller
     public function index()
     {
         $featuredCourses = Course::with(['chapters'])->latest()->take(6)->get();
-        return view('home', compact('featuredCourses'));
+        $contents = Content::getPageContents('home');
+        return view('home', compact('featuredCourses', 'contents'));
     }
 
     /**
@@ -41,7 +43,8 @@ class HomeController extends Controller
      */
     public function about()
     {
-        return view('about');
+        $contents = Content::getPageContents('about');
+        return view('about', compact('contents'));
     }
 
     /**

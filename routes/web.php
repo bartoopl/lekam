@@ -132,6 +132,11 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->name('admin.'
     
     Route::get('/certificates', [AdminController::class, 'certificates'])->name('certificates');
     Route::get('/statistics', [AdminController::class, 'statistics'])->name('statistics');
+
+    // Content management
+    Route::get('/content', [AdminController::class, 'contentIndex'])->name('content.index');
+    Route::get('/content/{content}/edit', [AdminController::class, 'contentEdit'])->name('content.edit');
+    Route::put('/content/{content}', [AdminController::class, 'contentUpdate'])->name('content.update');
 });
 
 // Video proxy for HTTPS compatibility (requires auth)
