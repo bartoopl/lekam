@@ -66,6 +66,11 @@ class Content extends Model
                 'title' => 'Kontakt',
                 'description' => 'Dane kontaktowe i informacje',
                 'icon' => '📞'
+            ],
+            'emails' => [
+                'title' => 'Szablony emaili',
+                'description' => 'Treści wysyłanych wiadomości email',
+                'icon' => '📧'
             ]
         ];
     }

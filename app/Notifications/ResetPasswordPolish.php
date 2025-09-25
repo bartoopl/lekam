@@ -4,6 +4,7 @@ namespace App\Notifications;
 
 use Illuminate\Auth\Notifications\ResetPassword as BaseResetPassword;
 use Illuminate\Notifications\Messages\MailMessage;
+use App\Models\Content;
 
 class ResetPasswordPolish extends BaseResetPassword
 {
@@ -17,13 +18,22 @@ class ResetPasswordPolish extends BaseResetPassword
             'email' => $notifiable->getEmailForPasswordReset(),
         ], false));
 
+        // Pobierz treści z CMS
+        $subject = Content::getByKey('emails.reset_password.subject') ?? 'Resetowanie hasła - Lekam Akademia';
+        $greeting = Content::getByKey('emails.reset_password.greeting') ?? 'Cześć!';
+        $intro = Content::getByKey('emails.reset_password.intro') ?? 'Otrzymujesz ten email, ponieważ otrzymaliśmy prośbę o zresetowanie hasła dla Twojego konta.';
+        $buttonText = Content::getByKey('emails.reset_password.button_text') ?? 'Resetuj hasło';
+        $expiryInfo = Content::getByKey('emails.reset_password.expiry_info') ?? 'Ten link wygaśnie za :count minut.';
+        $footer = Content::getByKey('emails.reset_password.footer') ?? 'Jeśli nie prosiłeś o zresetowanie hasła, zignoruj tę wiadomość.';
+        $signature = Content::getByKey('emails.reset_password.signature') ?? 'Zespół Lekam Akademia';
+
         return (new MailMessage)
-            ->subject('Resetowanie hasła - Lekam Akademia')
-            ->greeting('Cześć!')
-            ->line('Otrzymujesz ten email, ponieważ otrzymaliśmy prośbę o zresetowanie hasła dla Twojego konta.')
-            ->action('Resetuj hasło', $url)
-            ->line('Ten link wygaśnie za :count minut.', ['count' => config('auth.passwords.'.config('auth.defaults.passwords').'.expire')])
-            ->line('Jeśli nie prosiłeś o zresetowanie hasła, zignoruj tę wiadomość.')
-            ->salutation('Zespół Lekam Akademia');
+            ->subject($subject)
+            ->greeting($greeting)
+            ->line($intro)
+            ->action($buttonText, $url)
+            ->line($expiryInfo, ['count' => config('auth.passwords.'.config('auth.defaults.passwords').'.expire')])
+            ->line($footer)
+            ->salutation($signature);
     }
 }
