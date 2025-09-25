@@ -29,9 +29,9 @@
             padding: 0.5rem 1rem !important;
         }
         
-        /* Video.js progress control styling - show it */
+        /* Video.js progress control styling - hide it completely */
         .vjs-progress-control {
-            display: flex !important;
+            display: none !important;
         }
         
         /* Custom progress bar overlay on video */
@@ -40,10 +40,11 @@
             bottom: 0;
             left: 0;
             right: 0;
-            height: 8px;
+            height: 12px;
             background: rgba(0, 0, 0, 0.5);
             z-index: 10;
             cursor: pointer;
+            transition: height 0.2s ease;
         }
 
         .custom-progress-bar {
@@ -54,7 +55,7 @@
         }
 
         .custom-progress-overlay:hover {
-            height: 12px;
+            height: 16px;
         }
 
         .custom-progress-overlay:hover .custom-progress-bar {

@@ -475,7 +475,6 @@ window.initVideoJSPlayer = function(videoElement, options = {}) {
             children: [
                 'playToggle',
                 'RewindButton',
-                'progressControl',
                 'currentTimeDisplay',
                 'timeDivider',
                 'durationDisplay',
