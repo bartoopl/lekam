@@ -445,6 +445,20 @@ window.initVideoJSPlayer = function(videoElement, options = {}) {
 
     console.log('🔍 DEBUG initVideoJSPlayer called with video element:', videoElement);
     console.log('🔍 DEBUG initVideoJSPlayer options:', options);
+
+    // Check if this element already has a Video.js player and dispose it
+    const existingPlayerId = videoElement.id + '_html5_api';
+    if (videojs.getPlayer(videoElement.id)) {
+        console.log('🔍 DEBUG Found existing Video.js player, disposing...');
+        videojs.getPlayer(videoElement.id).dispose();
+    }
+
+    // Also check for any existing player with _html5_api suffix
+    const existingApiElement = document.getElementById(existingPlayerId);
+    if (existingApiElement && videojs.getPlayer(existingPlayerId)) {
+        console.log('🔍 DEBUG Found existing API player, disposing...');
+        videojs.getPlayer(existingPlayerId).dispose();
+    }
     
     const playerOptions = {
         controls: true,

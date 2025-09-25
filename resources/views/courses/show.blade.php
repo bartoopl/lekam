@@ -1066,14 +1066,10 @@ function initializeVideoControls() {
             completeLessonUrl: video.dataset.completeLessonUrl
         });
 
-        // Add basic controls first
-        video.controls = true;
-        console.log('🔍 DEBUG Basic controls added');
-
         // Check if Video.js is loaded
         console.log('🔍 DEBUG Video.js available:', typeof videojs !== 'undefined');
 
-        // Try to call custom controls
+        // Try to call custom Video.js controls (they will handle native controls)
         if (typeof window.initVideoJSPlayer === 'function') {
             console.log('🔍 DEBUG Video.js player function found, calling...');
             try {
@@ -1087,9 +1083,13 @@ function initializeVideoControls() {
                 console.log('🔍 DEBUG Video.js player initialized successfully');
             } catch (error) {
                 console.error('🔍 DEBUG Error initializing Video.js player:', error);
+                // Fallback to basic controls if Video.js fails
+                video.controls = true;
+                console.log('🔍 DEBUG Fallback to basic controls due to error');
             }
         } else {
-            console.log('🔍 DEBUG Custom controls function not found, using fallback');
+            console.log('🔍 DEBUG Video.js player function not found, using basic controls');
+            video.controls = true;
         }
         
         // Auto-complete lesson when video ends
