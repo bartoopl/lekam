@@ -443,6 +443,13 @@ window.initVideoJSPlayer = function(videoElement, options = {}) {
         return;
     }
 
+    // Check if Video.js is available
+    if (typeof videojs === 'undefined') {
+        console.error('🔍 ERROR Video.js library not loaded!');
+        videoElement.controls = true; // Fallback to native controls
+        return;
+    }
+
     console.log('🔍 DEBUG initVideoJSPlayer called with video element:', videoElement);
     console.log('🔍 DEBUG initVideoJSPlayer options:', options);
 
@@ -492,10 +499,16 @@ window.initVideoJSPlayer = function(videoElement, options = {}) {
     
     console.log('🔍 DEBUG: Creating Video.js player with options:', playerOptions);
 
-    // Initialize Video.js player
-    const player = videojs(videoElement, playerOptions);
-
-    console.log('🔍 DEBUG: Video.js player created:', player);
+    // Initialize Video.js player with error handling
+    let player;
+    try {
+        player = videojs(videoElement, playerOptions);
+        console.log('🔍 DEBUG: Video.js player created successfully:', player);
+    } catch (error) {
+        console.error('🔍 ERROR: Failed to create Video.js player:', error);
+        videoElement.controls = true; // Fallback to native controls
+        return;
+    }
 
     // Disable right-click context menu
     player.ready(() => {
@@ -576,20 +589,31 @@ function forceVideoJSInitialization() {
     }, 100);
 }
 
-// Run forced initialization after a delay to override any other initialization
+// Only run forced initialization if no player was created through normal paths
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('🔍 DOM LOADED - setting timeout for forced init');
+    console.log('🔍 DOM LOADED - checking if forced init is needed');
     setTimeout(() => {
-        console.log('🔍 TIMEOUT REACHED - calling forceVideoJSInitialization');
-        forceVideoJSInitialization();
-    }, 500);
+        const videoElement = document.getElementById('lesson-video');
+        if (videoElement && !videojs.getPlayer(videoElement.id)) {
+            console.log('🔍 No Video.js player found - running forced initialization');
+            forceVideoJSInitialization();
+        } else {
+            console.log('🔍 Video.js player already exists - skipping forced init');
+        }
+    }, 1000); // Increased delay to allow normal initialization
 });
 
 // Also try to run it when the lesson content is loaded (for AJAX)
 if (typeof window.addEventListener !== 'undefined') {
     window.addEventListener('message', function(event) {
         if (event.data === 'lesson-content-loaded') {
-            setTimeout(forceVideoJSInitialization, 100);
+            setTimeout(() => {
+                const videoElement = document.getElementById('lesson-video');
+                if (videoElement && !videojs.getPlayer(videoElement.id)) {
+                    console.log('🔍 Running forced init after AJAX lesson load');
+                    forceVideoJSInitialization();
+                }
+            }, 200);
         }
     });
 }
