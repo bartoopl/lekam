@@ -57,10 +57,10 @@ class Content extends Model
                 'description' => 'Treści wyświetlane na stronie głównej',
                 'icon' => '🏠'
             ],
-            'about' => [
-                'title' => 'O nas',
-                'description' => 'Treści strony o nas',
-                'icon' => 'ℹ️'
+            'courses' => [
+                'title' => 'Szkolenia',
+                'description' => 'Treści strony szkoleń',
+                'icon' => '📚'
             ],
             'contact' => [
                 'title' => 'Kontakt',

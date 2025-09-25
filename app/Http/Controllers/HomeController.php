@@ -15,7 +15,7 @@ class HomeController extends Controller
     {
         $featuredCourses = Course::with(['chapters'])->latest()->take(6)->get();
         $contents = Content::getPageContents('home');
-        return view('home', compact('featuredCourses', 'contents'));
+        return view('welcome', compact('featuredCourses', 'contents'));
     }
 
     /**
@@ -35,7 +35,9 @@ class HomeController extends Controller
             ->orderBy('created_at', 'desc')
             ->paginate(12);
 
-        return view('courses', compact('courses'));
+        $contents = Content::getPageContents('courses');
+
+        return view('courses', compact('courses', 'contents'));
     }
 
     /**

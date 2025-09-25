@@ -15,9 +15,7 @@ use App\Http\Controllers\Admin\RepresentativeController;
 use Illuminate\Support\Facades\Route;
 
 // Public routes
-Route::get('/', function () {
-    return view('welcome');
-})->name('home');
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 // Button system demo route
 Route::get('/button-demo', function () {

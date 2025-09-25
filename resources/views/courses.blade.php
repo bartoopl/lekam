@@ -417,8 +417,8 @@ ob_start();
                 <img src="/images/backgrounds/rectangle.png" alt="Hero" class="hero-image">
             </div>
             <div class="hero-right">
-                <h1 class="hero-title">Szkolenia</h1>
-                <p class="hero-description">Szkolenia Akademii Lek‑am zostały przygotowane z najwyższą dbałością jeśli chodzi o wartość merytoryczną, są zawsze zgodne z aktualnymi standardami i wymaganiami współczesnej farmacji. Prowadzą je renomowani wykładowcy i eksperci z wieloletnim doświadczeniem. Nasza oferta obejmuje starannie opracowane kursy, które wspierają rozwój zawodowy farmaceutów i techników farmacji, łącząc rzetelną wiedzę z praktycznym podejściem do codziennej pracy.</p>
+                <h1 class="hero-title">{{ $contents['courses.hero.title']->content ?? 'Szkolenia' }}</h1>
+                <p class="hero-description">{{ $contents['courses.hero.description']->content ?? 'Szkolenia Akademii Lek‑am zostały przygotowane z najwyższą dbałością jeśli chodzi o wartość merytoryczną, są zawsze zgodne z aktualnymi standardami i wymaganiami współczesnej farmacji. Prowadzą je renomowani wykładowcy i eksperci z wieloletnim doświadczeniem. Nasza oferta obejmuje starannie opracowane kursy, które wspierają rozwój zawodowy farmaceutów i techników farmacji, łącząc rzetelną wiedzę z praktycznym podejściem do codziennej pracy.' }}</p>
             </div>
         </div>
     </section>

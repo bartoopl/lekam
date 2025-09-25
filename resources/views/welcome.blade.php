@@ -669,11 +669,11 @@ ob_start();
             </div>
             <div class="hero-right">
                 <h1 class="hero-title">
-                    <span class="desktop-title">Akademia LEK-AM<br>Lepsza strona farmacji.</span>
-                    <span class="mobile-title">Akademia<br>LEK-AM<br>Lepsza strona farmacji.</span>
+                    <span class="desktop-title">{!! $contents['home.hero.title.desktop']->content ?? 'Akademia LEK-AM<br>Lepsza strona farmacji.' !!}</span>
+                    <span class="mobile-title">{!! $contents['home.hero.title.mobile']->content ?? 'Akademia<br>LEK-AM<br>Lepsza strona farmacji.' !!}</span>
                 </h1>
                 <p class="hero-description">
-                <b>Witaj w serwisie stworzonym z myślą o farmaceutach i technikach farmacji.</b> To wymagające zawody – nie tylko ze względu na codzienną pracę w aptece, ale także przez wpisaną w nie potrzebę stałego rozwoju. Akademia LEK-AM wspiera Cię w tym procesie. Zarejestruj konto, aby zyskać dostęp do bezpłatnych szkoleń, zdobywać punkty edukacyjne i poszerzać wiedzę – bez wychodzenia z domu.
+                {!! $contents['home.hero.description']->content ?? '<b>Witaj w serwisie stworzonym z myślą o farmaceutach i technikach farmacji.</b> To wymagające zawody – nie tylko ze względu na codzienną pracę w aptece, ale także przez wpisaną w nie potrzebę stałego rozwoju. Akademia LEK-AM wspiera Cię w tym procesie. Zarejestruj konto, aby zyskać dostęp do bezpłatnych szkoleń, zdobywać punkty edukacyjne i poszerzać wiedzę – bez wychodzenia z domu.' !!}
                 </p>
                 <div class="hero-buttons">
                     <a href="{{ route('register') }}" class="hero-btn-primary">Zarejestruj się →</a>
@@ -693,7 +693,7 @@ ob_start();
             </div>
             <div class="about-right">
                 <h2 class="about-title">
-                Farmacja. Wiedza. Rozwój. Zdalnie. Prosto. Efektywnie. Akademia. Zapisz się na przyszłość.
+                {{ $contents['home.about.title']->content ?? 'Farmacja. Wiedza. Rozwój. Zdalnie. Prosto. Efektywnie. Akademia. Zapisz się na przyszłość.' }}
                 </h2>
             </div>
         </div>
@@ -731,8 +731,8 @@ ob_start();
                         <img src="/images/icons/ikona3.svg" alt="Icon 3" class="w-8 h-8">
                     </div>
                     <div class="feature-content">
-                        <h3 class="feature-title">Nasza idea - wiedzieć więcej</h3>
-                        <p class="feature-text">Sama idea akademii sięga starożytności – to tam, w gaju Akademosa, narodziła się wspólnota nauki i myśli. Dziś, w nowoczesnej formule, Akademia LEK-AM kontynuuje tego ducha: jako przestrzeń dla tych, którzy chcą rozwijać się świadomie, odpowiedzialnie i w zgodzie z wymaganiami współczesnej farmacji.
+                        <h3 class="feature-title">{{ $contents['home.features.title']->content ?? 'Nasza idea - wiedzieć więcej' }}</h3>
+                        <p class="feature-text">{{ $contents['home.features.description']->content ?? 'Sama idea akademii sięga starożytności – to tam, w gaju Akademosa, narodziła się wspólnota nauki i myśli. Dziś, w nowoczesnej formule, Akademia LEK-AM kontynuuje tego ducha: jako przestrzeń dla tych, którzy chcą rozwijać się świadomie, odpowiedzialnie i w zgodzie z wymaganiami współczesnej farmacji.' }}
                     </div>
                 </div>
             </div>
@@ -744,9 +744,8 @@ ob_start();
         <div class="trainings-content">
             <div class="trainings-left">
                 <div class="badge trainings-badge">Szkolenia</div>
-                <h2 class="trainings-title">Nowoczesna edukacja online. Profesjonalnie, wygodnie, skutecznie.</h2>
-                <p class="trainings-description">W Akademii LEK-AM szkolisz się wtedy, gdy Ci wygodnie – bez grafiku, dojazdów i formalności. Wybierasz interesujący Cię temat, oglądasz wykład prowadzony przez eksperta, rozwiązujesz test i pobierasz certyfikat – wszystko w intuicyjnym systemie online.
-Treści są merytoryczne, zawsze zgodne z aktualną wiedzą, a zajęcia prowadzone przez renomowanych wykładowcó, specjalistów w danej dziedzinie.  To rozwiązanie stworzone z myślą o farmaceutach i technikach farmacji, którzy cenią jakość, prostotę i efektywność.
+                <h2 class="trainings-title">{{ $contents['home.trainings.title']->content ?? 'Nowoczesna edukacja online. Profesjonalnie, wygodnie, skutecznie.' }}</h2>
+                <p class="trainings-description">{!! $contents['home.trainings.description'] ? nl2br(e($contents['home.trainings.description']->content)) : 'W Akademii LEK-AM szkolisz się wtedy, gdy Ci wygodnie – bez grafiku, dojazdów i formalności. Wybierasz interesujący Cię temat, oglądasz wykład prowadzony przez eksperta, rozwiązujesz test i pobierasz certyfikat – wszystko w intuicyjnym systemie online.<br>Treści są merytoryczne, zawsze zgodne z aktualną wiedzą, a zajęcia prowadzone przez renomowanych wykładowców, specjalistów w danej dziedzinie. To rozwiązanie stworzone z myślą o farmaceutach i technikach farmacji, którzy cenią jakość, prostotę i efektywność.' !!}
 
 
             </div>
