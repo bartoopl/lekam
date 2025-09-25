@@ -12,80 +12,48 @@
         </div>
     @endif
 
-    <div class="bg-white shadow-md rounded-lg overflow-hidden">
-        <table class="min-w-full table-auto">
-            <thead class="bg-gray-50">
-                <tr>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Strona
-                    </th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Sekcja
-                    </th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Tytuł
-                    </th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Typ
-                    </th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Status
-                    </th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Akcje
-                    </th>
-                </tr>
-            </thead>
-            <tbody class="bg-white divide-y divide-gray-200">
-                @forelse($contents as $content)
-                    <tr>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                            <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">
-                                {{ ucfirst($content->page) }}
-                            </span>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            {{ ucfirst($content->section) }}
-                        </td>
-                        <td class="px-6 py-4 text-sm text-gray-900">
-                            {{ $content->title }}
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            <span class="bg-gray-100 text-gray-800 text-xs font-medium px-2.5 py-0.5 rounded">
-                                {{ $content->type }}
-                            </span>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            @if($content->is_active)
-                                <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">
-                                    Aktywna
-                                </span>
-                            @else
-                                <span class="bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded">
-                                    Nieaktywna
-                                </span>
-                            @endif
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                            <a href="{{ route('admin.content.edit', $content) }}"
-                               class="text-blue-600 hover:text-blue-900 mr-3">
-                                Edytuj
-                            </a>
-                        </td>
-                    </tr>
-                @empty
-                    <tr>
-                        <td colspan="6" class="px-6 py-4 text-center text-sm text-gray-500">
-                            Brak treści do wyświetlenia. Uruchom seedera, aby utworzyć domyślne treści.
-                        </td>
-                    </tr>
-                @endforelse
-            </tbody>
-        </table>
-    </div>
+    <div class="grid md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+        @forelse($contentStats as $page => $stats)
+            <div class="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-200">
+                <div class="p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="text-3xl mr-3">{{ $stats['info']['icon'] }}</div>
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-900">{{ $stats['info']['title'] }}</h3>
+                            <p class="text-sm text-gray-600">{{ $stats['info']['description'] }}</p>
+                        </div>
+                    </div>
 
-    <div class="mt-6">
-        {{ $contents->links() }}
+                    <div class="grid grid-cols-2 gap-4 mb-6">
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-blue-600">{{ $stats['count'] }}</div>
+                            <div class="text-xs text-gray-500">Treści ogółem</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-green-600">{{ $stats['active'] }}</div>
+                            <div class="text-xs text-gray-500">Aktywne</div>
+                        </div>
+                    </div>
+
+                    <div class="flex space-x-2">
+                        <a href="{{ route('admin.content.page.edit', $page) }}"
+                           class="flex-1 bg-blue-500 hover:bg-blue-700 text-white text-sm font-medium py-2 px-4 rounded text-center transition-colors duration-200">
+                            Edytuj stronę
+                        </a>
+                    </div>
+                </div>
+            </div>
+        @empty
+            <div class="col-span-full">
+                <div class="bg-white shadow-md rounded-lg p-8 text-center">
+                    <div class="text-gray-400 text-4xl mb-4">📄</div>
+                    <h3 class="text-lg font-medium text-gray-900 mb-2">Brak treści</h3>
+                    <p class="text-sm text-gray-600">
+                        Uruchom seedera, aby utworzyć domyślne treści dla stron.
+                    </p>
+                </div>
+            </div>
+        @endforelse
     </div>
 </div>
 @endsection

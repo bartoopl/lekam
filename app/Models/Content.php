@@ -39,4 +39,34 @@ class Content extends Model
     {
         return $query->where('page', $page);
     }
+
+    public static function getGroupedByPage()
+    {
+        return static::where('is_active', true)
+            ->orderBy('page')
+            ->orderBy('section')
+            ->get()
+            ->groupBy('page');
+    }
+
+    public static function getPageInfo()
+    {
+        return [
+            'home' => [
+                'title' => 'Strona główna',
+                'description' => 'Treści wyświetlane na stronie głównej',
+                'icon' => '🏠'
+            ],
+            'about' => [
+                'title' => 'O nas',
+                'description' => 'Treści strony o nas',
+                'icon' => 'ℹ️'
+            ],
+            'contact' => [
+                'title' => 'Kontakt',
+                'description' => 'Dane kontaktowe i informacje',
+                'icon' => '📞'
+            ]
+        ];
+    }
 }

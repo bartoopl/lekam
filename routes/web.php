@@ -135,6 +135,8 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->name('admin.'
 
     // Content management
     Route::get('/content', [AdminController::class, 'contentIndex'])->name('content.index');
+    Route::get('/content/page/{page}/edit', [AdminController::class, 'contentPageEdit'])->name('content.page.edit');
+    Route::put('/content/page/{page}', [AdminController::class, 'contentPageUpdate'])->name('content.page.update');
     Route::get('/content/{content}/edit', [AdminController::class, 'contentEdit'])->name('content.edit');
     Route::put('/content/{content}', [AdminController::class, 'contentUpdate'])->name('content.update');
 });

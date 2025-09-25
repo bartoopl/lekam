@@ -489,15 +489,69 @@ class AdminController extends Controller
      */
     public function contentIndex()
     {
-        $contents = Content::orderBy('page')
-            ->orderBy('section')
-            ->paginate(20);
+        $pageInfo = Content::getPageInfo();
+        $contentStats = [];
 
-        return view('admin.content.index', compact('contents'));
+        foreach ($pageInfo as $page => $info) {
+            $contentStats[$page] = [
+                'info' => $info,
+                'count' => Content::where('page', $page)->count(),
+                'active' => Content::where('page', $page)->where('is_active', true)->count()
+            ];
+        }
+
+        return view('admin.content.index', compact('contentStats'));
     }
 
     /**
-     * Show content edit form
+     * Show page content edit form
+     */
+    public function contentPageEdit($page)
+    {
+        $pageInfo = Content::getPageInfo();
+
+        if (!array_key_exists($page, $pageInfo)) {
+            abort(404);
+        }
+
+        $contents = Content::where('page', $page)->orderBy('section')->get();
+
+        return view('admin.content.page-edit', compact('page', 'pageInfo', 'contents'));
+    }
+
+    /**
+     * Update page content
+     */
+    public function contentPageUpdate(Request $request, $page)
+    {
+        $pageInfo = Content::getPageInfo();
+
+        if (!array_key_exists($page, $pageInfo)) {
+            abort(404);
+        }
+
+        $contents = $request->input('contents', []);
+
+        foreach ($contents as $contentId => $data) {
+            $content = Content::find($contentId);
+            if ($content && $content->page === $page) {
+                $request->validate([
+                    "contents.{$contentId}.content" => 'required|string',
+                ]);
+
+                $content->update([
+                    'content' => $data['content'],
+                    'is_active' => isset($data['is_active']) ? true : false,
+                ]);
+            }
+        }
+
+        return redirect()->route('admin.content.index')
+            ->with('success', 'Treści strony zostały zaktualizowane pomyślnie.');
+    }
+
+    /**
+     * Show content edit form (pojedyncza treść)
      */
     public function contentEdit(Content $content)
     {
@@ -505,7 +559,7 @@ class AdminController extends Controller
     }
 
     /**
-     * Update content
+     * Update content (pojedyncza treść)
      */
     public function contentUpdate(Request $request, Content $content)
     {
