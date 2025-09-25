@@ -211,6 +211,9 @@ window.initCustomVideoControls = function(video) {
             <button id="play-pause" style="font-size: 16px;">
                 ▶
             </button>
+            <button id="rewind-10s" style="font-size: 14px; margin-left: 5px;" title="Cofnij o 10 sekund">
+                ⏪10s
+            </button>
             <span id="time-display">0:00 / 0:00</span>
             <div class="flex-1">
                 <div id="progress-fill" style="width: 0%"></div>
@@ -223,6 +226,7 @@ window.initCustomVideoControls = function(video) {
         video.parentNode.insertBefore(controlsContainer, video.nextSibling);
         
         const playPauseBtn = document.getElementById('play-pause');
+        const rewindBtn = document.getElementById('rewind-10s');
         const timeDisplay = document.getElementById('time-display');
         const fullscreenBtn = document.getElementById('fullscreen');
         const progressFill = document.getElementById('progress-fill');
@@ -235,6 +239,13 @@ window.initCustomVideoControls = function(video) {
                 video.pause();
                 playPauseBtn.innerHTML = '▶';
             }
+        });
+
+        rewindBtn.addEventListener('click', function() {
+            // Rewind by 10 seconds, but don't go below 0
+            const newTime = Math.max(0, video.currentTime - 10);
+            video.currentTime = newTime;
+            console.log('Rewound 10 seconds to:', newTime);
         });
         
         fullscreenBtn.addEventListener('click', function() {

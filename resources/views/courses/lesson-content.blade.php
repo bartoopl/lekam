@@ -40,31 +40,31 @@
             bottom: 0;
             left: 0;
             right: 0;
-            height: 6px;
+            height: 8px;
             background: rgba(0, 0, 0, 0.5);
             z-index: 10;
             cursor: pointer;
         }
-        
+
         .custom-progress-bar {
             height: 100%;
-            background: linear-gradient(90deg, #3B82F6 0%, #1D4ED8 100%);
+            background: linear-gradient(90deg, #22C55E 0%, #16A34A 100%);
             width: 0%;
             transition: width 0.1s ease;
         }
-        
+
         .custom-progress-overlay:hover {
-            height: 8px;
+            height: 12px;
         }
-        
+
         .custom-progress-overlay:hover .custom-progress-bar {
-            box-shadow: 0 0 8px rgba(59, 130, 246, 0.5);
+            box-shadow: 0 0 8px rgba(34, 197, 94, 0.5);
         }
         
         
         /* Fullscreen adjustments */
         .vjs-fullscreen .custom-progress-overlay {
-            height: 8px;
+            height: 12px;
         }
         
         .vjs-fullscreen .vjs-control-bar {

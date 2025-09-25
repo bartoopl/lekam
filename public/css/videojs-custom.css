@@ -101,24 +101,24 @@
 
 /* Progress bar */
 .video-js .vjs-progress-control {
-    height: 8px !important;
+    height: 12px !important;
     margin: 0 10px !important;
 }
 
 .video-js .vjs-progress-holder {
-    height: 8px !important;
-    border-radius: 4px !important;
+    height: 12px !important;
+    border-radius: 6px !important;
     background: rgba(255, 255, 255, 0.3) !important;
     transition: height 0.2s ease !important;
 }
 
 .video-js .vjs-progress-holder:hover {
-    height: 12px !important;
+    height: 16px !important;
 }
 
 .video-js .vjs-play-progress {
-    background: linear-gradient(90deg, #3B82F6 0%, #1D4ED8 100%) !important;
-    border-radius: 4px !important;
+    background: linear-gradient(90deg, #22C55E 0%, #16A34A 100%) !important;
+    border-radius: 6px !important;
     position: relative !important;
 }
 
@@ -157,7 +157,7 @@
 }
 
 .video-js .vjs-volume-level {
-    background: #3B82F6 !important;
+    background: #22C55E !important;
     border-radius: 2px !important;
 }
 
