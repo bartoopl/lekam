@@ -391,22 +391,22 @@ videojs.registerPlugin('customProgressOverlay', function(options = {}) {
     player.ready(updateProgress);
 });
 
-// Custom Rewind Button Component
-const RewindButton = videojs.extend(videojs.getComponent('Button'), {
-    constructor: function(player, options) {
+// Custom Rewind Button Component (Video.js 8.x compatible)
+class RewindButton extends videojs.getComponent('Button') {
+    constructor(player, options) {
         console.log('🔍 DEBUG: RewindButton constructor called');
-        videojs.getComponent('Button').call(this, player, options);
+        super(player, options);
         this.controlText('Cofnij o 10 sekund');
-    },
+    }
 
-    buildCSSClass: function() {
+    buildCSSClass() {
         console.log('🔍 DEBUG: RewindButton buildCSSClass called');
         return 'vjs-rewind-control vjs-control vjs-button';
-    },
+    }
 
-    createEl: function() {
+    createEl() {
         console.log('🔍 DEBUG: RewindButton createEl called');
-        const button = videojs.getComponent('Button').prototype.createEl.call(this, 'button', {
+        const button = super.createEl('button', {
             innerHTML: '<span aria-hidden="true" class="vjs-icon-placeholder">⏪10s</span><span class="vjs-control-text">Cofnij o 10 sekund</span>',
             className: 'vjs-rewind-control vjs-control vjs-button',
             type: 'button',
@@ -416,9 +416,9 @@ const RewindButton = videojs.extend(videojs.getComponent('Button'), {
 
         console.log('🔍 DEBUG: RewindButton element created:', button);
         return button;
-    },
+    }
 
-    handleClick: function() {
+    handleClick() {
         console.log('🔍 DEBUG: RewindButton clicked!');
         const player = this.player();
         const currentTime = player.currentTime();
@@ -427,7 +427,7 @@ const RewindButton = videojs.extend(videojs.getComponent('Button'), {
         player.currentTime(newTime);
         console.log('Rewound 10 seconds from', currentTime, 'to', newTime);
     }
-});
+}
 
 console.log('🔍 DEBUG: Registering RewindButton component');
 
