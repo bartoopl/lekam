@@ -578,7 +578,11 @@ function forceVideoJSInitialization() {
 
 // Run forced initialization after a delay to override any other initialization
 document.addEventListener('DOMContentLoaded', function() {
-    setTimeout(forceVideoJSInitialization, 500);
+    console.log('🔍 DOM LOADED - setting timeout for forced init');
+    setTimeout(() => {
+        console.log('🔍 TIMEOUT REACHED - calling forceVideoJSInitialization');
+        forceVideoJSInitialization();
+    }, 500);
 });
 
 // Also try to run it when the lesson content is loaded (for AJAX)
