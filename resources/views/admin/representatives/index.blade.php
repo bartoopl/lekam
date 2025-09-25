@@ -59,17 +59,17 @@
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                             <div class="flex space-x-2">
-                                <a href="{{ route('admin.representatives.show', $representative) }}" class="text-blue-600 hover:text-blue-900">
-                                    <i class="fas fa-eye"></i>
+                                <a href="{{ route('admin.representatives.show', $representative) }}" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm">
+                                    <i class="fas fa-eye mr-1"></i>Podgląd
                                 </a>
-                                <a href="{{ route('admin.representatives.edit', $representative) }}" class="text-yellow-600 hover:text-yellow-900">
-                                    <i class="fas fa-edit"></i>
+                                <a href="{{ route('admin.representatives.edit', $representative) }}" class="bg-yellow-600 hover:bg-yellow-700 text-white px-3 py-1 rounded text-sm">
+                                    <i class="fas fa-edit mr-1"></i>Edytuj
                                 </a>
                                 <form method="POST" action="{{ route('admin.representatives.destroy', $representative) }}" class="inline" onsubmit="return confirm('Czy na pewno chcesz usunąć tego przedstawiciela?')">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="text-red-600 hover:text-red-900">
-                                        <i class="fas fa-trash"></i>
+                                    <button type="submit" class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-sm">
+                                        <i class="fas fa-trash mr-1"></i>Usuń
                                     </button>
                                 </form>
                             </div>
