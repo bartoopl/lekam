@@ -514,39 +514,78 @@ window.initVideoJSPlayer = function(videoElement, options = {}) {
     return player;
 };
 
-// Initialize for static pages
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('🔍 DEBUG: DOM loaded, checking for Video.js');
+// Force Video.js reinitialization - override any existing initialization
+function forceVideoJSInitialization() {
+    console.log('🔍 FORCE: Starting forced Video.js initialization');
 
     // Check if Video.js is loaded
     if (typeof videojs === 'undefined') {
-        console.error('Video.js library not loaded');
+        console.error('🔍 FORCE: Video.js library not loaded');
         return;
     }
 
-    console.log('🔍 DEBUG: Video.js is loaded, version:', videojs.VERSION);
+    console.log('🔍 FORCE: Video.js is loaded, version:', videojs.VERSION);
+    console.log('🔍 FORCE: RewindButton registered?', videojs.getComponent('RewindButton') !== undefined);
 
     const videoElement = document.getElementById('lesson-video');
-    if (videoElement) {
-        console.log('🔍 DEBUG: Found video element:', videoElement);
-
-        // First, destroy any existing player instance
-        if (videojs.getPlayer('lesson-video')) {
-            console.log('🔍 DEBUG: Destroying existing player');
-            videojs.getPlayer('lesson-video').dispose();
-        }
-
-        const options = {
-            saveUrl: videoElement.dataset.savePositionUrl,
-            startPosition: videoElement.dataset.startPosition,
-            completeUrl: videoElement.dataset.completeLessonUrl
-        };
-
-        console.log('🔍 DEBUG: Initializing player with options:', options);
-        console.log('🔍 DEBUG: RewindButton registered?', videojs.getComponent('RewindButton') !== undefined);
-
-        window.initVideoJSPlayer(videoElement, options);
-    } else {
-        console.error('🔍 DEBUG: Video element not found');
+    if (!videoElement) {
+        console.error('🔍 FORCE: Video element not found');
+        return;
     }
+
+    console.log('🔍 FORCE: Found video element:', videoElement);
+
+    // Destroy ALL possible existing players
+    ['lesson-video', 'lesson-video_html5_api'].forEach(id => {
+        try {
+            if (videojs.getPlayer(id)) {
+                console.log('🔍 FORCE: Destroying existing player:', id);
+                videojs.getPlayer(id).dispose();
+            }
+        } catch (e) {
+            console.log('🔍 FORCE: Could not destroy player:', id, e.message);
+        }
+    });
+
+    // Remove all existing Video.js related classes and elements
+    videoElement.classList.remove('vjs-tech', 'vjs-html5-tech');
+    videoElement.removeAttribute('data-vjs-player');
+
+    // Find and remove any existing player wrapper
+    const wrapper = videoElement.closest('.video-js');
+    if (wrapper && wrapper !== videoElement) {
+        const parent = wrapper.parentNode;
+        parent.insertBefore(videoElement, wrapper);
+        parent.removeChild(wrapper);
+        console.log('🔍 FORCE: Removed existing wrapper');
+    }
+
+    // Ensure the video element has the right classes
+    videoElement.classList.add('video-js', 'vjs-default-skin');
+
+    const options = {
+        saveUrl: videoElement.dataset.savePositionUrl,
+        startPosition: videoElement.dataset.startPosition,
+        completeUrl: videoElement.dataset.completeLessonUrl
+    };
+
+    console.log('🔍 FORCE: Creating new player with options:', options);
+
+    setTimeout(() => {
+        window.initVideoJSPlayer(videoElement, options);
+    }, 100);
+}
+
+// Run forced initialization after a delay to override any other initialization
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(forceVideoJSInitialization, 500);
 });
+
+// Also try to run it when the lesson content is loaded (for AJAX)
+if (typeof window.addEventListener !== 'undefined') {
+    window.addEventListener('message', function(event) {
+        if (event.data === 'lesson-content-loaded') {
+            setTimeout(forceVideoJSInitialization, 100);
+        }
+    });
+}
