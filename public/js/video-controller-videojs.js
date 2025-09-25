@@ -394,38 +394,47 @@ videojs.registerPlugin('customProgressOverlay', function(options = {}) {
 // Custom Rewind Button Component
 const RewindButton = videojs.extend(videojs.getComponent('Button'), {
     constructor: function(player, options) {
+        console.log('🔍 DEBUG: RewindButton constructor called');
         videojs.getComponent('Button').call(this, player, options);
         this.controlText('Cofnij o 10 sekund');
     },
 
     buildCSSClass: function() {
+        console.log('🔍 DEBUG: RewindButton buildCSSClass called');
         return 'vjs-rewind-control vjs-control vjs-button';
     },
 
     createEl: function() {
+        console.log('🔍 DEBUG: RewindButton createEl called');
         const button = videojs.getComponent('Button').prototype.createEl.call(this, 'button', {
-            innerHTML: '<span aria-hidden="true" class="vjs-icon-placeholder">⏪</span><span class="vjs-control-text">Cofnij o 10 sekund</span>',
+            innerHTML: '<span aria-hidden="true" class="vjs-icon-placeholder">⏪10s</span><span class="vjs-control-text">Cofnij o 10 sekund</span>',
             className: 'vjs-rewind-control vjs-control vjs-button',
             type: 'button',
             'aria-live': 'polite',
             title: 'Cofnij o 10 sekund'
         });
 
+        console.log('🔍 DEBUG: RewindButton element created:', button);
         return button;
     },
 
     handleClick: function() {
+        console.log('🔍 DEBUG: RewindButton clicked!');
         const player = this.player();
         const currentTime = player.currentTime();
         const newTime = Math.max(0, currentTime - 10);
 
         player.currentTime(newTime);
-        console.log('Rewound 10 seconds to:', newTime);
+        console.log('Rewound 10 seconds from', currentTime, 'to', newTime);
     }
 });
 
+console.log('🔍 DEBUG: Registering RewindButton component');
+
 // Register the component
 videojs.registerComponent('RewindButton', RewindButton);
+
+console.log('🔍 DEBUG: RewindButton registered. Available:', videojs.getComponent('RewindButton') !== undefined);
 
 // Main initialization function
 window.initVideoJSPlayer = function(videoElement, options = {}) {
@@ -467,35 +476,63 @@ window.initVideoJSPlayer = function(videoElement, options = {}) {
         }
     };
     
+    console.log('🔍 DEBUG: Creating Video.js player with options:', playerOptions);
+
     // Initialize Video.js player
     const player = videojs(videoElement, playerOptions);
-    
+
+    console.log('🔍 DEBUG: Video.js player created:', player);
+
     // Disable right-click context menu
     player.ready(() => {
+        console.log('🔍 DEBUG: Player ready event fired');
+        console.log('🔍 DEBUG: Control bar children:', player.controlBar.children_.map(c => c.constructor.name));
+
         player.el().addEventListener('contextmenu', function(e) {
             e.preventDefault();
         });
+
+        // Log if RewindButton was created
+        const rewindButton = player.controlBar.getChild('RewindButton');
+        console.log('🔍 DEBUG: RewindButton in control bar:', rewindButton);
     });
-    
+
     return player;
 };
 
 // Initialize for static pages
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('🔍 DEBUG: DOM loaded, checking for Video.js');
+
     // Check if Video.js is loaded
     if (typeof videojs === 'undefined') {
         console.error('Video.js library not loaded');
         return;
     }
-    
+
+    console.log('🔍 DEBUG: Video.js is loaded, version:', videojs.VERSION);
+
     const videoElement = document.getElementById('lesson-video');
     if (videoElement) {
+        console.log('🔍 DEBUG: Found video element:', videoElement);
+
+        // First, destroy any existing player instance
+        if (videojs.getPlayer('lesson-video')) {
+            console.log('🔍 DEBUG: Destroying existing player');
+            videojs.getPlayer('lesson-video').dispose();
+        }
+
         const options = {
             saveUrl: videoElement.dataset.savePositionUrl,
             startPosition: videoElement.dataset.startPosition,
             completeUrl: videoElement.dataset.completeLessonUrl
         };
-        
+
+        console.log('🔍 DEBUG: Initializing player with options:', options);
+        console.log('🔍 DEBUG: RewindButton registered?', videojs.getComponent('RewindButton') !== undefined);
+
         window.initVideoJSPlayer(videoElement, options);
+    } else {
+        console.error('🔍 DEBUG: Video element not found');
     }
 });

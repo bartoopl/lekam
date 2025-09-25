@@ -78,16 +78,14 @@
     <div class="lesson-video">
         <h3 class="materials-title">Wideo</h3>
         <div class="video-container">
-            <video id="lesson-video" 
-                     class="video-js vjs-default-skin" 
-                     controls
+            <video id="lesson-video"
+                     class="video-js vjs-default-skin"
                      preload="metadata"
-                     data-lesson-id="{{ $lesson->id }}" 
+                     data-lesson-id="{{ $lesson->id }}"
                      data-course-id="{{ $course->id }}"
                      data-save-position-url="{{ route('courses.save-video-position', ['course' => $course, 'lesson' => $lesson]) }}"
                      data-complete-lesson-url="{{ route('courses.complete-lesson', ['course' => $course, 'lesson' => $lesson]) }}"
-                     @if($userProgress && $userProgress->video_position && !$userProgress->is_completed) data-start-position="{{ $userProgress->video_position }}" @endif
-                     data-setup='{}'>
+                     @if($userProgress && $userProgress->video_position && !$userProgress->is_completed) data-start-position="{{ $userProgress->video_position }}" @endif>
                 <source src="{{ 
                     $lesson->video_url ? 
                         (str_starts_with($lesson->video_url, 'http://') ? 
