@@ -29,9 +29,9 @@
             padding: 0.5rem 1rem !important;
         }
         
-        /* Hide progress control from Video.js control bar */
+        /* Video.js progress control styling - show it */
         .vjs-progress-control {
-            display: none !important;
+            display: flex !important;
         }
         
         /* Custom progress bar overlay on video */

@@ -70,6 +70,16 @@
     overflow: hidden !important;
 }
 
+/* Rewind button specific styling */
+.video-js .vjs-rewind-control {
+    width: 50px !important;
+    font-size: 14px !important;
+}
+
+.video-js .vjs-rewind-control .vjs-icon-placeholder {
+    font-size: 16px !important;
+}
+
 .video-js .vjs-control:hover {
     background: rgba(255, 255, 255, 0.2) !important;
 }

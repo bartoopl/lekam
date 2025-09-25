@@ -391,6 +391,42 @@ videojs.registerPlugin('customProgressOverlay', function(options = {}) {
     player.ready(updateProgress);
 });
 
+// Custom Rewind Button Component
+const RewindButton = videojs.extend(videojs.getComponent('Button'), {
+    constructor: function(player, options) {
+        videojs.getComponent('Button').call(this, player, options);
+        this.controlText('Cofnij o 10 sekund');
+    },
+
+    buildCSSClass: function() {
+        return 'vjs-rewind-control vjs-control vjs-button';
+    },
+
+    createEl: function() {
+        const button = videojs.getComponent('Button').prototype.createEl.call(this, 'button', {
+            innerHTML: '<span aria-hidden="true" class="vjs-icon-placeholder">⏪</span><span class="vjs-control-text">Cofnij o 10 sekund</span>',
+            className: 'vjs-rewind-control vjs-control vjs-button',
+            type: 'button',
+            'aria-live': 'polite',
+            title: 'Cofnij o 10 sekund'
+        });
+
+        return button;
+    },
+
+    handleClick: function() {
+        const player = this.player();
+        const currentTime = player.currentTime();
+        const newTime = Math.max(0, currentTime - 10);
+
+        player.currentTime(newTime);
+        console.log('Rewound 10 seconds to:', newTime);
+    }
+});
+
+// Register the component
+videojs.registerComponent('RewindButton', RewindButton);
+
 // Main initialization function
 window.initVideoJSPlayer = function(videoElement, options = {}) {
     if (!videoElement) {
@@ -408,7 +444,9 @@ window.initVideoJSPlayer = function(videoElement, options = {}) {
         controlBar: {
             children: [
                 'playToggle',
-                'currentTimeDisplay', 
+                'RewindButton',
+                'progressControl',
+                'currentTimeDisplay',
                 'timeDivider',
                 'durationDisplay',
                 'muteToggle',
