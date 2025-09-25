@@ -141,40 +141,39 @@ ob_start();
             gap: 1rem;
             animation: fadeInUp 1s ease-out 1.2s both;
         }
-        
+
+        .hero-btn-primary,
+        .hero-btn-secondary {
+            border-radius: 16px;
+            padding: 0.75rem 2rem;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            flex: 1;
+            text-align: center;
+            min-width: 0;
+        }
+
         .hero-btn-primary {
             background: #E0E7FA;
             color: black;
             border: none;
-            border-radius: 16px;
-            padding: 0.75rem 2rem;
-            font-weight: 600;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-block;
         }
-        
+
         .hero-btn-primary:hover {
             transform: translateY(-2px);
             box-shadow: 0 10px 25px rgba(224, 231, 250, 0.3);
         }
-        
+
         .hero-btn-secondary {
             background: transparent;
             color: #E0E7FA;
             border: 2px solid #E0E7FA;
-            border-radius: 16px;
-            padding: 0.75rem 2rem;
-            font-weight: 600;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-block;
         }
-        
+
         .hero-btn-secondary:hover {
             background: #E0E7FA;
             color: black;
@@ -248,8 +247,19 @@ ob_start();
             }
             
             .hero-buttons {
-                flex-direction: column;
+                flex-direction: row;
                 align-items: center;
+                max-width: 100%;
+                gap: 0.5rem;
+            }
+
+            .hero-btn-primary,
+            .hero-btn-secondary {
+                padding: 0.75rem 1rem;
+                font-size: 0.9rem;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
             }
 
             /* Switch title versions on mobile */
