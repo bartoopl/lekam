@@ -320,7 +320,7 @@ ob_start();
             margin: 0 auto;
             padding: 0 2rem;
             display: grid;
-            grid-template-columns: 2fr 1fr 1fr;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
             gap: 3rem;
             position: relative;
             z-index: 2;

@@ -249,7 +249,7 @@
     margin: 0 auto !important;
     padding: 0 2rem !important;
     display: grid !important;
-    grid-template-columns: 2fr 1fr 1fr !important;
+    grid-template-columns: 2fr 1fr 1fr 1fr !important;
     gap: 3rem !important;
     position: relative !important;
     z-index: 2 !important;
