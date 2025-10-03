@@ -2524,6 +2524,13 @@ document.addEventListener('click', function(e) {
                 <li><a href="{{ route('contact') }}" class="footer-link">Kontakt</a></li>
             </ul>
         </div>
+
+        <div class="footer-right">
+            <h3 class="footer-section-title">Patronat Merytoryczny</h3>
+            <div style="display: flex; align-items: center; justify-content: center; margin-top: 1rem;">
+                <img src="/images/icons/gumed.png" alt="GUMed" style="height: 80px;">
+            </div>
+        </div>
     </div>
 
     <div class="footer-bottom">

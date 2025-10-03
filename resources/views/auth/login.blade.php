@@ -371,6 +371,10 @@ ob_start();
                     <a href="{{ route('cookies') }}" class="login-footer-link">Polityka Cookies</a>
                     <a href="{{ route('contact') }}" class="login-footer-link">Kontakt</a>
                 </div>
+                <div style="text-align: center; margin: 2rem 0 1rem 0;">
+                    <h3 style="color: rgba(255, 255, 255, 0.9); font-family: 'Poppins', sans-serif; font-size: 1rem; font-weight: 600; margin-bottom: 1rem;">Patronat Merytoryczny</h3>
+                    <img src="/images/icons/gumed.png" alt="GUMed" style="height: 80px;">
+                </div>
                 <div class="login-footer-bottom">
                     <div>
                         <span>&copy; 2025 Wszelkie Prawa zastrzeżone</span>
