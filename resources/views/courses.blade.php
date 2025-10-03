@@ -340,7 +340,8 @@ ob_start();
         }
         
         .footer-center,
-        .footer-right {
+        .footer-right,
+        .footer-patronage {
             display: flex;
             flex-direction: column;
             gap: 1rem;
@@ -526,7 +527,7 @@ ob_start();
                 </ul>
             </div>
 
-            <div class="footer-right">
+            <div class="footer-patronage">
                 <h3 class="footer-section-title">Patronat Merytoryczny</h3>
                 <div style="display: flex; align-items: center; justify-content: center; margin-top: 1rem;">
                     <img src="/images/icons/gumed.png" alt="GUMed" style="height: 80px;">
