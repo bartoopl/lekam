@@ -723,28 +723,28 @@ ob_start();
                         <img src="/images/icons/ikona1.svg" alt="Icon 1" class="w-8 h-8">
                     </div>
                     <div class="feature-content">
-                        <h3 class="feature-title">Z potrzeby - dla praktyki</h3>
-                        <p class="feature-text">Akademia Lek-am powstała z potrzeby – realnej, zauważonej w codziennym kontakcie z farmaceutami i technikami farmacji. To odpowiedź na wyzwania zawodów, wymagających ciągłego rozwoju i dostępu do aktualnej wiedzy.
+                        <h3 class="feature-title">{!! $contents['home.features.feature1.title']->content ?? 'Z potrzeby - dla praktyki' !!}</h3>
+                        <p class="feature-text">{!! $contents['home.features.feature1.description']->content ?? 'Akademia Lek-am powstała z potrzeby – realnej, zauważonej w codziennym kontakcie z farmaceutami i technikami farmacji. To odpowiedź na wyzwania zawodów, wymagających ciągłego rozwoju i dostępu do aktualnej wiedzy.' !!}</p>
                     </div>
                 </div>
-                
+
                 <div class="feature-block">
                     <div class="feature-icon">
                         <img src="/images/icons/ikona2.svg" alt="Icon 2" class="w-8 h-8">
                     </div>
                     <div class="feature-content">
-                        <h3 class="feature-title">Wiedza - wsparcie - rozwój</h3>
-                        <p class="feature-text">Od lat wspieramy środowisko medyczne, dostarczając rzetelną wiedzę i praktyczne narzędzia rozwoju Akademia to miejsce stworzone przez ekspertów z myślą o kształceniu zawodowym na najwyższym poziomie. Dołącz do nas i przekonaj się, że warto być tam, gdzie wiedza ma wartość, a edukacja – konkretny kierunek.
+                        <h3 class="feature-title">{!! $contents['home.features.feature2.title']->content ?? 'Wiedza - wsparcie - rozwój' !!}</h3>
+                        <p class="feature-text">{!! $contents['home.features.feature2.description']->content ?? 'Od lat wspieramy środowisko medyczne, dostarczając rzetelną wiedzę i praktyczne narzędzia rozwoju Akademia to miejsce stworzone przez ekspertów z myślą o kształceniu zawodowym na najwyższym poziomie. Dołącz do nas i przekonaj się, że warto być tam, gdzie wiedza ma wartość, a edukacja – konkretny kierunek.' !!}</p>
                     </div>
                 </div>
-                
+
                 <div class="feature-block">
                     <div class="feature-icon">
                         <img src="/images/icons/ikona3.svg" alt="Icon 3" class="w-8 h-8">
                     </div>
                     <div class="feature-content">
-                        <h3 class="feature-title">{{ $contents['home.features.title']->content ?? 'Nasza idea - wiedzieć więcej' }}</h3>
-                        <p class="feature-text">{{ $contents['home.features.description']->content ?? 'Sama idea akademii sięga starożytności – to tam, w gaju Akademosa, narodziła się wspólnota nauki i myśli. Dziś, w nowoczesnej formule, Akademia LEK-AM kontynuuje tego ducha: jako przestrzeń dla tych, którzy chcą rozwijać się świadomie, odpowiedzialnie i w zgodzie z wymaganiami współczesnej farmacji.' }}
+                        <h3 class="feature-title">{!! $contents['home.features.feature3.title']->content ?? 'Nasza idea - wiedzieć więcej' !!}</h3>
+                        <p class="feature-text">{!! $contents['home.features.feature3.description']->content ?? 'Sama idea akademii sięga starożytności – to tam, w gaju Akademosa, narodziła się wspólnota nauki i myśli. Dziś, w nowoczesnej formule, Akademia LEK-AM kontynuuje tego ducha: jako przestrzeń dla tych, którzy chcą rozwijać się świadomie, odpowiedzialnie i w zgodzie z wymaganiami współczesnej farmacji.' !!}</p>
                     </div>
                 </div>
             </div>
