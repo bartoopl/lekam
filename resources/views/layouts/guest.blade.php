@@ -330,6 +330,18 @@
     <body>
         @include('layouts.navigation')
 
+        <style>
+            /* Ensure navbar styles are applied on guest pages */
+            .navbar-container .logo-icon {
+                width: 100px !important;
+                height: auto !important;
+            }
+
+            .navbar-container .navbar-content {
+                padding: 1rem 2rem !important;
+            }
+        </style>
+
         <div class="guest-container">
             <div class="content-wrapper">
                 <div class="logo-container">
