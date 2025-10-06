@@ -276,8 +276,9 @@
                     <img src="/images/icons/gumed.png?v=2" alt="GUMed" style="height: 120px; width: auto;">
                 </div>
                 <div class="guest-footer-bottom">
-                    <div>
+                    <div style="display: flex; align-items: flex-end;">
                         <span>&copy; 2025 Wszelkie Prawa zastrzeżone</span>
+                        <img src="/images/icons/lekam.png" alt="Lekam" style="height: 24px; margin-left: 8px; vertical-align: bottom;">
                     </div>
                     <div class="guest-footer-admin">
                         <span>Administrator serwisu:</span>

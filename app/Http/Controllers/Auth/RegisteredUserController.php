@@ -42,8 +42,8 @@ class RegisteredUserController extends Controller
             'pharmacy_city' => ['required', 'string', 'max:255'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'consent_1' => ['required', 'accepted'],
-            'consent_2' => ['required', 'accepted'],
-            'consent_3' => ['required', 'accepted'],
+            'consent_2' => ['nullable', 'boolean'],
+            'consent_3' => ['nullable', 'boolean'],
             'ref' => ['nullable', 'string', 'max:255'],
         ]);
 
