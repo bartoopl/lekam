@@ -29,8 +29,16 @@
                 min-height: 100vh;
                 display: flex;
                 flex-direction: column;
-                justify-content: center;
+                padding: 0;
+                padding-top: 80px;
+            }
+
+            .content-wrapper {
+                display: flex;
+                flex-direction: column;
                 align-items: center;
+                justify-content: center;
+                flex: 1;
                 padding: 2rem;
             }
 
@@ -170,7 +178,7 @@
                 position: relative;
                 color: white;
                 padding: 4rem 0 2rem 0;
-                margin-top: 3rem;
+                width: 100%;
             }
 
             .footer::before {
@@ -320,19 +328,23 @@
         </style>
     </head>
     <body>
+        @include('layouts.navigation')
+
         <div class="guest-container">
-            <div class="logo-container">
-                <a href="{{ route('home') }}">
-                    <img src="{{ asset('images/logos/logo.svg') }}" alt="LEK-AM Akademia">
-                </a>
-            </div>
+            <div class="content-wrapper">
+                <div class="logo-container">
+                    <a href="{{ route('home') }}">
+                        <img src="{{ asset('images/logos/logo.svg') }}" alt="LEK-AM Akademia">
+                    </a>
+                </div>
 
-            <div class="form-wrapper">
-                {{ $slot }}
-            </div>
+                <div class="form-wrapper">
+                    {{ $slot }}
+                </div>
 
-            <div class="back-link">
-                <a href="{{ route('home') }}">← Powrót do strony głównej</a>
+                <div class="back-link">
+                    <a href="{{ route('home') }}">← Powrót do strony głównej</a>
+                </div>
             </div>
 
             <!-- Footer -->
