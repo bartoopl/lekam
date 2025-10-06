@@ -133,7 +133,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 1.5rem 2rem;
+            padding: 1rem 2rem;
         }
 
         .navbar-brand {
@@ -149,7 +149,7 @@
         }
 
         .logo-icon {
-            width: 120px;
+            width: 100px;
             height: auto;
         }
 
