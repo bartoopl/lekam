@@ -30,7 +30,7 @@
                 display: flex;
                 flex-direction: column;
                 padding: 0;
-                padding-top: 120px;
+                padding-top: 100px;
             }
 
             .content-wrapper {
