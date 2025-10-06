@@ -25,6 +25,15 @@
                 font-family: 'Poppins', sans-serif;
             }
 
+            /* Override navbar styles for guest pages */
+            .navbar {
+                margin: 20px auto !important;
+            }
+
+            .navbar-content {
+                padding: 1.5rem 2rem !important;
+            }
+
             .guest-container {
                 min-height: 100vh;
                 display: flex;
