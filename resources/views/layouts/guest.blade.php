@@ -25,15 +25,6 @@
                 font-family: 'Poppins', sans-serif;
             }
 
-            /* Override navbar styles for guest pages */
-            .navbar {
-                margin: 20px auto !important;
-            }
-
-            .navbar-content {
-                padding: 1.5rem 2rem !important;
-            }
-
             .guest-container {
                 min-height: 100vh;
                 display: flex;
@@ -338,6 +329,17 @@
     </head>
     <body>
         @include('layouts.navigation')
+
+        <style>
+            /* Force navbar to match other pages - must be after navigation include */
+            .navbar-container .navbar {
+                margin: 20px auto !important;
+            }
+
+            .navbar-container .navbar-content {
+                padding: 1.5rem 2rem !important;
+            }
+        </style>
 
         <div class="guest-container">
             <div class="content-wrapper">
