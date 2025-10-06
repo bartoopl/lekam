@@ -2538,7 +2538,7 @@ document.addEventListener('click', function(e) {
         <div class="footer-bottom-left">
             <div style="display: flex; align-items: flex-end;">
                 <span>&copy; 2025 Wszelkie Prawa zastrzeżone</span>
-                <img src="/images/icons/lekam.png" alt="Lekam" style="height: 24px; margin-left: 8px;">
+                <img src="/images/icons/lekam.png" alt="Lekam" style="height: 24px; margin-left: 8px; vertical-align: bottom;">
             </div>
         </div>
         <div class="footer-bottom-right">
