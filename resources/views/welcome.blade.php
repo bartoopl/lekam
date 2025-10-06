@@ -572,6 +572,7 @@ ob_start();
             width: 120px;
             height: 120px;
             filter: brightness(0) invert(1); /* Makes logo white */
+            margin-bottom: 20px;
         }
         
         .footer-description {
@@ -803,7 +804,7 @@ ob_start();
         
         <div class="footer-bottom">
             <div class="footer-bottom-left">
-                <div style="display: flex; align-items: center;">
+                <div style="display: flex; align-items: flex-end;">
                     <span>&copy; 2025 Wszelkie Prawa zastrzeżone</span>
                     <img src="/images/icons/lekam.png" alt="Lekam" style="height: 24px; margin-left: 8px;">
                 </div>
