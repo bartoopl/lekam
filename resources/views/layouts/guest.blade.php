@@ -30,7 +30,7 @@
                 display: flex;
                 flex-direction: column;
                 padding: 0;
-                padding-top: 80px;
+                padding-top: 100px;
             }
 
             .content-wrapper {
@@ -385,7 +385,7 @@
                     <div class="footer-bottom-left">
                         <div style="display: flex; align-items: flex-end;">
                             <span>&copy; 2025 Wszelkie Prawa zastrzeżone</span>
-                            <img src="/images/icons/lekam.png" alt="Lekam" style="height: 24px; margin-left: 8px; vertical-align: bottom;">
+                            <img src="/images/icons/lekam.png" alt="Lekam" style="height: 24px; margin-left: 8px; margin-bottom: 6px;">
                         </div>
                     </div>
                     <div class="footer-bottom-right">
