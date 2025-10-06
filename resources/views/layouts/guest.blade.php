@@ -16,6 +16,12 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
 
         <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
             html, body {
                 background-image: url('/images/backgrounds/bg.jpg');
                 background-size: cover;
