@@ -135,6 +135,17 @@
         /* Ensure visibility in Safari */
         opacity: 1;
         visibility: visible;
+        /* Keep circle perfectly round despite preserveAspectRatio="none" */
+        transform: scale(1, 1);
+        transform-origin: center;
+        transform-box: fill-box;
+    }
+
+    /* Fix aspect ratio for dot only */
+    .sinusoidal-progress circle {
+        transform: scaleY(20);
+        transform-origin: center;
+        transform-box: fill-box;
     }
 
 
@@ -757,7 +768,7 @@
             <div class="progress-percentage">{{ $progressPercentage }}%</div>
         </div>
         <div class="progress-bar-container">
-            <svg class="sinusoidal-progress" viewBox="0 0 800 40" preserveAspectRatio="xMidYMid meet">
+            <svg class="sinusoidal-progress" viewBox="0 0 800 40" preserveAspectRatio="none">
                 <!-- Gradient definitions -->
                 <defs>
                     <linearGradient id="progressGradient" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -773,12 +784,14 @@
 
                 <!-- Background path (flat horizontal line) -->
                 <path id="progress-path-bg" class="progress-path-bg"
-                      d="M 0 20 L 800 20" />
+                      d="M 0 20 L 800 20"
+                      vector-effect="non-scaling-stroke" />
 
                 <!-- Progress path (flat horizontal line) -->
                 <path id="progress-path" class="progress-path"
                       stroke="url(#progressGradient)"
-                      d="M 0 20 L 800 20" />
+                      d="M 0 20 L 800 20"
+                      vector-effect="non-scaling-stroke" />
 
                 <!-- Progress dot as circle for perfect round shape -->
                 <circle class="progress-dot"
