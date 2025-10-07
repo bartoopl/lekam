@@ -67,6 +67,9 @@ class RegisteredUserController extends Controller
             'pharmacy_city' => $request->pharmacy_city,
             'ref' => $request->ref,
             'representative_id' => $representative ? $representative->id : null,
+            'consent_1' => $request->has('consent_1'),
+            'consent_2' => $request->has('consent_2'),
+            'consent_3' => $request->has('consent_3'),
         ]);
 
         event(new Registered($user));

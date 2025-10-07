@@ -34,6 +34,9 @@ class User extends Authenticatable implements MustVerifyEmail
         'pharmacy_city',
         'ref',
         'representative_id',
+        'consent_1',
+        'consent_2',
+        'consent_3',
     ];
 
     /**

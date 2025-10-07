@@ -45,6 +45,75 @@ class AdminController extends Controller
     }
 
     /**
+     * Export users to CSV with consent status
+     */
+    public function usersExport()
+    {
+        $users = User::all();
+
+        $filename = 'uzytkownicy_' . date('Y-m-d_His') . '.csv';
+
+        $headers = [
+            'Content-Type' => 'text/csv; charset=UTF-8',
+            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+            'Pragma' => 'no-cache',
+            'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+            'Expires' => '0'
+        ];
+
+        $callback = function() use ($users) {
+            $file = fopen('php://output', 'w');
+
+            // Add BOM for UTF-8
+            fprintf($file, chr(0xEF).chr(0xBB).chr(0xBF));
+
+            // Header row
+            fputcsv($file, [
+                'ID',
+                'Imię i Nazwisko',
+                'Email',
+                'Telefon',
+                'Typ użytkownika',
+                'Numer PWZ',
+                'Adres apteki',
+                'Kod pocztowy apteki',
+                'Miasto apteki',
+                'Data rejestracji',
+                'Email zweryfikowany',
+                'Administrator',
+                'Zgoda 1 (RODO - wymagana)',
+                'Zgoda 2 (Marketing LEK-AM)',
+                'Zgoda 3 (Marketing NeoArt)'
+            ], ';');
+
+            // Data rows
+            foreach ($users as $user) {
+                fputcsv($file, [
+                    $user->id,
+                    $user->name,
+                    $user->email,
+                    $user->phone ?? '',
+                    $user->user_type === 'farmaceuta' ? 'Farmaceuta' : 'Technik farmacji',
+                    $user->pwz_number ?? '',
+                    $user->pharmacy_address ?? '',
+                    $user->pharmacy_postal_code ?? '',
+                    $user->pharmacy_city ?? '',
+                    $user->created_at ? $user->created_at->format('Y-m-d H:i:s') : '',
+                    $user->email_verified_at ? 'Tak' : 'Nie',
+                    $user->is_admin ? 'Tak' : 'Nie',
+                    $user->consent_1 ? 'Tak' : 'Nie',
+                    $user->consent_2 ? 'Tak' : 'Nie',
+                    $user->consent_3 ? 'Tak' : 'Nie',
+                ], ';');
+            }
+
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
+    }
+
+    /**
      * Show user edit form
      */
     public function userEdit(User $user)
