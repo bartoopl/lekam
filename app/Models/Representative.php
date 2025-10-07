@@ -47,7 +47,7 @@ class Representative extends Model
      */
     public function getRegistrationUrlAttribute(): string
     {
-        return route('register') . '?rep=' . $this->code;
+        return route('register') . '?ref=' . $this->code;
     }
 
     /**
