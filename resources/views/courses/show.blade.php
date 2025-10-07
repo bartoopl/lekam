@@ -100,15 +100,37 @@
 
     .progress-bar-container {
         position: relative;
-        height: 40px;
+        height: 10px;
         width: 100%;
         overflow: visible;
         margin: 20px 0;
     }
 
+    .progress-dot-wrapper {
+        position: absolute;
+        top: 50%;
+        left: 0;
+        width: 20px;
+        height: 20px;
+        margin-top: -10px;
+        margin-left: -10px;
+        transition: left 1s cubic-bezier(0.4, 0, 0.2, 1);
+        pointer-events: none;
+        z-index: 10;
+    }
+
+    .progress-dot-html {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: #21235F;
+        border: 3px solid #ffffff;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+
     .sinusoidal-progress {
         width: 100%;
-        height: 40px;
+        height: 10px;
         overflow: visible;
     }
 
@@ -141,12 +163,6 @@
         transform-box: fill-box;
     }
 
-    /* Fix aspect ratio for dot only */
-    .sinusoidal-progress circle {
-        transform: scaleY(20);
-        transform-origin: center;
-        transform-box: fill-box;
-    }
 
 
     .quiz-section {
@@ -768,43 +784,30 @@
             <div class="progress-percentage">{{ $progressPercentage }}%</div>
         </div>
         <div class="progress-bar-container">
-            <svg class="sinusoidal-progress" viewBox="0 0 800 40" preserveAspectRatio="none">
+            <svg class="sinusoidal-progress" viewBox="0 0 800 10" preserveAspectRatio="none">
                 <!-- Gradient definitions -->
                 <defs>
                     <linearGradient id="progressGradient" x1="0%" y1="0%" x2="100%" y2="0%">
                         <stop offset="0%" stop-color="#21235F" />
                         <stop offset="100%" stop-color="#22C55E" />
                     </linearGradient>
-                    <!-- Solid dot gradient (no glow effect) -->
-                    <radialGradient id="dotGradient" cx="50%" cy="50%">
-                        <stop offset="0%" stop-color="#21235F" stop-opacity="1"/>
-                        <stop offset="100%" stop-color="#21235F" stop-opacity="1"/>
-                    </radialGradient>
                 </defs>
 
                 <!-- Background path (flat horizontal line) -->
                 <path id="progress-path-bg" class="progress-path-bg"
-                      d="M 0 20 L 800 20"
+                      d="M 0 5 L 800 5"
                       vector-effect="non-scaling-stroke" />
 
                 <!-- Progress path (flat horizontal line) -->
                 <path id="progress-path" class="progress-path"
                       stroke="url(#progressGradient)"
-                      d="M 0 20 L 800 20"
+                      d="M 0 5 L 800 5"
                       vector-effect="non-scaling-stroke" />
-
-                <!-- Progress dot as circle for perfect round shape -->
-                <circle class="progress-dot"
-                        cx="0"
-                        cy="20"
-                        r="10"
-                        fill="#21235F"
-                        stroke="#ffffff"
-                        stroke-width="3"
-                        vector-effect="non-scaling-stroke"
-                        shape-rendering="geometricPrecision"
-                        style="opacity: 1; visibility: visible;" />
             </svg>
+            <!-- HTML dot that stays perfectly round -->
+            <div class="progress-dot-wrapper" id="progress-dot-wrapper">
+                <div class="progress-dot-html"></div>
+            </div>
         </div>
         <div class="mt-4 text-sm text-gray-600">
             {{ $completedLessons }} z {{ $totalLessons }} lekcji ukończonych
@@ -1975,71 +1978,42 @@ let lastProgressPercentage = -1;
 
 function updateSinusoidalProgress(percentage) {
     const progressPath = document.querySelector('#progress-path');
-    const progressDot = document.querySelector('.progress-dot');
-    
-    if (!progressPath || !progressDot) return;
-    
+    const progressDotWrapper = document.querySelector('#progress-dot-wrapper');
+    const progressDotHtml = document.querySelector('.progress-dot-html');
+
+    if (!progressPath || !progressDotWrapper) return;
+
     try {
         // Check if progress actually changed
         const isProgressChanging = lastProgressPercentage !== percentage;
         lastProgressPercentage = percentage;
-        
+
         // Get path length and calculate progress
         const pathLength = progressPath.getTotalLength();
         const progress = Math.max(0, Math.min(100, percentage)) / 100;
         const progressLength = Math.max(0, Math.min(pathLength, pathLength * progress));
-        
+
         // Set stroke-dasharray to show progress
         progressPath.style.strokeDasharray = `${progressLength} ${pathLength}`;
-        
+
         // Update gradient color based on progress
         updateProgressGradient(progress);
-        
-        // Get point along path for dot position with bounds checking
-        if (progress > 0 && progressLength > 0) {
-            const point = progressPath.getPointAtLength(progressLength);
-            
-            // Validate coordinates and apply bounds
-            const svgRect = progressPath.closest('svg').getBoundingClientRect();
-            const viewBox = progressPath.closest('svg').getAttribute('viewBox').split(' ');
-            const maxX = parseFloat(viewBox[2]) || 800;
-            const maxY = parseFloat(viewBox[3]) || 40;
 
-            // Clamp coordinates within valid bounds
-            const x = Math.max(0, Math.min(maxX, point.x || 0));
-            const y = Math.max(0, Math.min(maxY, point.y || 20));
-            
-            // Only update if coordinates are valid numbers
-            if (!isNaN(x) && !isNaN(y) && isFinite(x) && isFinite(y)) {
-                progressDot.setAttribute('cx', x);
-                progressDot.setAttribute('cy', y);
+        // Update HTML dot position (simple percentage-based positioning)
+        const containerWidth = progressPath.closest('svg').getBoundingClientRect().width;
+        const dotPosition = progress * 100; // percentage
+        progressDotWrapper.style.left = `${dotPosition}%`;
 
-                // Ensure the circle radius is explicitly set for Chrome compatibility
-                if (!progressDot.getAttribute('r')) progressDot.setAttribute('r', '10');
-                progressDot.setAttribute('vector-effect', 'non-scaling-stroke');
-                progressDot.setAttribute('shape-rendering', 'geometricPrecision');
-
-                // Force re-render for Safari by toggling visibility
-                progressDot.style.opacity = '0.99';
-                setTimeout(() => {
-                    progressDot.style.opacity = '1';
-                }, 10);
-
-                // Update dot color based on progress
-                updateDotColor(progress);
-            } else {
-                console.warn('Invalid coordinates calculated:', {x, y, point});
-            }
-        } else {
-            // Position at start when progress is 0
-            progressDot.setAttribute('cx', 0);
-            progressDot.setAttribute('cy', 20);
+        // Update dot color based on progress
+        if (progressDotHtml) {
+            updateDotColor(progress, progressDotHtml);
         }
     } catch (error) {
         console.error('Error updating progress:', error);
         // Fallback to start position
-        progressDot.setAttribute('cx', 0);
-        progressDot.setAttribute('cy', 20);
+        if (progressDotWrapper) {
+            progressDotWrapper.style.left = '0%';
+        }
     }
 }
 
@@ -2080,22 +2054,13 @@ function updateProgressGradient(progress) {
     }
 }
 
-function updateDotColor(progress) {
-    // Update dot with solid color based on progress
-    const progressDot = document.querySelector('.progress-dot');
+function updateDotColor(progress, dotElement) {
+    // Update HTML dot with solid color based on progress
+    const progressDot = dotElement || document.querySelector('.progress-dot-html');
     if (!progressDot) return;
 
     const dotColor = interpolateColor('#21235F', '#22C55E', progress);
-    progressDot.setAttribute('fill', dotColor);
-
-    // Ensure stroke is visible for better definition
-    progressDot.setAttribute('stroke', '#ffffff');
-    progressDot.setAttribute('stroke-width', '2');
-    progressDot.setAttribute('vector-effect', 'non-scaling-stroke');
-    progressDot.setAttribute('shape-rendering', 'geometricPrecision');
-
-    // Force re-render for Safari compatibility
-    progressDot.style.fill = dotColor;
+    progressDot.style.background = dotColor;
 }
 
 // Initialize progress on page load
@@ -2108,20 +2073,10 @@ document.addEventListener('DOMContentLoaded', function() {
         const validPercentage = Math.max(0, Math.min(100, progressPercentage || 0));
         console.log('Initializing progress with:', validPercentage + '%');
 
-        // Ensure progress dot is visible before animation
-        const progressDot = document.querySelector('.progress-dot');
-        if (progressDot) {
-            // Force initial attributes for cross-browser compatibility
-            progressDot.setAttribute('r', '8');
-            progressDot.setAttribute('cx', '0');
-            progressDot.setAttribute('cy', '60');
-            progressDot.setAttribute('fill', '#21235F');
-            progressDot.setAttribute('stroke', '#ffffff');
-            progressDot.setAttribute('stroke-width', '2');
-            progressDot.setAttribute('vector-effect', 'non-scaling-stroke');
-            progressDot.setAttribute('shape-rendering', 'geometricPrecision');
-            progressDot.style.opacity = '1';
-            progressDot.style.visibility = 'visible';
+        // Ensure progress dot wrapper is visible before animation
+        const progressDotWrapper = document.querySelector('#progress-dot-wrapper');
+        if (progressDotWrapper) {
+            progressDotWrapper.style.left = '0%';
         }
 
         updateSinusoidalProgress(validPercentage);
