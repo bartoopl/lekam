@@ -100,16 +100,16 @@
 
     .progress-bar-container {
         position: relative;
-        height: 120px;
+        height: 40px;
         width: 100%;
-        overflow: hidden;
+        overflow: visible;
         margin: 20px 0;
     }
 
     .sinusoidal-progress {
         width: 100%;
-        height: 120px;
-        overflow: hidden;
+        height: 40px;
+        overflow: visible;
     }
 
     .progress-path-bg {
@@ -757,7 +757,7 @@
             <div class="progress-percentage">{{ $progressPercentage }}%</div>
         </div>
         <div class="progress-bar-container">
-            <svg class="sinusoidal-progress" viewBox="0 0 800 120" preserveAspectRatio="none">
+            <svg class="sinusoidal-progress" viewBox="0 0 800 40" preserveAspectRatio="none">
                 <!-- Gradient definitions -->
                 <defs>
                     <linearGradient id="progressGradient" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -770,56 +770,24 @@
                         <stop offset="100%" stop-color="#21235F" stop-opacity="1"/>
                     </radialGradient>
                 </defs>
-                
-                <!-- Background path -->
-                <path id="progress-path-bg" class="progress-path-bg" 
-                      d="M 0 60 
-                         Q 25 45, 50 40
-                         Q 75 35, 100 45
-                         Q 125 55, 150 70
-                         Q 175 85, 200 90
-                         Q 225 95, 250 85
-                         Q 275 75, 300 65
-                         Q 325 55, 350 30
-                         Q 375 5, 400 15
-                         Q 425 25, 450 50
-                         Q 475 75, 500 85
-                         Q 525 95, 550 75
-                         Q 575 55, 600 30
-                         Q 625 5, 650 25
-                         Q 675 45, 700 70
-                         Q 725 95, 750 85
-                         Q 775 75, 800 60" />
-                
-                <!-- Progress path -->
-                <path id="progress-path" class="progress-path" 
+
+                <!-- Background path (flat horizontal line) -->
+                <path id="progress-path-bg" class="progress-path-bg"
+                      d="M 0 20 L 800 20" />
+
+                <!-- Progress path (flat horizontal line) -->
+                <path id="progress-path" class="progress-path"
                       stroke="url(#progressGradient)"
-                      d="M 0 60 
-                         Q 25 45, 50 40
-                         Q 75 35, 100 45
-                         Q 125 55, 150 70
-                         Q 175 85, 200 90
-                         Q 225 95, 250 85
-                         Q 275 75, 300 65
-                         Q 325 55, 350 30
-                         Q 375 5, 400 15
-                         Q 425 25, 450 50
-                         Q 475 75, 500 85
-                         Q 525 95, 550 75
-                         Q 575 55, 600 30
-                         Q 625 5, 650 25
-                         Q 675 45, 700 70
-                         Q 725 95, 750 85
-                         Q 775 75, 800 60" />
-                
+                      d="M 0 20 L 800 20" />
+
                 <!-- Progress dot as circle for perfect round shape -->
                 <circle class="progress-dot"
                         cx="0"
-                        cy="60"
-                        r="8"
+                        cy="20"
+                        r="10"
                         fill="#21235F"
                         stroke="#ffffff"
-                        stroke-width="2"
+                        stroke-width="3"
                         vector-effect="non-scaling-stroke"
                         shape-rendering="geometricPrecision"
                         style="opacity: 1; visibility: visible;" />
@@ -2022,11 +1990,11 @@ function updateSinusoidalProgress(percentage) {
             const svgRect = progressPath.closest('svg').getBoundingClientRect();
             const viewBox = progressPath.closest('svg').getAttribute('viewBox').split(' ');
             const maxX = parseFloat(viewBox[2]) || 800;
-            const maxY = parseFloat(viewBox[3]) || 120;
-            
+            const maxY = parseFloat(viewBox[3]) || 40;
+
             // Clamp coordinates within valid bounds
             const x = Math.max(0, Math.min(maxX, point.x || 0));
-            const y = Math.max(0, Math.min(maxY, point.y || 60));
+            const y = Math.max(0, Math.min(maxY, point.y || 20));
             
             // Only update if coordinates are valid numbers
             if (!isNaN(x) && !isNaN(y) && isFinite(x) && isFinite(y)) {
@@ -2034,7 +2002,7 @@ function updateSinusoidalProgress(percentage) {
                 progressDot.setAttribute('cy', y);
 
                 // Ensure the circle radius is explicitly set for Chrome compatibility
-                if (!progressDot.getAttribute('r')) progressDot.setAttribute('r', '8');
+                if (!progressDot.getAttribute('r')) progressDot.setAttribute('r', '10');
                 progressDot.setAttribute('vector-effect', 'non-scaling-stroke');
                 progressDot.setAttribute('shape-rendering', 'geometricPrecision');
 
@@ -2052,13 +2020,13 @@ function updateSinusoidalProgress(percentage) {
         } else {
             // Position at start when progress is 0
             progressDot.setAttribute('cx', 0);
-            progressDot.setAttribute('cy', 60);
+            progressDot.setAttribute('cy', 20);
         }
     } catch (error) {
         console.error('Error updating progress:', error);
         // Fallback to start position
         progressDot.setAttribute('cx', 0);
-        progressDot.setAttribute('cy', 60);
+        progressDot.setAttribute('cy', 20);
     }
 }
 
