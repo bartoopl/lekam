@@ -513,13 +513,12 @@ ob_start();
                     </div>
                     
                     <div class="form-group">
-                        <label for="pwz_number" class="form-label">Numer PWZ</label>
-                        <input 
-                            id="pwz_number" 
-                            type="text" 
-                            name="pwz_number" 
-                            value="{{ old('pwz_number') }}" 
-                            required
+                        <label for="pwz_number" class="form-label">Numer PWZ <span id="pwz_required_indicator" style="color: #DC2626;">*</span></label>
+                        <input
+                            id="pwz_number"
+                            type="text"
+                            name="pwz_number"
+                            value="{{ old('pwz_number') }}"
                             class="form-input"
                             placeholder="Wprowadź numer PWZ"
                         >
@@ -713,26 +712,47 @@ ob_start();
         document.addEventListener('DOMContentLoaded', function() {
             const selectAllCheckbox = document.getElementById('select_all_consents');
             const consentCheckboxes = document.querySelectorAll('input[name^="consent_"]');
-            
+
             // Handle select all checkbox
             selectAllCheckbox.addEventListener('change', function() {
                 consentCheckboxes.forEach(function(checkbox) {
                     checkbox.checked = selectAllCheckbox.checked;
                 });
             });
-            
+
             // Handle individual checkboxes
             consentCheckboxes.forEach(function(checkbox) {
                 checkbox.addEventListener('change', function() {
                     // Check if all individual checkboxes are checked
                     const allChecked = Array.from(consentCheckboxes).every(cb => cb.checked);
                     selectAllCheckbox.checked = allChecked;
-                    
+
                     // Handle indeterminate state
                     const someChecked = Array.from(consentCheckboxes).some(cb => cb.checked);
                     selectAllCheckbox.indeterminate = someChecked && !allChecked;
                 });
             });
+
+            // Handle PWZ field requirement based on user type
+            const userTypeSelect = document.getElementById('user_type');
+            const pwzNumberInput = document.getElementById('pwz_number');
+            const pwzRequiredIndicator = document.getElementById('pwz_required_indicator');
+
+            function updatePwzRequirement() {
+                if (userTypeSelect.value === 'farmaceuta') {
+                    pwzNumberInput.setAttribute('required', 'required');
+                    pwzRequiredIndicator.style.display = 'inline';
+                } else {
+                    pwzNumberInput.removeAttribute('required');
+                    pwzRequiredIndicator.style.display = 'none';
+                }
+            }
+
+            // Set initial state
+            updatePwzRequirement();
+
+            // Update on change
+            userTypeSelect.addEventListener('change', updatePwzRequirement);
         });
         
         // Hide PHP errors immediately when page loads
