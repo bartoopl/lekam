@@ -36,7 +36,7 @@ class RegisteredUserController extends Controller
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'phone' => ['required', 'string', 'max:20'],
             'user_type' => ['required', 'string', 'in:farmaceuta,technik_farmacji'],
-            'pwz_number' => ['required', 'string', 'max:20'],
+            'pwz_number' => ['required_if:user_type,farmaceuta', 'nullable', 'string', 'max:20'],
             'pharmacy_address' => ['required', 'string', 'max:500'],
             'pharmacy_postal_code' => ['required', 'string', 'max:10'],
             'pharmacy_city' => ['required', 'string', 'max:255'],
