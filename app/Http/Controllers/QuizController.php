@@ -34,12 +34,6 @@ class QuizController extends Controller
                 ->with('error', 'Test nie jest dostępny.');
         }
 
-        // Check if user has already passed
-        if ($quiz->hasUserPassed($user)) {
-            return redirect()->route('courses.show', $course)
-                ->with('info', 'Już ukończyłeś ten test.');
-        }
-
         $bestAttempt = $quiz->getUserBestAttempt($user);
 
         return view('quizzes.show', compact('course', 'quiz', 'bestAttempt'));
@@ -78,20 +72,6 @@ class QuizController extends Controller
             return response()->view('courses.quiz-content', [
                 'error' => 'Test nie jest dostępny.',
                 'course' => $course
-            ]);
-        }
-
-        // Check if user has already passed
-        $hasPassed = $quiz->hasUserPassed($user);
-        \Log::info('Quiz pass check', ['quiz_id' => $quiz->id, 'user_id' => $user->id, 'has_passed' => $hasPassed]);
-        
-        if ($hasPassed) {
-            \Log::info('User already passed, showing info');
-            return response()->view('courses.quiz-content', [
-                'info' => 'Już ukończyłeś ten test.',
-                'course' => $course,
-                'quiz' => $quiz,
-                'bestAttempt' => $quiz->getUserBestAttempt($user)
             ]);
         }
 

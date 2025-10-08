@@ -37,7 +37,13 @@
                     <div class="space-y-3">
                         <div class="flex justify-between">
                             <span class="text-gray-600">Liczba pytań:</span>
-                            <span class="font-medium">{{ $quiz->questions->count() }}</span>
+                            <span class="font-medium">
+                                @if($quiz->questions_to_draw)
+                                    {{ $quiz->questions_to_draw }} (losowanych z {{ $quiz->questions->count() }})
+                                @else
+                                    {{ $quiz->questions->count() }}
+                                @endif
+                            </span>
                         </div>
                         <div class="flex justify-between">
                             <span class="text-gray-600">Czas limit:</span>
@@ -51,7 +57,13 @@
                         </div>
                         <div class="flex justify-between">
                             <span class="text-gray-600">Próg zaliczenia:</span>
-                            <span class="font-medium">{{ $quiz->passing_score }}%</span>
+                            <span class="font-medium">
+                                @if($quiz->min_correct_answers)
+                                    {{ $quiz->min_correct_answers }} poprawnych odpowiedzi
+                                @else
+                                    {{ $quiz->passing_score }}%
+                                @endif
+                            </span>
                         </div>
                         <div class="flex justify-between">
                             <span class="text-gray-600">Maksymalny wynik:</span>
@@ -133,13 +145,24 @@
                         <div class="mb-4">
                             <p class="text-green-600 font-medium">Gratulacje! Test został już zaliczony.</p>
                             <p class="text-gray-600">Możesz ponownie przystąpić do testu, aby poprawić swój wynik.</p>
+                            @if($quiz->questions_to_draw)
+                                <p class="text-blue-600 text-sm mt-2">💡 Za każdym razem otrzymasz nowy zestaw losowych pytań!</p>
+                            @endif
+                        </div>
+                    @elseif(isset($bestAttempt) && $bestAttempt && !$bestAttempt->passed)
+                        <div class="mb-4">
+                            <p class="text-orange-600 font-medium">Nie zaliczono testu przy ostatniej próbie.</p>
+                            <p class="text-gray-600">Spróbuj ponownie!</p>
+                            @if($quiz->questions_to_draw)
+                                <p class="text-blue-600 text-sm mt-2">💡 Za każdym razem otrzymasz nowy zestaw losowych pytań!</p>
+                            @endif
                         </div>
                     @endif
-                    
-                    <button id="startQuizBtn" 
+
+                    <button id="startQuizBtn"
                             class="btn btn-primary"
                             onclick="startQuiz();">
-                        Rozpocznij test
+                        {{ (isset($bestAttempt) && $bestAttempt) ? 'Spróbuj ponownie' : 'Rozpocznij test' }}
                     </button>
                 </div>
             @endif
