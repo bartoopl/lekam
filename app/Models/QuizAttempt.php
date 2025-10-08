@@ -13,6 +13,7 @@ class QuizAttempt extends Model
         'user_id',
         'quiz_id',
         'score',
+        'correct_answers_count',
         'max_score',
         'percentage',
         'passed',
@@ -20,6 +21,7 @@ class QuizAttempt extends Model
         'completed_at',
         'answers',
         'earned_points',
+        'selected_question_ids',
     ];
 
     protected $casts = [
@@ -27,6 +29,7 @@ class QuizAttempt extends Model
         'started_at' => 'datetime',
         'completed_at' => 'datetime',
         'answers' => 'array',
+        'selected_question_ids' => 'array',
     ];
 
     /**
@@ -46,20 +49,53 @@ class QuizAttempt extends Model
     }
 
     /**
+     * Get the selected questions for this attempt
+     */
+    public function getSelectedQuestions()
+    {
+        if (empty($this->selected_question_ids)) {
+            return $this->quiz->questions;
+        }
+
+        return QuizQuestion::whereIn('id', $this->selected_question_ids)
+            ->orderBy('order')
+            ->get();
+    }
+
+    /**
      * Calculate score from answers
      */
     public function calculateScore(): void
     {
         $score = 0;
+        $correctAnswers = 0;
         $answers = $this->answers ?? [];
-        
-        foreach ($this->quiz->questions as $question) {
+
+        // Use selected questions if available, otherwise use all questions
+        $questions = $this->getSelectedQuestions();
+
+        foreach ($questions as $question) {
             $userAnswer = $answers[$question->id] ?? null;
-            $score += $question->getPointsForAnswer($userAnswer);
+            $points = $question->getPointsForAnswer($userAnswer);
+            $score += $points;
+
+            // Count correct answers
+            if ($points > 0) {
+                $correctAnswers++;
+            }
         }
-        
+
         $this->score = $score;
-        $this->max_score = $this->quiz->getMaxScore();
+
+        // Calculate max score based on selected questions
+        if (!empty($this->selected_question_ids)) {
+            $this->max_score = $this->quiz->getMaxScoreForQuestions($this->selected_question_ids);
+        } else {
+            $this->max_score = $this->quiz->getMaxScore();
+        }
+
+        // Store correct answers count for potential use
+        $this->correct_answers_count = $correctAnswers;
     }
 
     /**
@@ -79,6 +115,12 @@ class QuizAttempt extends Model
      */
     public function checkIfPassed(): bool
     {
+        // If min_correct_answers is set, use that instead of percentage
+        if ($this->quiz->min_correct_answers !== null) {
+            return ($this->correct_answers_count ?? 0) >= $this->quiz->min_correct_answers;
+        }
+
+        // Otherwise use percentage-based passing score
         return $this->percentage >= $this->quiz->passing_score;
     }
 

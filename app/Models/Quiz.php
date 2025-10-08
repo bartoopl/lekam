@@ -15,6 +15,8 @@ class Quiz extends Model
         'description',
         'time_limit_minutes',
         'passing_score',
+        'questions_to_draw',
+        'min_correct_answers',
         'is_active',
     ];
 
@@ -77,5 +79,30 @@ class Quiz extends Model
             ->where('user_id', $user->id)
             ->orderBy('percentage', 'desc')
             ->first();
+    }
+
+    /**
+     * Get random questions for a quiz attempt
+     */
+    public function getRandomQuestions(): \Illuminate\Database\Eloquent\Collection
+    {
+        $totalQuestions = $this->questions()->count();
+        $questionsToTake = $this->questions_to_draw ?? $totalQuestions;
+
+        // If questions_to_draw is null or greater than available questions, use all
+        if ($questionsToTake >= $totalQuestions) {
+            return $this->questions;
+        }
+
+        // Randomly select questions
+        return $this->questions()->inRandomOrder()->limit($questionsToTake)->get();
+    }
+
+    /**
+     * Get max score for specific questions
+     */
+    public function getMaxScoreForQuestions(array $questionIds): int
+    {
+        return $this->questions()->whereIn('id', $questionIds)->sum('points');
     }
 }

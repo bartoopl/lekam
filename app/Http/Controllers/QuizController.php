@@ -124,12 +124,18 @@ class QuizController extends Controller
 
         \Log::info('Creating quiz attempt', ['quiz_id' => $quiz->id, 'user_id' => $user->id, 'max_score' => $quiz->getMaxScore()]);
 
+        // Get random questions for this attempt
+        $selectedQuestions = $quiz->getRandomQuestions();
+        $selectedQuestionIds = $selectedQuestions->pluck('id')->toArray();
+        $maxScore = $quiz->getMaxScoreForQuestions($selectedQuestionIds);
+
         // Create new attempt
         $attempt = QuizAttempt::create([
             'user_id' => $user->id,
             'quiz_id' => $quiz->id,
             'started_at' => now(),
-            'max_score' => $quiz->getMaxScore(),
+            'max_score' => $maxScore,
+            'selected_question_ids' => $selectedQuestionIds,
         ]);
 
         $redirectUrl = route('quizzes.take', ['course' => $course, 'attempt' => $attempt]);
@@ -162,8 +168,8 @@ class QuizController extends Controller
         }
 
         $quiz = $attempt->quiz;
-        $questions = $quiz->questions;
-        
+        $questions = $attempt->getSelectedQuestions();
+
         \Log::info('Showing quiz take view', ['quiz_id' => $quiz->id, 'questions_count' => $questions->count()]);
 
         return view('quizzes.take', compact('course', 'quiz', 'attempt', 'questions'));
@@ -194,8 +200,8 @@ class QuizController extends Controller
         }
 
         $quiz = $attempt->quiz;
-        $questions = $quiz->questions;
-        
+        $questions = $attempt->getSelectedQuestions();
+
         \Log::info('Loading quiz questions via AJAX', ['quiz_id' => $quiz->id, 'questions_count' => $questions->count()]);
 
         return view('courses.quiz-questions', compact('course', 'quiz', 'attempt', 'questions'));
@@ -228,9 +234,9 @@ class QuizController extends Controller
         $attempt->calculateScore();
         $percentage = $attempt->calculatePercentage();
         $attempt->percentage = $percentage;
-        $attempt->passed = $percentage >= $attempt->quiz->passing_score;
+        $attempt->passed = $attempt->checkIfPassed();
         $attempt->applyScoreMultiplier(); // This now calculates earned points based on course
-        
+
         $attempt->save();
 
         // Check if request is AJAX

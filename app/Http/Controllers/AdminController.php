@@ -314,6 +314,8 @@ class AdminController extends Controller
             'description' => 'nullable|string',
             'time_limit_minutes' => 'required|integer|min:1|max:480',
             'passing_score' => 'required|integer|min:1|max:100',
+            'questions_to_draw' => 'nullable|integer|min:1',
+            'min_correct_answers' => 'nullable|integer|min:1',
             'is_active' => 'nullable|boolean',
         ]);
 
@@ -352,6 +354,8 @@ class AdminController extends Controller
             'description' => 'nullable|string',
             'time_limit_minutes' => 'required|integer|min:1|max:480',
             'passing_score' => 'required|integer|min:1|max:100',
+            'questions_to_draw' => 'nullable|integer|min:1',
+            'min_correct_answers' => 'nullable|integer|min:1',
             'is_active' => 'nullable|boolean',
         ]);
 

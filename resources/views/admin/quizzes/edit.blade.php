@@ -226,7 +226,7 @@
                     <!-- Time Limit and Passing Score -->
                     <div class="form-section">
                         <h3>Ustawienia testu</h3>
-                        
+
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
                                 <label for="time_limit_minutes" class="block form-label">Limit czasu (minuty)</label>
@@ -244,6 +244,28 @@
                                     class="mt-1 block w-full form-input">
                                 <p class="form-help-text">Minimalny procent poprawnych odpowiedzi do zaliczenia</p>
                                 @error('passing_score')
+                                    <p class="form-error">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                            <div>
+                                <label for="questions_to_draw" class="block form-label">Liczba losowanych pytań (opcjonalnie)</label>
+                                <input type="number" name="questions_to_draw" id="questions_to_draw" value="{{ old('questions_to_draw', $quiz->questions_to_draw) }}" min="1"
+                                    class="mt-1 block w-full form-input" placeholder="Zostaw puste dla wszystkich pytań">
+                                <p class="form-help-text">Ile pytań ma być losowanych dla każdego użytkownika? (puste = wszystkie)</p>
+                                @error('questions_to_draw')
+                                    <p class="form-error">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div>
+                                <label for="min_correct_answers" class="block form-label">Min. poprawnych odpowiedzi (opcjonalnie)</label>
+                                <input type="number" name="min_correct_answers" id="min_correct_answers" value="{{ old('min_correct_answers', $quiz->min_correct_answers) }}" min="1"
+                                    class="mt-1 block w-full form-input" placeholder="Zostaw puste dla procentu">
+                                <p class="form-help-text">Minimalna liczba poprawnych odpowiedzi do zdania (puste = użyj progu %)</p>
+                                @error('min_correct_answers')
                                     <p class="form-error">{{ $message }}</p>
                                 @enderror
                             </div>
