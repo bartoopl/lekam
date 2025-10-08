@@ -322,6 +322,17 @@ class AdminController extends Controller
         $validated['course_id'] = $course->id;
         $validated['is_active'] = $request->has('is_active');
 
+        // Convert empty strings to null for nullable fields
+        if (empty($validated['description'])) {
+            $validated['description'] = null;
+        }
+        if (empty($validated['questions_to_draw'])) {
+            $validated['questions_to_draw'] = null;
+        }
+        if (empty($validated['min_correct_answers'])) {
+            $validated['min_correct_answers'] = null;
+        }
+
         $quiz = Quiz::create($validated);
 
         return redirect()->route('admin.quizzes.edit', [$course, $quiz])
@@ -360,6 +371,17 @@ class AdminController extends Controller
         ]);
 
         $validated['is_active'] = $request->has('is_active');
+
+        // Convert empty strings to null for nullable fields
+        if (empty($validated['description'])) {
+            $validated['description'] = null;
+        }
+        if (empty($validated['questions_to_draw'])) {
+            $validated['questions_to_draw'] = null;
+        }
+        if (empty($validated['min_correct_answers'])) {
+            $validated['min_correct_answers'] = null;
+        }
 
         $quiz->update($validated);
 
