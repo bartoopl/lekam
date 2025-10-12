@@ -306,6 +306,9 @@
                 <a href="{{ route('admin.content.index') }}" class="action-button purple">
                     ✏️ Zarządzaj treściami
                 </a>
+                <a href="{{ route('admin.certificate-templates.index') }}" class="action-button green">
+                    🎓 Szablony certyfikatów
+                </a>
             </div>
         </div>
 
