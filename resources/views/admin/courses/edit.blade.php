@@ -69,6 +69,17 @@
                                 @enderror
                             </div>
 
+                            <!-- Order -->
+                            <div>
+                                <label for="order" class="block text-sm font-medium text-gray-700">Kolejność wyświetlania</label>
+                                <input type="number" name="order" id="order" value="{{ old('order', $course->order ?? 0) }}" min="0"
+                                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                                <p class="mt-1 text-sm text-gray-500">Im mniejsza liczba, tym wyżej kurs będzie wyświetlany na liście (0 = najwyżej)</p>
+                                @error('order')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+
                             <!-- Points for different user types -->
                             <div class="border border-gray-200 rounded-lg p-4">
                                 <h3 class="text-lg font-medium text-gray-900 mb-4">Punkty dla różnych grup użytkowników</h3>

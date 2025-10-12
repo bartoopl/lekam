@@ -168,6 +168,17 @@
                         @enderror
                     </div>
 
+                    <!-- Order -->
+                    <div>
+                        <label for="order" class="block form-label">Kolejność wyświetlania</label>
+                        <input type="number" name="order" id="order" value="{{ old('order', 0) }}" min="0"
+                            class="mt-1 block w-full form-input">
+                        <p class="mt-1 text-sm text-gray-500">Im mniejsza liczba, tym wyżej kurs będzie wyświetlany na liście (0 = najwyżej)</p>
+                        @error('order')
+                            <p class="form-error">{{ $message }}</p>
+                        @enderror
+                    </div>
+
                     <!-- Points for different user types -->
                     <div class="form-section">
                         <h3>Punkty dla różnych grup użytkowników</h3>

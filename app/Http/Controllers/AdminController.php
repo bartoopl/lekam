@@ -118,7 +118,11 @@ class AdminController extends Controller
      */
     public function userEdit(User $user)
     {
-        return view('admin.users.edit', compact('user'));
+        $representatives = \App\Models\Representative::where('is_active', true)
+            ->orderBy('name')
+            ->get();
+
+        return view('admin.users.edit', compact('user', 'representatives'));
     }
 
     /**
@@ -131,6 +135,7 @@ class AdminController extends Controller
             'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
             'user_type' => 'required|in:farmaceuta,technik_farmacji',
             'is_admin' => 'boolean',
+            'representative_id' => 'nullable|exists:representatives,id',
         ]);
 
         // Prevent the current admin from removing their own admin privileges
@@ -143,6 +148,7 @@ class AdminController extends Controller
             'email' => $request->email,
             'user_type' => $request->user_type,
             'is_admin' => $request->has('is_admin'),
+            'representative_id' => $request->representative_id,
         ]);
 
         return redirect()->route('admin.users')->with('success', 'Użytkownik został zaktualizowany pomyślnie.');
@@ -188,6 +194,7 @@ class AdminController extends Controller
             'description' => 'required|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'duration_minutes' => 'required|integer|min:1',
+            'order' => 'nullable|integer|min:0',
             'pharmacist_points' => 'required|integer|min:0',
             'technician_points' => 'required|integer|min:0',
             'is_active' => 'nullable|boolean',
@@ -233,6 +240,7 @@ class AdminController extends Controller
             'description' => 'required|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'duration_minutes' => 'required|integer|min:1',
+            'order' => 'nullable|integer|min:0',
             'pharmacist_points' => 'required|integer|min:0',
             'technician_points' => 'required|integer|min:0',
             'is_active' => 'nullable|boolean',

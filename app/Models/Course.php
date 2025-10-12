@@ -14,6 +14,7 @@ class Course extends Model
         'description',
         'image',
         'duration_minutes',
+        'order',
         'is_active',
         'requires_sequential_lessons',
         'pharmacist_points',
@@ -30,6 +31,7 @@ class Course extends Model
         'pharmacist_points' => 'integer',
         'technician_points' => 'integer',
         'has_instruction' => 'boolean',
+        'order' => 'integer',
     ];
 
     /**

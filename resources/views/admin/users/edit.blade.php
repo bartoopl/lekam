@@ -313,6 +313,26 @@
                 @enderror
             </div>
 
+            <!-- Representative -->
+            <div class="form-group">
+                <label for="representative_id" class="form-label">Przedstawiciel</label>
+                <select id="representative_id" name="representative_id" class="form-select">
+                    <option value="">-- Brak przypisania --</option>
+                    @foreach($representatives as $representative)
+                        <option value="{{ $representative->id }}"
+                                {{ old('representative_id', $user->representative_id) == $representative->id ? 'selected' : '' }}>
+                            {{ $representative->name }} ({{ $representative->email }})
+                        </option>
+                    @endforeach
+                </select>
+                <div class="checkbox-description" style="margin-top: 0.5rem;">
+                    Przypisz użytkownika do przedstawiciela handlowego
+                </div>
+                @error('representative_id')
+                    <div class="error-message">{{ $message }}</div>
+                @enderror
+            </div>
+
             <!-- Admin Privileges -->
             <div class="form-group">
                 <label class="form-label">Uprawnienia administratora</label>
