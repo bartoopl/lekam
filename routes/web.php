@@ -48,10 +48,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     
     // Route for getting lesson navigation (AJAX)
     Route::get('/courses/{course}/lesson/{lesson}/navigation', [CourseController::class, 'getLessonNavigation'])->name('courses.lesson-navigation');
-    
-    // Test route for resetting course progress (only in debug/local mode)
-    Route::post('/courses/{course}/reset-progress', [CourseController::class, 'resetProgress'])->name('courses.reset-progress');
-    
+
     // Course enrollment route
     Route::post('/courses/{course}/enroll', [CourseController::class, 'enroll'])->name('courses.enroll');
 });

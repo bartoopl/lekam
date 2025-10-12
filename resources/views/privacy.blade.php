@@ -160,7 +160,13 @@ ob_start();
                     <strong>Kontakt w sprawach danych osobowych:</strong> office@neoart.pl
                 </p>
 
-                <h2>2. Zakres i cele przetwarzania</h2>
+                <h2>2. Niezależni administratorzy – marketing</h2>
+                <p>
+                    <strong>Przedsiębiorstwo Farmaceutyczne LEK-AM Sp. z o.o.</strong> (ul. Ostrzykowizna 14A, 05-170 Zakroczym) – niezależny administrator dla celów marketingowych na podstawie odrębnej, dobrowolnej zgody (osobny checkbox).<br>
+                    <strong>Kontakt w sprawach danych osobowych:</strong> iod@lekam.pl
+                </p>
+
+                <h2>3. Zakres i cele przetwarzania</h2>
                 <p>
                     Przetwarzamy Twoje dane w związku z funkcjonowaniem Platformy i świadczeniem usług edukacyjnych (szkolenia, webinary, testy, certyfikaty).
                 </p>
@@ -178,14 +184,9 @@ ob_start();
                     Podanie danych jest dobrowolne, jednak niepodanie danych niezbędnych do rejestracji/logowania może uniemożliwić korzystanie z Platformy lub skutkować ograniczeniami w dostępie do treści (np. brak możliwości udziału w webinarze, przejścia testu, pobrania certyfikatu).
                 </p>
 
-                <h2>3. Zakres danych</h2>
+                <h2>4. Zakres danych</h2>
                 <p>
                     W szczególności: imię, nazwisko, e-mail, hasło (zahashowane), informacje o aktywności edukacyjnej (postępy, zaliczenia testów, certyfikaty), miejsce pracy / nr PWZ*, logi systemowe (adres IP, identyfikatory zdarzeń).
-                </p>
-
-                <h2>4. Niezależni administratorzy – marketing</h2>
-                <p>
-                    <strong>LEK-AM Sp. z o.o.</strong> (ul. Ostrzykowizna 14A, 05-170 Zakroczym) – niezależny administrator dla celów marketingowych na podstawie odrębnej, dobrowolnej zgody (osobny checkbox).
                 </p>
 
                 <h2>5. Odbiorcy danych (procesorzy/podmioty przetwarzające)</h2>
@@ -205,7 +206,10 @@ ob_start();
                 <p>
                     Masz prawo do: dostępu, sprostowania, usunięcia, ograniczenia, przeniesienia, sprzeciwu (gdy podstawą jest art. 6 ust. 1 lit. f). Jeśli podstawą jest zgoda, możesz ją wycofać w dowolnym momencie – bez wpływu na zgodność z prawem przetwarzania sprzed wycofania.
                 </p>
-                <p><strong>Skontaktuj się:</strong> office@neoart.pl</p>
+                <p><strong>Skontaktuj się:</strong><br>
+                    NeoArt&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;office@neoart.pl<br>
+                    LEK-AM&nbsp;&nbsp;&nbsp;&nbsp;iod@lekam.pl
+                </p>
 
                 <h2>8. Przekazywanie poza EOG</h2>
                 <p>
@@ -234,7 +238,7 @@ ob_start();
 
                 <div style="margin-top: 2rem; padding: 1rem; background: #f3f4f6; border-radius: 8px;">
                     <p style="font-size: 0.9rem; color: #6b7280; margin: 0;">
-                        <strong>Data ostatniej aktualizacji:</strong> {{ date('d.m.Y') }}<br>
+                        <strong>Data ostatniej aktualizacji:</strong> 07.10.2025<br>
                         <strong>Wersja polityki prywatności:</strong> 1.0
                     </p>
                 </div>

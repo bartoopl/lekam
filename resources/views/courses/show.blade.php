@@ -145,6 +145,7 @@
         fill: none;
         stroke-width: 6;
         stroke-linecap: round;
+        stroke-dashoffset: 0;
         transition: stroke-dasharray 1s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
@@ -811,19 +812,6 @@
         </div>
         <div class="mt-4 text-sm text-gray-600">
             {{ $completedLessons }} z {{ $totalLessons }} lekcji ukończonych
-        </div>
-        
-        <!-- Test Reset Button -->
-        <div class="mt-4 p-3 bg-yellow-100 border border-yellow-300 rounded-md">
-            <div class="flex items-center justify-between">
-                <div class="text-yellow-800 text-sm">
-                    <strong>🧪 Funkcja testowa:</strong> Przycisk do resetowania postępu
-                </div>
-                <button onclick="resetCourseProgress()" 
-                        class="btn btn-danger">
-                    Resetuj postęp kursu
-                </button>
-            </div>
         </div>
     </div>
 
@@ -1509,32 +1497,6 @@ function findNextAccessibleLesson(currentLesson) {
     return null;
 }
 
-function resetCourseProgress() {
-    if (confirm('Czy na pewno chcesz usunąć wszystkie postępy w tym kursie? Ta operacja jest nieodwracalna.')) {
-        fetch(`/courses/{{ $course->id }}/reset-progress`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                alert('Postępy w kursie zostały usunięte.');
-                // Reload the page to reflect the changes
-                window.location.reload();
-            } else {
-                alert('Wystąpił błąd podczas resetowania postępów: ' + (data.message || data.error));
-            }
-        })
-        .catch(error => {
-            console.error('Error resetting progress:', error);
-            alert('Wystąpił błąd podczas resetowania postępów: ' + error.message);
-        });
-    }
-}
-
 // Setup material download handlers
 function setupMaterialDownloadHandlers(lessonId) {
     console.log('setupMaterialDownloadHandlers called for lesson:', lessonId);
@@ -1993,8 +1955,9 @@ function updateSinusoidalProgress(percentage) {
         const progress = Math.max(0, Math.min(100, percentage)) / 100;
         const progressLength = Math.max(0, Math.min(pathLength, pathLength * progress));
 
-        // Set stroke-dasharray to show progress
+        // Set stroke-dasharray and stroke-dashoffset to show progress from left to right
         progressPath.style.strokeDasharray = `${progressLength} ${pathLength}`;
+        progressPath.style.strokeDashoffset = '0';
 
         // Update gradient color based on progress
         updateProgressGradient(progress);

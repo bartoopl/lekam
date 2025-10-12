@@ -457,44 +457,6 @@ class CourseController extends Controller
     }
 
     /**
-     * Reset course progress for testing purposes
-     */
-    public function resetProgress(Request $request, Course $course)
-    {
-        $user = Auth::user();
-        
-        if (!$user) {
-            return response()->json(['error' => 'Unauthorized'], 401);
-        }
-
-        // Reset progress is now available for testing purposes on all environments
-
-        try {
-            // Delete all user progress for this course
-            UserProgress::where('user_id', $user->id)
-                ->where('course_id', $course->id)
-                ->delete();
-
-            // Also delete quiz attempts for this course
-            if ($course->quiz) {
-                $course->quiz->attempts()
-                    ->where('user_id', $user->id)
-                    ->delete();
-            }
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Postępy w kursie oraz wyniki testów zostały usunięte.'
-            ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'error' => 'Wystąpił błąd podczas resetowania postępów: ' . $e->getMessage()
-            ], 500);
-        }
-    }
-
-    /**
      * Enroll user in course
      */
     public function enroll(Request $request, Course $course)
