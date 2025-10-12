@@ -13,7 +13,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $featuredCourses = Course::with(['chapters'])->latest()->take(6)->get();
+        $featuredCourses = Course::with(['chapters'])->orderBy('order')->orderBy('id')->take(6)->get();
         $contents = Content::getPageContents('home');
         return view('welcome', compact('featuredCourses', 'contents'));
     }
@@ -32,7 +32,8 @@ class HomeController extends Controller
     public function courses()
     {
         $courses = Course::where('is_active', true)
-            ->orderBy('created_at', 'desc')
+            ->orderBy('order')
+            ->orderBy('id')
             ->paginate(12);
 
         $contents = Content::getPageContents('courses');
