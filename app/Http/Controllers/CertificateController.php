@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Certificate;
 use App\Models\Course;
 use App\Models\QuizAttempt;
+use App\Services\CertificateService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -15,12 +16,12 @@ class CertificateController extends Controller
     /**
      * Generate certificate for course completion
      */
-    public function generate(Course $course)
+    public function generate(Course $course, CertificateService $certificateService)
     {
         \Log::info('Certificate generation requested', ['course_id' => $course->id, 'user_id' => auth()->id()]);
-        
+
         $user = Auth::user();
-        
+
         if (!$user) {
             \Log::error('User not authenticated for certificate generation');
             return redirect()->route('login');
@@ -51,6 +52,15 @@ class CertificateController extends Controller
             return $this->download($existingCertificate);
         }
 
+        // Find appropriate template
+        $template = $certificateService->findTemplateFor($user, $course);
+
+        if (!$template) {
+            \Log::error('No certificate template found', ['user_type' => $user->user_type, 'course_id' => $course->id]);
+            return redirect()->route('courses.show', $course)
+                ->with('error', 'Brak dostępnego szablonu certyfikatu. Skontaktuj się z administratorem.');
+        }
+
         // Get best quiz attempt
         $quizAttempt = null;
         if ($quiz) {
@@ -58,24 +68,26 @@ class CertificateController extends Controller
             \Log::info('Found best quiz attempt', ['attempt_id' => $quizAttempt?->id, 'score' => $quizAttempt?->score]);
         }
 
-        \Log::info('Creating new certificate', ['course_id' => $course->id, 'user_id' => $user->id]);
-        
+        \Log::info('Creating new certificate', ['course_id' => $course->id, 'user_id' => $user->id, 'template_id' => $template->id]);
+
         // Create certificate
         $certificate = Certificate::create([
             'user_id' => $user->id,
             'course_id' => $course->id,
+            'certificate_template_id' => $template->id,
             'quiz_attempt_id' => $quizAttempt?->id,
-            'certificate_number' => Certificate::generateCertificateNumber(),
+            'certificate_number' => $certificateService->generateCertificateNumber($template),
             'issued_at' => now(),
             'expires_at' => now()->addYears(2), // Certyfikat ważny 2 lata
         ]);
 
         \Log::info('Certificate created, generating PDF', ['certificate_id' => $certificate->id]);
-        
+
         // Generate PDF
         try {
-            $this->generateCertificatePDF($certificate);
-            \Log::info('PDF generated successfully', ['certificate_id' => $certificate->id]);
+            $pdfPath = $certificateService->generateCertificatePDF($certificate);
+            $certificate->update(['pdf_path' => $pdfPath]);
+            \Log::info('PDF generated successfully', ['certificate_id' => $certificate->id, 'pdf_path' => $pdfPath]);
         } catch (\Exception $e) {
             \Log::error('Error generating PDF', ['certificate_id' => $certificate->id, 'error' => $e->getMessage()]);
             return redirect()->route('courses.show', $course)

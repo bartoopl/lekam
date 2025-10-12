@@ -125,7 +125,15 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->name('admin.'
     // Representatives management
     Route::resource('representatives', RepresentativeController::class);
     Route::post('/representatives/{representative}/generate-code', [RepresentativeController::class, 'generateNewCode'])->name('representatives.generate-code');
-    
+
+    // Certificate Templates management
+    Route::get('/certificate-templates', [\App\Http\Controllers\Admin\CertificateTemplateController::class, 'index'])->name('certificate-templates.index');
+    Route::get('/certificate-templates/create', [\App\Http\Controllers\Admin\CertificateTemplateController::class, 'create'])->name('certificate-templates.create');
+    Route::post('/certificate-templates', [\App\Http\Controllers\Admin\CertificateTemplateController::class, 'store'])->name('certificate-templates.store');
+    Route::get('/certificate-templates/{template}/edit', [\App\Http\Controllers\Admin\CertificateTemplateController::class, 'edit'])->name('certificate-templates.edit');
+    Route::put('/certificate-templates/{template}', [\App\Http\Controllers\Admin\CertificateTemplateController::class, 'update'])->name('certificate-templates.update');
+    Route::delete('/certificate-templates/{template}', [\App\Http\Controllers\Admin\CertificateTemplateController::class, 'destroy'])->name('certificate-templates.destroy');
+
     Route::get('/certificates', [AdminController::class, 'certificates'])->name('certificates');
     Route::get('/statistics', [AdminController::class, 'statistics'])->name('statistics');
 

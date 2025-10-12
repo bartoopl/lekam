@@ -12,6 +12,7 @@ class Certificate extends Model
     protected $fillable = [
         'user_id',
         'course_id',
+        'certificate_template_id',
         'quiz_attempt_id',
         'certificate_number',
         'pdf_path',
@@ -51,14 +52,22 @@ class Certificate extends Model
     }
 
     /**
-     * Generate certificate number
+     * Get the certificate template for this certificate
+     */
+    public function template()
+    {
+        return $this->belongsTo(CertificateTemplate::class, 'certificate_template_id');
+    }
+
+    /**
+     * Generate certificate number (deprecated - use template method)
      */
     public static function generateCertificateNumber(): string
     {
         $prefix = 'CERT';
         $year = date('Y');
         $random = strtoupper(substr(md5(uniqid()), 0, 8));
-        
+
         return "{$prefix}-{$year}-{$random}";
     }
 
