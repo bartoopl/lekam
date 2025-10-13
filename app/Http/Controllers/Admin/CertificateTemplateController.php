@@ -210,10 +210,19 @@ class CertificateTemplateController extends Controller
         $fontSize = $config['font_size'] ?? 12;
         $align = $config['align'] ?? 'left';
 
+        // Skip if coordinates are 0,0 (field not configured)
+        if ($x == 0 && $y == 0) {
+            return;
+        }
+
         $pdf->SetFont('helvetica', '', $fontSize);
+        $pdf->SetTextColor(0, 0, 0); // Ensure black text
 
         // Calculate width for centered text
         $width = $config['width'] ?? ($align === 'center' ? $pageWidth : 0);
+
+        // Convert text to ISO-8859-2 for proper Polish characters display
+        $text = iconv('UTF-8', 'ISO-8859-2//TRANSLIT', $text);
 
         if ($align === 'center') {
             $pdf->SetXY($x, $y);
