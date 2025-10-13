@@ -41,10 +41,12 @@ class RegisteredUserController extends Controller
             'pharmacy_postal_code' => ['required', 'string', 'max:10'],
             'pharmacy_city' => ['required', 'string', 'max:255'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'consent_1' => ['required', 'accepted'],
-            'consent_2' => ['nullable', 'boolean'],
-            'consent_3' => ['nullable', 'boolean'],
+            'consent_1' => ['required'],
+            'consent_2' => ['nullable'],
+            'consent_3' => ['nullable'],
             'ref' => ['nullable', 'string', 'max:255'],
+        ], [
+            'consent_1.required' => 'Musisz zaakceptować obowiązkową zgodę dotyczącą przetwarzania danych osobowych.',
         ]);
 
         // Check if the ref parameter is a representative code
