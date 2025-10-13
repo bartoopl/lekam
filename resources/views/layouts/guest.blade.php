@@ -394,7 +394,7 @@
                     <div class="footer-patronage">
                         <h3 class="footer-section-title" style="text-align: center;">Patronat Merytoryczny</h3>
                         <div style="display: flex; align-items: center; justify-content: center; margin-top: 1rem;">
-                            <img src="/images/icons/gumed.png?v=2" alt="GUMed" style="height: 120px; width: auto;">
+                            <img src="/images/icons/gumed.png?v=3" alt="GUMed" style="height: 120px; width: auto;">
                         </div>
                     </div>
                 </div>
