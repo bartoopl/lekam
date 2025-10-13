@@ -155,6 +155,25 @@ class AdminController extends Controller
     }
 
     /**
+     * Delete user
+     */
+    public function userDestroy(User $user)
+    {
+        // Prevent the current admin from deleting themselves
+        if ($user->id === auth()->id()) {
+            return redirect()->back()->with('error', 'Nie możesz usunąć własnego konta.');
+        }
+
+        // Store user name for success message
+        $userName = $user->name;
+
+        // Delete user (cascade deletes will handle related records)
+        $user->delete();
+
+        return redirect()->route('admin.users')->with('success', "Użytkownik {$userName} został usunięty pomyślnie.");
+    }
+
+    /**
      * Show courses management
      */
     public function courses()

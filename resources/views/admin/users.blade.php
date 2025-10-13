@@ -90,6 +90,19 @@
         color: white !important;
     }
 
+    .table-button.delete {
+        background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
+        color: white !important;
+        box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+    }
+
+    .table-button.delete:hover {
+        background: linear-gradient(135deg, #DC2626 0%, #B91C1C 100%);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+        color: white !important;
+    }
+
     /* Table styles */
     .admin-table {
         background: rgba(255, 255, 255, 0.95);
@@ -206,6 +219,15 @@
                                                 <a href="{{ route('admin.users.edit', $user) }}" class="table-button view">
                                                     Edytuj
                                                 </a>
+                                                @if($user->id !== auth()->id())
+                                                <form action="{{ route('admin.users.destroy', $user) }}" method="POST" style="display: inline-block;" onsubmit="return confirm('Czy na pewno chcesz usunąć użytkownika {{ $user->name }}? Ta operacja jest nieodwracalna.');">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="table-button delete">
+                                                        Usuń
+                                                    </button>
+                                                </form>
+                                                @endif
                                             </td>
                                         </tr>
                                     @endforeach
