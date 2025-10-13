@@ -161,16 +161,6 @@ class CertificateTemplateController extends Controller
             // Use the imported page as template
             $pdf->useTemplate($templateId, 0, 0, $size['width'], $size['height']);
 
-            // DEBUG: Add visible red rectangle to see if rendering works
-            $pdf->SetFillColor(255, 0, 0);
-            $pdf->Rect(10, 10, 50, 20, 'F');
-
-            // DEBUG: Add large visible text
-            $pdf->SetFont('helvetica', 'B', 40);
-            $pdf->SetTextColor(255, 0, 0);
-            $pdf->SetXY(100, 50);
-            $pdf->Cell(0, 10, 'TEST DEMO', 0, 0, 'L');
-
             // Set font for text
             $pdf->SetFont('helvetica', '', 12);
             $pdf->SetTextColor(0, 0, 0);
@@ -182,16 +172,28 @@ class CertificateTemplateController extends Controller
             $demoData = [
                 'certificate_number' => 'DEMO/001/2025',
                 'user_name' => 'Jan Kowalski',
-                'course_title' => 'Przykładowy kurs szkoleniowy',
+                'course_title' => 'Przykladowy kurs szkoleniowy',
                 'completion_date' => date('d.m.Y'),
                 'points' => '50 pkt',
                 'user_type' => 'Farmaceuta',
                 'expiry_date' => date('d.m.Y', strtotime('+2 years')),
             ];
 
-            // Insert text fields
+            // Insert text fields WITH BORDERS for debugging
             foreach ($fields as $fieldName => $config) {
                 if (isset($demoData[$fieldName])) {
+                    $x = $config['x'] ?? 0;
+                    $y = $config['y'] ?? 0;
+                    $fontSize = $config['font_size'] ?? 12;
+
+                    // Skip if not configured
+                    if ($x == 0 && $y == 0) continue;
+
+                    // Draw debug rectangle at position
+                    $pdf->SetDrawColor(255, 0, 0);
+                    $pdf->Rect($x - 2, $y - 2, 100, 15, 'D');
+
+                    // Insert the text
                     $this->insertTextField($pdf, $demoData[$fieldName], $config, $size['width']);
                 }
             }
