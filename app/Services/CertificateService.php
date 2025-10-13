@@ -70,12 +70,11 @@ class CertificateService
         // Prepare data to insert
         $data = $this->prepareDataFields($certificate, $user, $course);
 
-        // Insert text fields
-        foreach ($fields as $fieldName => $config) {
-            if (isset($data[$fieldName])) {
-                $this->insertTextField($pdf, $data[$fieldName], $config, $size['width']);
-            }
-        }
+        // Calculate center X position for all fields
+        $centerX = $size['width'] / 2;
+
+        // Render certificate content with formatting
+        $this->renderCertificateContent($pdf, $fields, $data, $centerX, $size);
 
         // Generate filename
         $filename = 'certificates/' . $certificate->certificate_number . '.pdf';
@@ -101,6 +100,96 @@ class CertificateService
             'user_type' => $user->user_type === 'farmaceuta' ? 'Farmaceuta' : 'Technik Farmacji',
             'expiry_date' => $certificate->expires_at ? $certificate->expires_at->format('d.m.Y') : 'bezterminowy',
         ];
+    }
+
+    /**
+     * Render all certificate content with static and dynamic text
+     */
+    private function renderCertificateContent($pdf, array $fields, array $data, float $centerX, array $size): void
+    {
+        // 1. ZAŚWIADCZENIE nr [numer] - BOLD
+        if (isset($fields['certificate_number'])) {
+            $y = $fields['certificate_number']['y'];
+            $pdf->SetFont('helvetica', 'B', $fields['certificate_number']['font_size'] ?? 12);
+            $pdf->SetTextColor(0, 0, 0);
+            $text = 'ZAŚWIADCZENIE nr ' . $data['certificate_number'];
+            $textWidth = $pdf->GetStringWidth($text);
+            $pdf->SetXY($centerX - ($textWidth / 2), $y);
+            $pdf->Cell($textWidth, 10, $text, 0, 0, 'L');
+        }
+
+        // 2. Pan / Pani - above user_name (14px)
+        if (isset($fields['user_name'])) {
+            $y = $fields['user_name']['y'] - 20; // 20 points above name
+            $pdf->SetFont('helvetica', '', 14);
+            $pdf->SetTextColor(0, 0, 0);
+            // Simple gender detection based on name ending
+            $userName = $data['user_name'];
+            $prefix = (substr($userName, -1) === 'a') ? 'Pani' : 'Pan';
+            $textWidth = $pdf->GetStringWidth($prefix);
+            $pdf->SetXY($centerX - ($textWidth / 2), $y);
+            $pdf->Cell($textWidth, 10, $prefix, 0, 0, 'L');
+        }
+
+        // 3. User name - BOLD and centered
+        if (isset($fields['user_name'])) {
+            $y = $fields['user_name']['y'];
+            $fontSize = $fields['user_name']['font_size'] ?? 20;
+            $pdf->SetFont('helvetica', 'B', $fontSize);
+            $pdf->SetTextColor(0, 0, 0);
+            $text = $data['user_name'];
+            $textWidth = $pdf->GetStringWidth($text);
+            $pdf->SetXY($centerX - ($textWidth / 2), $y);
+            $pdf->Cell($textWidth, 10, $text, 0, 0, 'L');
+        }
+
+        // 4. "odbyła w dniu [data] kurs szkoleniowy:" - below user_name
+        if (isset($fields['user_name']) && isset($data['completion_date'])) {
+            $y = $fields['user_name']['y'] + 25; // 25 points below name
+            $pdf->SetFont('helvetica', '', 12);
+            $pdf->SetTextColor(0, 0, 0);
+            // Use proper verb form based on gender
+            $userName = $data['user_name'];
+            $verb = (substr($userName, -1) === 'a') ? 'odbyła' : 'odbył';
+            $text = $verb . ' w dniu ' . $data['completion_date'] . ' kurs szkoleniowy:';
+            $textWidth = $pdf->GetStringWidth($text);
+            $pdf->SetXY($centerX - ($textWidth / 2), $y);
+            $pdf->Cell($textWidth, 10, $text, 0, 0, 'L');
+        }
+
+        // 5. Course title - centered
+        if (isset($fields['course_title'])) {
+            $y = $fields['course_title']['y'];
+            $fontSize = $fields['course_title']['font_size'] ?? 14;
+            $pdf->SetFont('helvetica', 'B', $fontSize);
+            $pdf->SetTextColor(0, 0, 0);
+            $text = $data['course_title'];
+            $textWidth = $pdf->GetStringWidth($text);
+            $pdf->SetXY($centerX - ($textWidth / 2), $y);
+            $pdf->Cell($textWidth, 10, $text, 0, 0, 'L');
+        }
+
+        // 6. "liczba punktów edukacyjnych: [points]" - below course title
+        if (isset($fields['points'])) {
+            $y = $fields['points']['y'];
+            $pdf->SetFont('helvetica', '', 12);
+            $pdf->SetTextColor(0, 0, 0);
+            $text = 'liczba punktów edukacyjnych: ' . $data['points'];
+            $textWidth = $pdf->GetStringWidth($text);
+            $pdf->SetXY($centerX - ($textWidth / 2), $y);
+            $pdf->Cell($textWidth, 10, $text, 0, 0, 'L');
+        }
+
+        // 7. "Gdańsk, dnia [data]" - at bottom
+        if (isset($fields['expiry_date']) && isset($data['expiry_date'])) {
+            $y = $fields['expiry_date']['y'];
+            $pdf->SetFont('helvetica', '', 12);
+            $pdf->SetTextColor(0, 0, 0);
+            $text = 'Gdańsk, dnia ' . $data['completion_date']; // Use completion date here
+            $textWidth = $pdf->GetStringWidth($text);
+            $pdf->SetXY($centerX - ($textWidth / 2), $y);
+            $pdf->Cell($textWidth, 10, $text, 0, 0, 'L');
+        }
     }
 
     /**

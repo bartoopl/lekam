@@ -166,9 +166,9 @@ class CertificateTemplateController extends Controller
             // Get fields configuration
             $fields = $template->getFieldsConfig();
 
-            // Demo data
+            // Demo data with full formatting
             $demoData = [
-                'certificate_number' => 'DEMO/001/2025',
+                'certificate_number' => 'ZAŚWIADCZENIE nr DEMO/001/2025',
                 'user_name' => 'Jan Kowalski',
                 'course_title' => 'Przykladowy kurs szkoleniowy',
                 'completion_date' => date('d.m.Y'),
@@ -228,24 +228,11 @@ class CertificateTemplateController extends Controller
             $pdf->SetXY(10, 50);
             $pdf->Cell(0, 10, 'Size: ' . round($size['width']) . ' x ' . round($size['height']), 0, 0, 'L');
 
-            // NOW render the actual demo data fields
-            foreach ($fields as $fieldName => $config) {
-                if (isset($demoData[$fieldName])) {
-                    // Draw a red circle at the field position to mark it
-                    $pdf->SetDrawColor(255, 0, 0);
-                    $pdf->SetFillColor(255, 0, 0);
-                    $pdf->Circle($config['x'], $config['y'], 3, 0, 360, 'F');
+            // Calculate center X position for all fields
+            $centerX = $size['width'] / 2;
 
-                    // Add a label showing what field this is
-                    $pdf->SetFont('helvetica', '', 8);
-                    $pdf->SetTextColor(255, 0, 0);
-                    $pdf->SetXY($config['x'] + 5, $config['y'] - 3);
-                    $pdf->Cell(100, 5, $fieldName, 0, 0, 'L');
-
-                    // Now render the actual field
-                    $this->insertTextField($pdf, $demoData[$fieldName], $config, $size['width']);
-                }
-            }
+            // Render static and dynamic content
+            $this->renderCertificateContent($pdf, $fields, $demoData, $centerX, $size);
 
             // Generate filename
             $filename = 'demo_certificate_' . $template->id . '_' . time() . '.pdf';
@@ -261,6 +248,95 @@ class CertificateTemplateController extends Controller
 
         } catch (\Exception $e) {
             return back()->with('error', 'Błąd podczas generowania demo certyfikatu: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Render all certificate content with static and dynamic text
+     */
+    private function renderCertificateContent($pdf, array $fields, array $demoData, float $centerX, array $size): void
+    {
+        // 1. ZAŚWIADCZENIE nr [numer] - BOLD
+        if (isset($fields['certificate_number'])) {
+            $y = $fields['certificate_number']['y'];
+            $pdf->SetFont('helvetica', 'B', $fields['certificate_number']['font_size'] ?? 12);
+            $pdf->SetTextColor(0, 0, 0);
+            $text = 'ZAŚWIADCZENIE nr ' . ($demoData['certificate_number'] ?? 'DEMO/001/2025');
+            $textWidth = $pdf->GetStringWidth($text);
+            $pdf->SetXY($centerX - ($textWidth / 2), $y);
+            $pdf->Cell($textWidth, 10, $text, 0, 0, 'L');
+        }
+
+        // 2. Pan / Pani - above user_name (14px)
+        if (isset($fields['user_name'])) {
+            $y = $fields['user_name']['y'] - 20; // 20 points above name
+            $pdf->SetFont('helvetica', '', 14);
+            $pdf->SetTextColor(0, 0, 0);
+            $userType = $demoData['user_type'] ?? 'Farmaceuta';
+            $prefix = (strpos(strtolower($userType), 'pani') !== false || strpos(strtolower($demoData['user_name'] ?? ''), 'a ') !== false) ? 'Pani' : 'Pan';
+            $textWidth = $pdf->GetStringWidth($prefix);
+            $pdf->SetXY($centerX - ($textWidth / 2), $y);
+            $pdf->Cell($textWidth, 10, $prefix, 0, 0, 'L');
+        }
+
+        // 3. User name - BOLD and centered
+        if (isset($fields['user_name'])) {
+            $y = $fields['user_name']['y'];
+            $fontSize = $fields['user_name']['font_size'] ?? 20;
+            $pdf->SetFont('helvetica', 'B', $fontSize);
+            $pdf->SetTextColor(0, 0, 0);
+            $text = $demoData['user_name'] ?? 'Jan Kowalski';
+            $textWidth = $pdf->GetStringWidth($text);
+            $pdf->SetXY($centerX - ($textWidth / 2), $y);
+            $pdf->Cell($textWidth, 10, $text, 0, 0, 'L');
+        }
+
+        // 4. "odbyła w dniu [data] kurs szkoleniowy:" - below user_name
+        if (isset($fields['user_name']) && isset($fields['completion_date'])) {
+            $y = $fields['user_name']['y'] + 25; // 25 points below name
+            $pdf->SetFont('helvetica', '', 12);
+            $pdf->SetTextColor(0, 0, 0);
+            $date = $demoData['completion_date'] ?? date('d.m.Y');
+            $text = 'odbyła w dniu ' . $date . ' kurs szkoleniowy:';
+            $textWidth = $pdf->GetStringWidth($text);
+            $pdf->SetXY($centerX - ($textWidth / 2), $y);
+            $pdf->Cell($textWidth, 10, $text, 0, 0, 'L');
+        }
+
+        // 5. Course title - centered
+        if (isset($fields['course_title'])) {
+            $y = $fields['course_title']['y'];
+            $fontSize = $fields['course_title']['font_size'] ?? 14;
+            $pdf->SetFont('helvetica', 'B', $fontSize);
+            $pdf->SetTextColor(0, 0, 0);
+            $text = $demoData['course_title'] ?? 'Przykladowy kurs szkoleniowy';
+            $textWidth = $pdf->GetStringWidth($text);
+            $pdf->SetXY($centerX - ($textWidth / 2), $y);
+            $pdf->Cell($textWidth, 10, $text, 0, 0, 'L');
+        }
+
+        // 6. "liczba punktów edukacyjnych: [points]" - below course title
+        if (isset($fields['points'])) {
+            $y = $fields['points']['y'];
+            $pdf->SetFont('helvetica', '', 12);
+            $pdf->SetTextColor(0, 0, 0);
+            $points = $demoData['points'] ?? '50 pkt';
+            $text = 'liczba punktów edukacyjnych: ' . $points;
+            $textWidth = $pdf->GetStringWidth($text);
+            $pdf->SetXY($centerX - ($textWidth / 2), $y);
+            $pdf->Cell($textWidth, 10, $text, 0, 0, 'L');
+        }
+
+        // 7. "Gdańsk, dnia [data]" - at bottom
+        if (isset($fields['expiry_date'])) {
+            $y = $fields['expiry_date']['y'];
+            $pdf->SetFont('helvetica', '', 12);
+            $pdf->SetTextColor(0, 0, 0);
+            $date = $demoData['expiry_date'] ?? date('d.m.Y');
+            $text = 'Gdańsk, dnia ' . $date;
+            $textWidth = $pdf->GetStringWidth($text);
+            $pdf->SetXY($centerX - ($textWidth / 2), $y);
+            $pdf->Cell($textWidth, 10, $text, 0, 0, 'L');
         }
     }
 
