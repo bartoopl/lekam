@@ -2010,19 +2010,9 @@ function interpolateColor(color1, color2, factor) {
 }
 
 function updateProgressGradient(progress) {
-    const gradient = document.querySelector('#progressGradient');
-    const stop1 = gradient.querySelector('stop:first-child');
-    const stop2 = gradient.querySelector('stop:last-child');
-    
-    if (progress < 0.5) {
-        // First half: navy to blue
-        stop1.setAttribute('stop-color', '#21235F');
-        stop2.setAttribute('stop-color', interpolateColor('#21235F', '#3B82F6', progress * 2));
-    } else {
-        // Second half: blue to green
-        stop1.setAttribute('stop-color', interpolateColor('#21235F', '#3B82F6', 1));
-        stop2.setAttribute('stop-color', interpolateColor('#3B82F6', '#22C55E', (progress - 0.5) * 2));
-    }
+    // Gradient is now static with 3 colors (navy -> blue -> green)
+    // No need to dynamically update it - the stroke-dasharray handles the progress
+    // Just leave the gradient as-is from the HTML definition
 }
 
 function updateDotColor(progress, dotElement) {
