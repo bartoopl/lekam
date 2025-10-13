@@ -219,8 +219,8 @@
                                                 <a href="{{ route('admin.users.edit', $user) }}" class="table-button view">
                                                     Edytuj
                                                 </a>
-                                                @if($user->id !== auth()->id())
-                                                <form action="{{ route('admin.users.destroy', $user) }}" method="POST" style="display: inline-block;" onsubmit="return confirm('Czy na pewno chcesz usunąć użytkownika {{ $user->name }}? Ta operacja jest nieodwracalna.');">
+                                                @if((int)$user->id !== (int)auth()->id())
+                                                <form action="{{ route('admin.users.destroy', $user) }}" method="POST" style="display: inline-block;" onsubmit="return confirm('Czy na pewno chcesz usunąć użytkownika {{ addslashes($user->name) }}? Ta operacja jest nieodwracalna.');">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="table-button delete">
