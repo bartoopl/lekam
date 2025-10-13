@@ -52,7 +52,7 @@ class CertificateService
         $pdf->useTemplate($templateId);
 
         // Set font for text
-        $pdf->SetFont('DejaVu', '', 12);
+        $pdf->SetFont('helvetica', '', 12);
         $pdf->SetTextColor(0, 0, 0);
 
         // Get fields configuration
@@ -104,7 +104,7 @@ class CertificateService
         $fontSize = $config['font_size'] ?? 12;
         $align = $config['align'] ?? 'left';
 
-        $pdf->SetFont('DejaVu', '', $fontSize);
+        $pdf->SetFont('helvetica', '', $fontSize);
 
         // Calculate width for centered text
         $width = $config['width'] ?? ($align === 'center' ? $pageWidth : 0);
