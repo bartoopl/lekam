@@ -218,18 +218,18 @@ class CertificateTemplateController extends Controller
         $pdf->SetFont('helvetica', '', $fontSize);
         $pdf->SetTextColor(0, 0, 0); // Ensure black text
 
-        // Calculate width for centered text
-        $width = $config['width'] ?? ($align === 'center' ? $pageWidth : 0);
-
         // Convert text to ISO-8859-2 for proper Polish characters display
         $text = iconv('UTF-8', 'ISO-8859-2//TRANSLIT', $text);
 
         if ($align === 'center') {
-            $pdf->SetXY($x, $y);
-            $pdf->Cell($width, 10, $text, 0, 0, 'C');
+            // For center alignment, center around X coordinate
+            $textWidth = $pdf->GetStringWidth($text);
+            $pdf->SetXY($x - ($textWidth / 2), $y);
+            $pdf->Cell($textWidth, 10, $text, 0, 0, 'L');
         } elseif ($align === 'right') {
-            $pdf->SetXY($x, $y);
-            $pdf->Cell($width, 10, $text, 0, 0, 'R');
+            $textWidth = $pdf->GetStringWidth($text);
+            $pdf->SetXY($x - $textWidth, $y);
+            $pdf->Cell($textWidth, 10, $text, 0, 0, 'L');
         } else {
             $pdf->SetXY($x, $y);
             $pdf->Cell(0, 10, $text, 0, 0, 'L');
