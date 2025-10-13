@@ -29,8 +29,9 @@ class CertificateService
             throw new \Exception('Template PDF not found: ' . $template->pdf_path);
         }
 
-        // Initialize FPDI
-        $pdf = new Fpdi();
+        // Initialize FPDI with TCPDF in POINT units (not mm)
+        // Parameters: orientation, unit, format, unicode, encoding, diskcache
+        $pdf = new Fpdi('P', 'pt', 'A4', true, 'UTF-8', false);
 
         // Get template file path
         $templatePath = Storage::disk('public')->path($template->pdf_path);
@@ -112,8 +113,7 @@ class CertificateService
         $pdf->SetFont('helvetica', '', $fontSize);
         $pdf->SetTextColor(0, 0, 0); // Ensure black text
 
-        // Convert text to ISO-8859-2 for proper Polish characters display
-        $text = iconv('UTF-8', 'ISO-8859-2//TRANSLIT', $text);
+        // TCPDF with UTF-8 handles Polish characters natively, no conversion needed
 
         if ($align === 'center') {
             // For center alignment, center around X coordinate
