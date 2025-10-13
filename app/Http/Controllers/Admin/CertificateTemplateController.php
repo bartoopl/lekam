@@ -219,6 +219,25 @@ class CertificateTemplateController extends Controller
             $pdf->SetXY(10, 50);
             $pdf->Cell(0, 10, 'Size: ' . round($size['width']) . ' x ' . round($size['height']), 0, 0, 'L');
 
+            // NOW render the actual demo data fields
+            foreach ($fields as $fieldName => $config) {
+                if (isset($demoData[$fieldName])) {
+                    // Draw a red circle at the field position to mark it
+                    $pdf->SetDrawColor(255, 0, 0);
+                    $pdf->SetFillColor(255, 0, 0);
+                    $pdf->Circle($config['x'], $config['y'], 3, 0, 360, 'F');
+
+                    // Add a label showing what field this is
+                    $pdf->SetFont('helvetica', '', 8);
+                    $pdf->SetTextColor(255, 0, 0);
+                    $pdf->SetXY($config['x'] + 5, $config['y'] - 3);
+                    $pdf->Cell(100, 5, $fieldName, 0, 0, 'L');
+
+                    // Now render the actual field
+                    $this->insertTextField($pdf, $demoData[$fieldName], $config, $size['width']);
+                }
+            }
+
             // Generate filename
             $filename = 'demo_certificate_' . $template->id . '_' . time() . '.pdf';
 
