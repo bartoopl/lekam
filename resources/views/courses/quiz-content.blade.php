@@ -169,4 +169,76 @@
         </div>
     </div>
 
+    <script>
+    function startQuiz() {
+        console.log('startQuiz called from quiz-content');
+
+        if (confirm('Czy na pewno chcesz rozpocząć test? Po rozpoczęciu nie będziesz mógł go przerwać.')) {
+            const startBtn = document.getElementById('startQuizBtn');
+
+            // Show loading state
+            if (startBtn) {
+                startBtn.disabled = true;
+                startBtn.textContent = 'Rozpoczynanie...';
+            }
+
+            // First, start the quiz attempt
+            fetch('{{ route("quizzes.start", $course) }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                }
+            })
+            .then(response => {
+                console.log('Response status:', response.status);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Quiz started, response data:', data);
+                if (data.success) {
+                    // Now load the quiz questions via AJAX
+                    const attemptId = data.attempt_id;
+                    const questionsUrl = `/courses/{{ $course->id }}/quiz/questions/${attemptId}`;
+
+                    console.log('Loading questions from:', questionsUrl);
+
+                    return fetch(questionsUrl);
+                } else {
+                    throw new Error(data.message || data.error || 'Quiz start failed');
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.text();
+            })
+            .then(html => {
+                console.log('Questions loaded successfully');
+                // Replace the lesson content with quiz questions
+                document.getElementById('lesson-content').innerHTML = html;
+
+                // Initialize the quiz timer
+                if (typeof initializeQuizTimer === 'function') {
+                    initializeQuizTimer();
+                }
+            })
+            .catch(error => {
+                console.error('Error starting quiz:', error);
+                alert('Błąd podczas rozpoczynania testu: ' + error.message);
+
+                // Re-enable button on error
+                if (startBtn) {
+                    startBtn.disabled = false;
+                    startBtn.textContent = '{{ (isset($bestAttempt) && $bestAttempt) ? "Spróbuj ponownie" : "Rozpocznij test" }}';
+                }
+            });
+        }
+    }
+    </script>
+
 @endif
