@@ -143,10 +143,11 @@
 
     .progress-path {
         fill: none;
+        stroke: url(#progressGradient);
         stroke-width: 6;
         stroke-linecap: round;
         stroke-dashoffset: 0;
-        transition: stroke-dasharray 1s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: stroke-dashoffset 1s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .progress-dot {
@@ -1963,9 +1964,10 @@ function updateSinusoidalProgress(percentage) {
         const progress = Math.max(0, Math.min(100, percentage)) / 100;
         const progressLength = Math.max(0, Math.min(pathLength, pathLength * progress));
 
-        // Set stroke-dasharray and stroke-dashoffset to show progress from left to right
-        progressPath.style.strokeDasharray = `${progressLength} ${pathLength}`;
-        progressPath.style.strokeDashoffset = '0';
+        // Set stroke-dasharray to the full path length and use dashoffset to show progress
+        // This ensures the gradient fills from left to right as progress increases
+        progressPath.style.strokeDasharray = pathLength;
+        progressPath.style.strokeDashoffset = pathLength - progressLength;
 
         // Update gradient color based on progress
         updateProgressGradient(progress);
