@@ -139,8 +139,8 @@ class CertificateTemplateController extends Controller
                 return back()->with('error', 'Plik PDF szablonu nie został znaleziony.');
             }
 
-            // Initialize FPDI
-            $pdf = new \setasign\Fpdi\Fpdi();
+            // Initialize FPDI with TCPDF
+            $pdf = new \setasign\Fpdi\Tcpdf\Fpdi();
 
             // Get template file path
             $templatePath = Storage::disk('public')->path($template->pdf_path);

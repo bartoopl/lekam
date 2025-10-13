@@ -7,7 +7,7 @@ use App\Models\CertificateTemplate;
 use App\Models\User;
 use App\Models\Course;
 use Illuminate\Support\Facades\Storage;
-use setasign\Fpdi\Fpdi;
+use setasign\Fpdi\Tcpdf\Fpdi;
 
 class CertificateService
 {
