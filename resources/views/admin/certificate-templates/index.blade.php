@@ -72,6 +72,9 @@
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                     <a href="{{ route('admin.certificate-templates.edit', $template) }}"
                                        class="text-blue-600 hover:text-blue-900 mr-3">Edytuj</a>
+                                    <a href="{{ route('admin.certificate-templates.demo', $template) }}"
+                                       target="_blank"
+                                       class="text-green-600 hover:text-green-900 mr-3">Demo</a>
                                     <form action="{{ route('admin.certificate-templates.destroy', $template) }}"
                                           method="POST" class="inline"
                                           onsubmit="return confirm('Czy na pewno chcesz usunąć ten szablon?');">

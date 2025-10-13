@@ -129,6 +129,105 @@ class CertificateTemplateController extends Controller
     }
 
     /**
+     * Generate demo certificate with sample data
+     */
+    public function generateDemo(CertificateTemplate $template)
+    {
+        try {
+            // Check if template PDF exists
+            if (!Storage::disk('public')->exists($template->pdf_path)) {
+                return back()->with('error', 'Plik PDF szablonu nie został znaleziony.');
+            }
+
+            // Initialize FPDI
+            $pdf = new \setasign\Fpdi\Fpdi();
+
+            // Get template file path
+            $templatePath = Storage::disk('public')->path($template->pdf_path);
+
+            // Set source file
+            $pageCount = $pdf->setSourceFile($templatePath);
+
+            // Import first page
+            $templateId = $pdf->importPage(1);
+
+            // Get page dimensions
+            $size = $pdf->getTemplateSize($templateId);
+
+            // Add a page with same orientation and size as template
+            $orientation = $size['width'] > $size['height'] ? 'L' : 'P';
+            $pdf->AddPage($orientation, [$size['width'], $size['height']]);
+
+            // Use the imported page as template
+            $pdf->useTemplate($templateId);
+
+            // Set font for text
+            $pdf->SetFont('helvetica', '', 12);
+            $pdf->SetTextColor(0, 0, 0);
+
+            // Get fields configuration
+            $fields = $template->getFieldsConfig();
+
+            // Demo data
+            $demoData = [
+                'certificate_number' => 'DEMO/001/2025',
+                'user_name' => 'Jan Kowalski',
+                'course_title' => 'Przykładowy kurs szkoleniowy',
+                'completion_date' => date('d.m.Y'),
+                'points' => '50 pkt',
+                'user_type' => 'Farmaceuta',
+                'expiry_date' => date('d.m.Y', strtotime('+2 years')),
+            ];
+
+            // Insert text fields
+            foreach ($fields as $fieldName => $config) {
+                if (isset($demoData[$fieldName])) {
+                    $this->insertTextField($pdf, $demoData[$fieldName], $config, $size['width']);
+                }
+            }
+
+            // Generate filename
+            $filename = 'demo_certificate_' . $template->id . '_' . time() . '.pdf';
+
+            // Output PDF to browser
+            return response($pdf->Output('S', $filename), 200, [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'inline; filename="' . $filename . '"',
+            ]);
+
+        } catch (\Exception $e) {
+            return back()->with('error', 'Błąd podczas generowania demo certyfikatu: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Insert text field on PDF (helper method for demo generation)
+     */
+    private function insertTextField($pdf, string $text, array $config, float $pageWidth): void
+    {
+        $x = $config['x'] ?? 0;
+        $y = $config['y'] ?? 0;
+        $fontSize = $config['font_size'] ?? 12;
+        $align = $config['align'] ?? 'left';
+
+        $pdf->SetFont('helvetica', '', $fontSize);
+
+        // Calculate width for centered text
+        $width = $config['width'] ?? ($align === 'center' ? $pageWidth : 0);
+
+        if ($align === 'center') {
+            $pdf->SetXY($x, $y);
+            $pdf->Cell($width, 10, $text, 0, 0, 'C');
+        } elseif ($align === 'right') {
+            $pdf->SetXY($x, $y);
+            $pdf->Cell($width, 10, $text, 0, 0, 'R');
+        } else {
+            $pdf->SetXY($x, $y);
+            $pdf->Cell(0, 10, $text, 0, 0, 'L');
+        }
+    }
+
+    /**
      * Remove the specified template
      */
     public function destroy(CertificateTemplate $template)

@@ -133,6 +133,7 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->name('admin.'
     Route::get('/certificate-templates/{template}/edit', [\App\Http\Controllers\Admin\CertificateTemplateController::class, 'edit'])->name('certificate-templates.edit');
     Route::put('/certificate-templates/{template}', [\App\Http\Controllers\Admin\CertificateTemplateController::class, 'update'])->name('certificate-templates.update');
     Route::delete('/certificate-templates/{template}', [\App\Http\Controllers\Admin\CertificateTemplateController::class, 'destroy'])->name('certificate-templates.destroy');
+    Route::get('/certificate-templates/{template}/demo', [\App\Http\Controllers\Admin\CertificateTemplateController::class, 'generateDemo'])->name('certificate-templates.demo');
 
     Route::get('/certificates', [AdminController::class, 'certificates'])->name('certificates');
     Route::get('/statistics', [AdminController::class, 'statistics'])->name('statistics');

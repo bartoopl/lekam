@@ -1,6 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
+@php
+use Illuminate\Support\Facades\Storage;
+@endphp
 <div class="py-12">
     <div class="max-w-6xl mx-auto sm:px-6 lg:px-8 mb-6">
         <div class="bg-white p-6 rounded-lg shadow-sm">
@@ -143,19 +146,114 @@
                         </div>
                     </div>
 
-                    <div class="mt-6 flex justify-end space-x-3">
-                        <a href="{{ route('admin.certificate-templates.index') }}"
-                           class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded">
-                            Anuluj
-                        </a>
-                        <button type="submit"
-                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                            Zapisz zmiany
-                        </button>
+                    <div class="mt-6 flex justify-between items-center">
+                        <div>
+                            <a href="{{ route('admin.certificate-templates.demo', $template) }}"
+                               target="_blank"
+                               class="inline-block bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+                                🔍 Generuj demo certyfikat
+                            </a>
+                            <p class="text-xs text-gray-500 mt-1">Otworzy się w nowej karcie z przykładowymi danymi</p>
+                        </div>
+                        <div class="flex space-x-3">
+                            <a href="{{ route('admin.certificate-templates.index') }}"
+                               class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded">
+                                Anuluj
+                            </a>
+                            <button type="submit"
+                                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                Zapisz zmiany
+                            </button>
+                        </div>
                     </div>
                 </form>
             </div>
         </div>
+
+        <!-- Live Preview Section -->
+        <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mt-6">
+            <div class="p-6">
+                <h3 class="text-lg font-semibold text-gray-700 mb-4">📊 Podgląd live pozycji pól</h3>
+                <div class="bg-gray-100 rounded-lg p-4 relative" style="height: 600px; overflow: auto;">
+                    <div id="preview-container" class="relative bg-white mx-auto" style="width: 842px; height: 595px; border: 2px solid #cbd5e0;">
+                        <!-- PDF Preview or placeholder -->
+                        @if($template->pdf_path && Storage::disk('public')->exists($template->pdf_path))
+                            <embed src="{{ Storage::url($template->pdf_path) }}" type="application/pdf" width="100%" height="100%" style="position: absolute; top: 0; left: 0; opacity: 0.3;">
+                        @endif
+
+                        <!-- Field markers -->
+                        <div id="field-markers"></div>
+                    </div>
+                </div>
+                <div class="mt-3 text-xs text-gray-600">
+                    <p>💡 Kolorowe punkty pokazują przybliżone pozycje pól na certyfikacie. Rozmiar okręgu odpowiada rozmiarowi czcionki.</p>
+                    <p class="mt-1">📝 Zmień wartości X, Y lub rozmiar czcionki powyżej, aby zobaczyć aktualizację pozycji w czasie rzeczywistym.</p>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const fields = {
+        'certificate_number': { label: 'Numer', color: '#3b82f6' },
+        'user_name': { label: 'Imię', color: '#10b981' },
+        'course_title': { label: 'Tytuł', color: '#8b5cf6' },
+        'completion_date': { label: 'Data ukończenia', color: '#f59e0b' },
+        'points': { label: 'Punkty', color: '#ef4444' },
+        'user_type': { label: 'Typ', color: '#ec4899' },
+        'expiry_date': { label: 'Ważność', color: '#6366f1' },
+    };
+
+    function updatePreview() {
+        const container = document.getElementById('field-markers');
+        container.innerHTML = '';
+
+        Object.keys(fields).forEach(fieldKey => {
+            const x = parseFloat(document.querySelector(`input[name="${fieldKey}_x"]`)?.value) || 0;
+            const y = parseFloat(document.querySelector(`input[name="${fieldKey}_y"]`)?.value) || 0;
+            const fontSize = parseInt(document.querySelector(`input[name="${fieldKey}_font_size"]`)?.value) || 12;
+            const align = document.querySelector(`select[name="${fieldKey}_align"]`)?.value || 'left';
+
+            if (x > 0 || y > 0) {
+                const marker = document.createElement('div');
+                marker.style.position = 'absolute';
+                marker.style.left = x + 'px';
+                marker.style.top = y + 'px';
+                marker.style.width = (fontSize * 1.5) + 'px';
+                marker.style.height = (fontSize * 1.5) + 'px';
+                marker.style.backgroundColor = fields[fieldKey].color;
+                marker.style.borderRadius = '50%';
+                marker.style.opacity = '0.6';
+                marker.style.border = '2px solid white';
+                marker.style.boxShadow = '0 2px 4px rgba(0,0,0,0.3)';
+                marker.style.display = 'flex';
+                marker.style.alignItems = 'center';
+                marker.style.justifyContent = 'center';
+                marker.style.fontSize = '10px';
+                marker.style.color = 'white';
+                marker.style.fontWeight = 'bold';
+                marker.style.cursor = 'help';
+                marker.title = `${fields[fieldKey].label} (${x}, ${y}) - Font: ${fontSize}px - Align: ${align}`;
+                marker.textContent = fields[fieldKey].label.substring(0, 2);
+
+                container.appendChild(marker);
+            }
+        });
+    }
+
+    // Update preview on input change
+    document.querySelectorAll('input[type="number"], select').forEach(input => {
+        if (input.name.includes('_x') || input.name.includes('_y') ||
+            input.name.includes('_font_size') || input.name.includes('_align')) {
+            input.addEventListener('input', updatePreview);
+            input.addEventListener('change', updatePreview);
+        }
+    });
+
+    // Initial preview
+    updatePreview();
+});
+</script>
 @endsection
