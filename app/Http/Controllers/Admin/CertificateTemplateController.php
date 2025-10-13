@@ -161,6 +161,16 @@ class CertificateTemplateController extends Controller
             // Use the imported page as template
             $pdf->useTemplate($templateId, 0, 0, $size['width'], $size['height']);
 
+            // DEBUG: Add visible red rectangle to see if rendering works
+            $pdf->SetFillColor(255, 0, 0);
+            $pdf->Rect(10, 10, 50, 20, 'F');
+
+            // DEBUG: Add large visible text
+            $pdf->SetFont('helvetica', 'B', 40);
+            $pdf->SetTextColor(255, 0, 0);
+            $pdf->SetXY(100, 50);
+            $pdf->Cell(0, 10, 'TEST DEMO', 0, 0, 'L');
+
             // Set font for text
             $pdf->SetFont('helvetica', '', 12);
             $pdf->SetTextColor(0, 0, 0);
