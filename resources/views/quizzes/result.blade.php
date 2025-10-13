@@ -311,7 +311,7 @@
                     </button>
                 </form>
             @else
-                <a href="{{ route('quizzes.show', $course) }}" class="certificate-button retry-button">
+                <a href="{{ route('courses.show', $course) }}#quiz" class="certificate-button retry-button">
                     🔄 Wróć do kursu i spróbuj ponownie
                 </a>
             @endif

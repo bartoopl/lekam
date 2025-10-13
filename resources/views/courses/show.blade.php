@@ -972,10 +972,17 @@
 // Auto-start first available lesson
 @if($firstAvailableLesson)
 document.addEventListener('DOMContentLoaded', function() {
-    // Auto-load first available lesson after a short delay
-    setTimeout(() => {
-        loadLesson({{ $firstAvailableLesson->id }}, '{{ $firstAvailableLesson->title }}');
-    }, 1000);
+    // Check if URL has #quiz hash - if yes, load quiz instead
+    if (window.location.hash === '#quiz' && canTakeQuiz) {
+        setTimeout(() => {
+            navigateToQuiz();
+        }, 500);
+    } else {
+        // Auto-load first available lesson after a short delay
+        setTimeout(() => {
+            loadLesson({{ $firstAvailableLesson->id }}, '{{ $firstAvailableLesson->title }}');
+        }, 1000);
+    }
 });
 @endif
 
