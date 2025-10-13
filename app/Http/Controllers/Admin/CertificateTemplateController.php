@@ -143,6 +143,14 @@ class CertificateTemplateController extends Controller
             // Parameters: orientation, unit, format, unicode, encoding, diskcache
             $pdf = new \setasign\Fpdi\Tcpdf\Fpdi('P', 'pt', 'A4', true, 'UTF-8', false);
 
+            // Disable automatic page breaks
+            $pdf->SetAutoPageBreak(false, 0);
+
+            // Set margins to 0 for full control
+            $pdf->SetMargins(0, 0, 0);
+            $pdf->SetHeaderMargin(0);
+            $pdf->SetFooterMargin(0);
+
             // Get template file path
             $templatePath = Storage::disk('public')->path($template->pdf_path);
 
