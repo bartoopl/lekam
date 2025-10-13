@@ -174,20 +174,29 @@ use Illuminate\Support\Facades\Storage;
         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mt-6">
             <div class="p-6">
                 <h3 class="text-lg font-semibold text-gray-700 mb-4">📊 Podgląd live pozycji pól</h3>
-                <div class="bg-gray-100 rounded-lg p-4 relative" style="height: 600px; overflow: auto;">
-                    <div id="preview-container" class="relative bg-white mx-auto" style="width: 842px; height: 595px; border: 2px solid #cbd5e0;">
-                        <!-- PDF Preview or placeholder -->
+                <div class="bg-gray-100 rounded-lg p-4" style="overflow-x: auto;">
+                    <div id="preview-container" class="relative bg-white mx-auto border-2 border-gray-300" style="width: 842px; height: 595px; background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDIiIGhlaWdodD0iNDIiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI0MiIgaGVpZ2h0PSI0MiIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAwIDQyIEwgNDIgNDIgTCA0MiAwIiBmaWxsPSJub25lIiBzdHJva2U9IiNlNWU3ZWIiIHN0cm9rZS13aWR0aD0iMSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNncmlkKSIgLz48L3N2Zz4='); background-size: 42px 42px;">
+
+                        <!-- Display PDF name if exists -->
                         @if($template->pdf_path && Storage::disk('public')->exists($template->pdf_path))
-                            <embed src="{{ Storage::url($template->pdf_path) }}" type="application/pdf" width="100%" height="100%" style="position: absolute; top: 0; left: 0; opacity: 0.3;">
+                            <div class="absolute top-2 left-2 bg-blue-500 text-white px-3 py-1 rounded text-xs">
+                                📄 {{ basename($template->pdf_path) }}
+                            </div>
                         @endif
 
+                        <!-- Size indicator -->
+                        <div class="absolute bottom-2 right-2 bg-gray-700 text-white px-3 py-1 rounded text-xs">
+                            842 × 595 px (A4 Landscape)
+                        </div>
+
                         <!-- Field markers -->
-                        <div id="field-markers"></div>
+                        <div id="field-markers" style="position: relative; width: 100%; height: 100%;"></div>
                     </div>
                 </div>
                 <div class="mt-3 text-xs text-gray-600">
                     <p>💡 Kolorowe punkty pokazują przybliżone pozycje pól na certyfikacie. Rozmiar okręgu odpowiada rozmiarowi czcionki.</p>
                     <p class="mt-1">📝 Zmień wartości X, Y lub rozmiar czcionki powyżej, aby zobaczyć aktualizację pozycji w czasie rzeczywistym.</p>
+                    <p class="mt-1">⚠️ Współrzędne PDF: (0,0) = lewy górny róg. Użyj przycisku "Generuj demo certyfikat" aby zobaczyć finalny wynik.</p>
                 </div>
             </div>
         </div>
