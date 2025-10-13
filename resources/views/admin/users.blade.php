@@ -128,6 +128,66 @@
     .admin-table tbody tr:hover {
         background: rgba(59, 130, 246, 0.05);
     }
+
+    /* Pagination styles */
+    .pagination-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 1.5rem;
+        padding: 1rem;
+        background: rgba(255, 255, 255, 0.5);
+        border-radius: 10px;
+    }
+
+    .pagination-stats {
+        color: #4B5563;
+        font-size: 0.9rem;
+    }
+
+    nav[role="navigation"] {
+        display: flex;
+        justify-content: center;
+    }
+
+    .pagination {
+        display: flex;
+        gap: 0.5rem;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .pagination a,
+    .pagination span {
+        padding: 0.5rem 0.75rem;
+        border-radius: 0.5rem;
+        text-decoration: none;
+        transition: all 0.2s ease;
+        font-weight: 500;
+    }
+
+    .pagination a {
+        background: rgba(59, 130, 246, 0.1);
+        color: #3B82F6;
+    }
+
+    .pagination a:hover {
+        background: #3B82F6;
+        color: white;
+        transform: translateY(-1px);
+    }
+
+    .pagination .active span {
+        background: #3B82F6;
+        color: white;
+    }
+
+    .pagination .disabled span {
+        background: rgba(156, 163, 175, 0.1);
+        color: #9CA3AF;
+        cursor: not-allowed;
+    }
 </style>
 
 <div class="admin-container">
@@ -231,6 +291,14 @@
                                     @endforeach
                                 </tbody>
                             </table>
+                        </div>
+
+                        <div class="pagination-info">
+                            <div class="pagination-stats">
+                                <strong>Łącznie:</strong> {{ $users->total() }} użytkowników |
+                                <strong>Strona:</strong> {{ $users->currentPage() }} z {{ $users->lastPage() }} |
+                                <strong>Pokazano:</strong> {{ $users->firstItem() }}-{{ $users->lastItem() }}
+                            </div>
                         </div>
 
                         <div class="mt-6">
