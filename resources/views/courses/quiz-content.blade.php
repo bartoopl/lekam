@@ -159,11 +159,17 @@
                         </div>
                     @endif
 
-                    <button id="startQuizBtn"
-                            class="btn btn-primary"
-                            onclick="startQuiz();">
-                        {{ (isset($bestAttempt) && $bestAttempt) ? 'Spróbuj ponownie' : 'Rozpocznij test' }}
-                    </button>
+                    @if(isset($bestAttempt) && $bestAttempt)
+                        <a href="{{ route('courses.show', $course) }}" class="btn btn-primary">
+                            Wróć do kursu i spróbuj ponownie
+                        </a>
+                    @else
+                        <button id="startQuizBtn"
+                                class="btn btn-primary"
+                                onclick="startQuiz();">
+                            Rozpocznij test
+                        </button>
+                    @endif
                 </div>
             @endif
         </div>
