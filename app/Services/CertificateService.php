@@ -158,16 +158,30 @@ class CertificateService
             $pdf->Cell($textWidth, 10, $text, 0, 0, 'L');
         }
 
-        // 5. Course title - centered
+        // 5. Course title - centered with multiline support
         if (isset($fields['course_title'])) {
             $y = $fields['course_title']['y'];
             $fontSize = $fields['course_title']['font_size'] ?? 14;
             $pdf->SetFont('dejavusans', 'B', $fontSize);
             $pdf->SetTextColor(0, 0, 0);
             $text = $data['course_title'];
+
+            // Calculate maximum width (80% of page width to leave margins)
+            $maxWidth = $size['width'] * 0.8;
+
+            // Check if text fits in one line
             $textWidth = $pdf->GetStringWidth($text);
-            $pdf->SetXY($centerX - ($textWidth / 2), $y);
-            $pdf->Cell($textWidth, 10, $text, 0, 0, 'L');
+
+            if ($textWidth <= $maxWidth) {
+                // Single line - center it
+                $pdf->SetXY($centerX - ($textWidth / 2), $y);
+                $pdf->Cell($textWidth, 10, $text, 0, 0, 'L');
+            } else {
+                // Multi-line - use MultiCell with center alignment
+                $startX = $centerX - ($maxWidth / 2);
+                $pdf->SetXY($startX, $y);
+                $pdf->MultiCell($maxWidth, 15, $text, 0, 'C', false, 1);
+            }
         }
 
         // 6. "liczba punktów edukacyjnych: [points]" (uses points Y position)
