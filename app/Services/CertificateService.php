@@ -38,7 +38,7 @@ class CertificateService
         // Set source file
         $pageCount = $pdf->setSourceFile($templatePath);
 
-        // Import first page (certificates usually have 1 page)
+        // Import ONLY first page (certificates usually have 1 page)
         $templateId = $pdf->importPage(1);
 
         // Get page dimensions
@@ -48,8 +48,8 @@ class CertificateService
         $orientation = $size['width'] > $size['height'] ? 'L' : 'P';
         $pdf->AddPage($orientation, [$size['width'], $size['height']]);
 
-        // Use the imported page as template
-        $pdf->useTemplate($templateId);
+        // Use the imported page as template with exact dimensions
+        $pdf->useTemplate($templateId, 0, 0, $size['width'], $size['height']);
 
         // Set font for text
         $pdf->SetFont('helvetica', '', 12);

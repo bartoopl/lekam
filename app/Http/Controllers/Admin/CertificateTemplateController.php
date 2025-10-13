@@ -148,7 +148,7 @@ class CertificateTemplateController extends Controller
             // Set source file
             $pageCount = $pdf->setSourceFile($templatePath);
 
-            // Import first page
+            // Import ONLY first page (template should have only 1 page)
             $templateId = $pdf->importPage(1);
 
             // Get page dimensions
@@ -159,7 +159,7 @@ class CertificateTemplateController extends Controller
             $pdf->AddPage($orientation, [$size['width'], $size['height']]);
 
             // Use the imported page as template
-            $pdf->useTemplate($templateId);
+            $pdf->useTemplate($templateId, 0, 0, $size['width'], $size['height']);
 
             // Set font for text
             $pdf->SetFont('helvetica', '', 12);
