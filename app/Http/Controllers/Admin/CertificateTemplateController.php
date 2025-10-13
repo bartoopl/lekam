@@ -154,17 +154,6 @@ class CertificateTemplateController extends Controller
             // Get page dimensions
             $size = $pdf->getTemplateSize($templateId);
 
-            // Add a page with same orientation and size as template
-            $orientation = $size['width'] > $size['height'] ? 'L' : 'P';
-            $pdf->AddPage($orientation, [$size['width'], $size['height']]);
-
-            // Use the imported page as template
-            $pdf->useTemplate($templateId, 0, 0, $size['width'], $size['height']);
-
-            // Set font for text
-            $pdf->SetFont('helvetica', '', 12);
-            $pdf->SetTextColor(0, 0, 0);
-
             // Get fields configuration
             $fields = $template->getFieldsConfig();
 
@@ -179,6 +168,23 @@ class CertificateTemplateController extends Controller
                 'expiry_date' => date('d.m.Y', strtotime('+2 years')),
             ];
 
+            // Add a page with same orientation and size as template
+            $orientation = $size['width'] > $size['height'] ? 'L' : 'P';
+            $pdf->AddPage($orientation, [$size['width'], $size['height']]);
+
+            // Use the imported page as template FIRST (as background)
+            $pdf->useTemplate($templateId, 0, 0, $size['width'], $size['height']);
+
+            // NOW add text ON TOP of template
+            $pdf->SetFont('helvetica', '', 12);
+            $pdf->SetTextColor(0, 0, 0);
+
+            // DEBUG: Add very visible text first
+            $pdf->SetFont('helvetica', 'B', 30);
+            $pdf->SetTextColor(255, 0, 0);
+            $pdf->SetXY(100, 100);
+            $pdf->Cell(0, 10, 'WIDOCZNY TEST', 0, 0, 'L');
+
             // Insert text fields WITH BORDERS for debugging
             foreach ($fields as $fieldName => $config) {
                 if (isset($demoData[$fieldName])) {
@@ -191,6 +197,7 @@ class CertificateTemplateController extends Controller
 
                     // Draw debug rectangle at position
                     $pdf->SetDrawColor(255, 0, 0);
+                    $pdf->SetLineWidth(2);
                     $pdf->Rect($x - 2, $y - 2, 100, 15, 'D');
 
                     // Insert the text
