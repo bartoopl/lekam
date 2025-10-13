@@ -185,25 +185,22 @@ class CertificateTemplateController extends Controller
             $pdf->SetXY(100, 100);
             $pdf->Cell(0, 10, 'WIDOCZNY TEST', 0, 0, 'L');
 
-            // Insert text fields WITH BORDERS for debugging
-            foreach ($fields as $fieldName => $config) {
-                if (isset($demoData[$fieldName])) {
-                    $x = $config['x'] ?? 0;
-                    $y = $config['y'] ?? 0;
-                    $fontSize = $config['font_size'] ?? 12;
+            // FORCE draw some rectangles and text at known positions
+            $pdf->SetDrawColor(255, 0, 0);
+            $pdf->SetLineWidth(3);
+            $pdf->Rect(280, 140, 150, 20, 'D'); // certificate_number position
+            $pdf->Rect(280, 300, 150, 20, 'D'); // user_name position
+            $pdf->Rect(280, 350, 150, 20, 'D'); // course_title position
 
-                    // Skip if not configured
-                    if ($x == 0 && $y == 0) continue;
-
-                    // Draw debug rectangle at position
-                    $pdf->SetDrawColor(255, 0, 0);
-                    $pdf->SetLineWidth(2);
-                    $pdf->Rect($x - 2, $y - 2, 100, 15, 'D');
-
-                    // Insert the text
-                    $this->insertTextField($pdf, $demoData[$fieldName], $config, $size['width']);
-                }
-            }
+            // Add text at those positions
+            $pdf->SetFont('helvetica', 'B', 14);
+            $pdf->SetTextColor(0, 0, 255); // Blue text
+            $pdf->SetXY(280, 140);
+            $pdf->Cell(0, 10, 'DEMO/001/2025', 0, 0, 'L');
+            $pdf->SetXY(280, 300);
+            $pdf->Cell(0, 10, 'Jan Kowalski', 0, 0, 'L');
+            $pdf->SetXY(280, 350);
+            $pdf->Cell(0, 10, 'Przykladowy kurs', 0, 0, 'L');
 
             // Generate filename
             $filename = 'demo_certificate_' . $template->id . '_' . time() . '.pdf';
