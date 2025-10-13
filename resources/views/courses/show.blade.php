@@ -143,7 +143,6 @@
 
     .progress-path {
         fill: none;
-        stroke: url(#progressGradient);
         stroke-width: 6;
         stroke-linecap: round;
         stroke-dashoffset: 0;
@@ -804,7 +803,6 @@
                 <!-- Progress path (flat horizontal line) -->
                 <path id="progress-path" class="progress-path"
                       d="M 0 5 L 800 5"
-                      stroke="url(#progressGradient)"
                       vector-effect="non-scaling-stroke" />
             </svg>
             <!-- HTML dot that stays perfectly round -->
@@ -2012,9 +2010,25 @@ function interpolateColor(color1, color2, factor) {
 }
 
 function updateProgressGradient(progress) {
-    // Gradient is now static with 3 colors (navy -> blue -> green)
-    // No need to dynamically update it - the stroke-dasharray handles the progress
-    // Just leave the gradient as-is from the HTML definition
+    const progressPath = document.querySelector('#progress-path');
+    if (!progressPath) return;
+
+    // Calculate dynamic color based on progress
+    // 0% = navy (#21235F), 50% = blue (#3B82F6), 100% = green (#22C55E)
+    let strokeColor;
+
+    if (progress <= 0.5) {
+        // Interpolate between navy and blue (0% to 50%)
+        const factor = progress / 0.5; // 0 to 1
+        strokeColor = interpolateColor('#21235F', '#3B82F6', factor);
+    } else {
+        // Interpolate between blue and green (50% to 100%)
+        const factor = (progress - 0.5) / 0.5; // 0 to 1
+        strokeColor = interpolateColor('#3B82F6', '#22C55E', factor);
+    }
+
+    // Apply the calculated color directly to the stroke
+    progressPath.style.stroke = strokeColor;
 }
 
 function updateDotColor(progress, dotElement) {
