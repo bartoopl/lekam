@@ -96,7 +96,7 @@ class CertificateService
             'user_name' => $user->name,
             'course_title' => $course->title,
             'completion_date' => $certificate->issued_at->format('d.m.Y'),
-            'points' => $course->getPointsForUser($user) . ' pkt',
+            'points' => $course->getPointsForUser($user), // Just the number, no "pkt"
             'user_type' => $user->user_type === 'farmaceuta' ? 'Farmaceuta' : 'Technik Farmacji',
             'expiry_date' => $certificate->expires_at ? $certificate->expires_at->format('d.m.Y') : 'bezterminowy',
         ];
@@ -143,10 +143,11 @@ class CertificateService
             $pdf->Cell($textWidth, 10, $text, 0, 0, 'L');
         }
 
-        // 4. "odbyła w dniu [data] kurs szkoleniowy:" - below user_name
-        if (isset($fields['user_name']) && isset($data['completion_date'])) {
-            $y = $fields['user_name']['y'] + 25; // 25 points below name
-            $pdf->SetFont('helvetica', '', 12);
+        // 4. "odbyła w dniu [data] kurs szkoleniowy:" (uses completion_date Y position)
+        if (isset($fields['completion_date']) && isset($data['completion_date'])) {
+            $y = $fields['completion_date']['y'];
+            $fontSize = $fields['completion_date']['font_size'] ?? 12;
+            $pdf->SetFont('helvetica', '', $fontSize);
             $pdf->SetTextColor(0, 0, 0);
             // Use proper verb form based on gender
             $userName = $data['user_name'];
@@ -169,21 +170,23 @@ class CertificateService
             $pdf->Cell($textWidth, 10, $text, 0, 0, 'L');
         }
 
-        // 6. "liczba punktów edukacyjnych: [points]" - below course title
-        if (isset($fields['points'])) {
+        // 6. "liczba punktów edukacyjnych: [points]" (uses points Y position)
+        if (isset($fields['points']) && isset($data['points'])) {
             $y = $fields['points']['y'];
-            $pdf->SetFont('helvetica', '', 12);
+            $fontSize = $fields['points']['font_size'] ?? 12;
+            $pdf->SetFont('helvetica', '', $fontSize);
             $pdf->SetTextColor(0, 0, 0);
-            $text = 'liczba punktów edukacyjnych: ' . $data['points'];
+            $text = 'liczba punktów edukacyjnych: ' . $data['points'] . ' pkt';
             $textWidth = $pdf->GetStringWidth($text);
             $pdf->SetXY($centerX - ($textWidth / 2), $y);
             $pdf->Cell($textWidth, 10, $text, 0, 0, 'L');
         }
 
-        // 7. "Gdańsk, dnia [data]" - at bottom
-        if (isset($fields['expiry_date']) && isset($data['expiry_date'])) {
+        // 7. "Gdańsk, dnia [data]" (uses expiry_date Y position)
+        if (isset($fields['expiry_date']) && isset($data['completion_date'])) {
             $y = $fields['expiry_date']['y'];
-            $pdf->SetFont('helvetica', '', 12);
+            $fontSize = $fields['expiry_date']['font_size'] ?? 12;
+            $pdf->SetFont('helvetica', '', $fontSize);
             $pdf->SetTextColor(0, 0, 0);
             $text = 'Gdańsk, dnia ' . $data['completion_date']; // Use completion date here
             $textWidth = $pdf->GetStringWidth($text);

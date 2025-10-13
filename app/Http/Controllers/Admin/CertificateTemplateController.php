@@ -166,13 +166,13 @@ class CertificateTemplateController extends Controller
             // Get fields configuration
             $fields = $template->getFieldsConfig();
 
-            // Demo data with full formatting
+            // Demo data (only actual dynamic values)
             $demoData = [
-                'certificate_number' => 'ZAŚWIADCZENIE nr DEMO/001/2025',
+                'certificate_number' => 'DEMO/001/2025',
                 'user_name' => 'Jan Kowalski',
-                'course_title' => 'Przykladowy kurs szkoleniowy',
+                'course_title' => 'Przykładowy kurs szkoleniowy',
                 'completion_date' => date('d.m.Y'),
-                'points' => '50 pkt',
+                'points' => '50',
                 'user_type' => 'Farmaceuta',
                 'expiry_date' => date('d.m.Y', strtotime('+2 years')),
             ];
@@ -256,12 +256,13 @@ class CertificateTemplateController extends Controller
      */
     private function renderCertificateContent($pdf, array $fields, array $demoData, float $centerX, array $size): void
     {
-        // 1. ZAŚWIADCZENIE nr [numer] - BOLD
-        if (isset($fields['certificate_number'])) {
+        // 1. ZAŚWIADCZENIE nr [numer] - BOLD (uses certificate_number Y position)
+        if (isset($fields['certificate_number']) && isset($demoData['certificate_number'])) {
             $y = $fields['certificate_number']['y'];
-            $pdf->SetFont('helvetica', 'B', $fields['certificate_number']['font_size'] ?? 12);
+            $fontSize = $fields['certificate_number']['font_size'] ?? 12;
+            $pdf->SetFont('helvetica', 'B', $fontSize);
             $pdf->SetTextColor(0, 0, 0);
-            $text = 'ZAŚWIADCZENIE nr ' . ($demoData['certificate_number'] ?? 'DEMO/001/2025');
+            $text = 'ZAŚWIADCZENIE nr ' . $demoData['certificate_number'];
             $textWidth = $pdf->GetStringWidth($text);
             $pdf->SetXY($centerX - ($textWidth / 2), $y);
             $pdf->Cell($textWidth, 10, $text, 0, 0, 'L');
@@ -291,13 +292,15 @@ class CertificateTemplateController extends Controller
             $pdf->Cell($textWidth, 10, $text, 0, 0, 'L');
         }
 
-        // 4. "odbyła w dniu [data] kurs szkoleniowy:" - below user_name
-        if (isset($fields['user_name']) && isset($fields['completion_date'])) {
-            $y = $fields['user_name']['y'] + 25; // 25 points below name
-            $pdf->SetFont('helvetica', '', 12);
+        // 4. "odbyła w dniu [data] kurs szkoleniowy:" (uses completion_date Y position)
+        if (isset($fields['completion_date']) && isset($demoData['completion_date'])) {
+            $y = $fields['completion_date']['y'];
+            $fontSize = $fields['completion_date']['font_size'] ?? 12;
+            $pdf->SetFont('helvetica', '', $fontSize);
             $pdf->SetTextColor(0, 0, 0);
-            $date = $demoData['completion_date'] ?? date('d.m.Y');
-            $text = 'odbyła w dniu ' . $date . ' kurs szkoleniowy:';
+            $userName = $demoData['user_name'] ?? '';
+            $verb = (substr($userName, -1) === 'a') ? 'odbyła' : 'odbył';
+            $text = $verb . ' w dniu ' . $demoData['completion_date'] . ' kurs szkoleniowy:';
             $textWidth = $pdf->GetStringWidth($text);
             $pdf->SetXY($centerX - ($textWidth / 2), $y);
             $pdf->Cell($textWidth, 10, $text, 0, 0, 'L');
@@ -315,25 +318,25 @@ class CertificateTemplateController extends Controller
             $pdf->Cell($textWidth, 10, $text, 0, 0, 'L');
         }
 
-        // 6. "liczba punktów edukacyjnych: [points]" - below course title
-        if (isset($fields['points'])) {
+        // 6. "liczba punktów edukacyjnych: [points]" (uses points Y position)
+        if (isset($fields['points']) && isset($demoData['points'])) {
             $y = $fields['points']['y'];
-            $pdf->SetFont('helvetica', '', 12);
+            $fontSize = $fields['points']['font_size'] ?? 12;
+            $pdf->SetFont('helvetica', '', $fontSize);
             $pdf->SetTextColor(0, 0, 0);
-            $points = $demoData['points'] ?? '50 pkt';
-            $text = 'liczba punktów edukacyjnych: ' . $points;
+            $text = 'liczba punktów edukacyjnych: ' . $demoData['points'] . ' pkt';
             $textWidth = $pdf->GetStringWidth($text);
             $pdf->SetXY($centerX - ($textWidth / 2), $y);
             $pdf->Cell($textWidth, 10, $text, 0, 0, 'L');
         }
 
-        // 7. "Gdańsk, dnia [data]" - at bottom
-        if (isset($fields['expiry_date'])) {
+        // 7. "Gdańsk, dnia [data]" (uses expiry_date Y position)
+        if (isset($fields['expiry_date']) && isset($demoData['completion_date'])) {
             $y = $fields['expiry_date']['y'];
-            $pdf->SetFont('helvetica', '', 12);
+            $fontSize = $fields['expiry_date']['font_size'] ?? 12;
+            $pdf->SetFont('helvetica', '', $fontSize);
             $pdf->SetTextColor(0, 0, 0);
-            $date = $demoData['expiry_date'] ?? date('d.m.Y');
-            $text = 'Gdańsk, dnia ' . $date;
+            $text = 'Gdańsk, dnia ' . $demoData['completion_date'];
             $textWidth = $pdf->GetStringWidth($text);
             $pdf->SetXY($centerX - ($textWidth / 2), $y);
             $pdf->Cell($textWidth, 10, $text, 0, 0, 'L');
