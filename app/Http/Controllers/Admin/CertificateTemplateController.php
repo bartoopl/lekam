@@ -260,7 +260,7 @@ class CertificateTemplateController extends Controller
         if (isset($fields['certificate_number']) && isset($demoData['certificate_number'])) {
             $y = $fields['certificate_number']['y'];
             $fontSize = $fields['certificate_number']['font_size'] ?? 12;
-            $pdf->SetFont('helvetica', 'B', $fontSize);
+            $pdf->SetFont('dejavusans', 'B', $fontSize);
             $pdf->SetTextColor(0, 0, 0);
             $text = 'ZAŚWIADCZENIE nr ' . $demoData['certificate_number'];
             $textWidth = $pdf->GetStringWidth($text);
@@ -271,7 +271,7 @@ class CertificateTemplateController extends Controller
         // 2. Pan / Pani - above user_name (14px)
         if (isset($fields['user_name'])) {
             $y = $fields['user_name']['y'] - 20; // 20 points above name
-            $pdf->SetFont('helvetica', '', 14);
+            $pdf->SetFont('dejavusans', '', 14);
             $pdf->SetTextColor(0, 0, 0);
             $userType = $demoData['user_type'] ?? 'Farmaceuta';
             $prefix = (strpos(strtolower($userType), 'pani') !== false || strpos(strtolower($demoData['user_name'] ?? ''), 'a ') !== false) ? 'Pani' : 'Pan';
@@ -284,7 +284,7 @@ class CertificateTemplateController extends Controller
         if (isset($fields['user_name'])) {
             $y = $fields['user_name']['y'];
             $fontSize = $fields['user_name']['font_size'] ?? 20;
-            $pdf->SetFont('helvetica', 'B', $fontSize);
+            $pdf->SetFont('dejavusans', 'B', $fontSize);
             $pdf->SetTextColor(0, 0, 0);
             $text = $demoData['user_name'] ?? 'Jan Kowalski';
             $textWidth = $pdf->GetStringWidth($text);
@@ -296,7 +296,7 @@ class CertificateTemplateController extends Controller
         if (isset($fields['completion_date']) && isset($demoData['completion_date'])) {
             $y = $fields['completion_date']['y'];
             $fontSize = $fields['completion_date']['font_size'] ?? 12;
-            $pdf->SetFont('helvetica', '', $fontSize);
+            $pdf->SetFont('dejavusans', '', $fontSize);
             $pdf->SetTextColor(0, 0, 0);
             $userName = $demoData['user_name'] ?? '';
             $verb = (substr($userName, -1) === 'a') ? 'odbyła' : 'odbył';
@@ -310,7 +310,7 @@ class CertificateTemplateController extends Controller
         if (isset($fields['course_title'])) {
             $y = $fields['course_title']['y'];
             $fontSize = $fields['course_title']['font_size'] ?? 14;
-            $pdf->SetFont('helvetica', 'B', $fontSize);
+            $pdf->SetFont('dejavusans', 'B', $fontSize);
             $pdf->SetTextColor(0, 0, 0);
             $text = $demoData['course_title'] ?? 'Przykladowy kurs szkoleniowy';
             $textWidth = $pdf->GetStringWidth($text);
@@ -322,7 +322,7 @@ class CertificateTemplateController extends Controller
         if (isset($fields['points']) && isset($demoData['points'])) {
             $y = $fields['points']['y'];
             $fontSize = $fields['points']['font_size'] ?? 12;
-            $pdf->SetFont('helvetica', '', $fontSize);
+            $pdf->SetFont('dejavusans', '', $fontSize);
             $pdf->SetTextColor(0, 0, 0);
             $text = 'liczba punktów edukacyjnych: ' . $demoData['points'] . ' pkt';
             $textWidth = $pdf->GetStringWidth($text);
@@ -334,7 +334,7 @@ class CertificateTemplateController extends Controller
         if (isset($fields['expiry_date']) && isset($demoData['completion_date'])) {
             $y = $fields['expiry_date']['y'];
             $fontSize = $fields['expiry_date']['font_size'] ?? 12;
-            $pdf->SetFont('helvetica', '', $fontSize);
+            $pdf->SetFont('dejavusans', '', $fontSize);
             $pdf->SetTextColor(0, 0, 0);
             $text = 'Gdańsk, dnia ' . $demoData['completion_date'];
             $textWidth = $pdf->GetStringWidth($text);

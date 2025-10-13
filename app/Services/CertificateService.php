@@ -61,7 +61,7 @@ class CertificateService
         $pdf->useTemplate($templateId, 0, 0, $size['width'], $size['height']);
 
         // Set font for text
-        $pdf->SetFont('helvetica', '', 12);
+        $pdf->SetFont('dejavusans', '', 12);
         $pdf->SetTextColor(0, 0, 0);
 
         // Get fields configuration
@@ -110,7 +110,7 @@ class CertificateService
         // 1. ZAŚWIADCZENIE nr [numer] - BOLD
         if (isset($fields['certificate_number'])) {
             $y = $fields['certificate_number']['y'];
-            $pdf->SetFont('helvetica', 'B', $fields['certificate_number']['font_size'] ?? 12);
+            $pdf->SetFont('dejavusans', 'B', $fields['certificate_number']['font_size'] ?? 12);
             $pdf->SetTextColor(0, 0, 0);
             $text = 'ZAŚWIADCZENIE nr ' . $data['certificate_number'];
             $textWidth = $pdf->GetStringWidth($text);
@@ -121,7 +121,7 @@ class CertificateService
         // 2. Pan / Pani - above user_name (14px)
         if (isset($fields['user_name'])) {
             $y = $fields['user_name']['y'] - 20; // 20 points above name
-            $pdf->SetFont('helvetica', '', 14);
+            $pdf->SetFont('dejavusans', '', 14);
             $pdf->SetTextColor(0, 0, 0);
             // Simple gender detection based on name ending
             $userName = $data['user_name'];
@@ -135,7 +135,7 @@ class CertificateService
         if (isset($fields['user_name'])) {
             $y = $fields['user_name']['y'];
             $fontSize = $fields['user_name']['font_size'] ?? 20;
-            $pdf->SetFont('helvetica', 'B', $fontSize);
+            $pdf->SetFont('dejavusans', 'B', $fontSize);
             $pdf->SetTextColor(0, 0, 0);
             $text = $data['user_name'];
             $textWidth = $pdf->GetStringWidth($text);
@@ -147,7 +147,7 @@ class CertificateService
         if (isset($fields['completion_date']) && isset($data['completion_date'])) {
             $y = $fields['completion_date']['y'];
             $fontSize = $fields['completion_date']['font_size'] ?? 12;
-            $pdf->SetFont('helvetica', '', $fontSize);
+            $pdf->SetFont('dejavusans', '', $fontSize);
             $pdf->SetTextColor(0, 0, 0);
             // Use proper verb form based on gender
             $userName = $data['user_name'];
@@ -162,7 +162,7 @@ class CertificateService
         if (isset($fields['course_title'])) {
             $y = $fields['course_title']['y'];
             $fontSize = $fields['course_title']['font_size'] ?? 14;
-            $pdf->SetFont('helvetica', 'B', $fontSize);
+            $pdf->SetFont('dejavusans', 'B', $fontSize);
             $pdf->SetTextColor(0, 0, 0);
             $text = $data['course_title'];
             $textWidth = $pdf->GetStringWidth($text);
@@ -174,7 +174,7 @@ class CertificateService
         if (isset($fields['points']) && isset($data['points'])) {
             $y = $fields['points']['y'];
             $fontSize = $fields['points']['font_size'] ?? 12;
-            $pdf->SetFont('helvetica', '', $fontSize);
+            $pdf->SetFont('dejavusans', '', $fontSize);
             $pdf->SetTextColor(0, 0, 0);
             $text = 'liczba punktów edukacyjnych: ' . $data['points'] . ' pkt';
             $textWidth = $pdf->GetStringWidth($text);
@@ -186,7 +186,7 @@ class CertificateService
         if (isset($fields['expiry_date']) && isset($data['completion_date'])) {
             $y = $fields['expiry_date']['y'];
             $fontSize = $fields['expiry_date']['font_size'] ?? 12;
-            $pdf->SetFont('helvetica', '', $fontSize);
+            $pdf->SetFont('dejavusans', '', $fontSize);
             $pdf->SetTextColor(0, 0, 0);
             $text = 'Gdańsk, dnia ' . $data['completion_date']; // Use completion date here
             $textWidth = $pdf->GetStringWidth($text);
@@ -210,7 +210,7 @@ class CertificateService
             return;
         }
 
-        $pdf->SetFont('helvetica', '', $fontSize);
+        $pdf->SetFont('dejavusans', '', $fontSize);
         $pdf->SetTextColor(0, 0, 0); // Ensure black text
 
         // TCPDF with UTF-8 handles Polish characters natively, no conversion needed
