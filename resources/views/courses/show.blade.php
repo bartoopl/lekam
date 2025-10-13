@@ -804,6 +804,7 @@
                 <!-- Progress path (flat horizontal line) -->
                 <path id="progress-path" class="progress-path"
                       d="M 0 5 L 800 5"
+                      stroke="url(#progressGradient)"
                       vector-effect="non-scaling-stroke" />
             </svg>
             <!-- HTML dot that stays perfectly round -->
