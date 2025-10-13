@@ -179,28 +179,45 @@ class CertificateTemplateController extends Controller
             $pdf->SetFont('helvetica', '', 12);
             $pdf->SetTextColor(0, 0, 0);
 
-            // DEBUG: Add very visible text first
-            $pdf->SetFont('helvetica', 'B', 30);
-            $pdf->SetTextColor(255, 0, 0);
-            $pdf->SetXY(100, 100);
-            $pdf->Cell(0, 10, 'WIDOCZNY TEST', 0, 0, 'L');
+            // DEBUG: Draw grid to see coordinate system
+            $pdf->SetDrawColor(200, 200, 200);
+            $pdf->SetLineWidth(0.5);
 
-            // FORCE draw some rectangles and text at known positions
+            // Vertical lines every 50 points
+            for ($x = 0; $x <= $size['width']; $x += 50) {
+                $pdf->Line($x, 0, $x, $size['height']);
+            }
+
+            // Horizontal lines every 50 points
+            for ($y = 0; $y <= $size['height']; $y += 50) {
+                $pdf->Line(0, $y, $size['width'], $y);
+            }
+
+            // Add coordinate labels
+            $pdf->SetFont('helvetica', '', 8);
+            $pdf->SetTextColor(100, 100, 100);
+            for ($x = 0; $x <= $size['width']; $x += 100) {
+                $pdf->SetXY($x + 2, 2);
+                $pdf->Cell(20, 5, "X:$x", 0, 0, 'L');
+            }
+            for ($y = 0; $y <= $size['height']; $y += 100) {
+                $pdf->SetXY(2, $y + 2);
+                $pdf->Cell(20, 5, "Y:$y", 0, 0, 'L');
+            }
+
+            // DEBUG: Add visible markers at corners
             $pdf->SetDrawColor(255, 0, 0);
-            $pdf->SetLineWidth(3);
-            $pdf->Rect(280, 140, 150, 20, 'D'); // certificate_number position
-            $pdf->Rect(280, 300, 150, 20, 'D'); // user_name position
-            $pdf->Rect(280, 350, 150, 20, 'D'); // course_title position
+            $pdf->SetLineWidth(2);
+            $pdf->Rect(10, 10, 30, 30, 'D'); // Top-left
+            $pdf->Rect($size['width'] - 40, 10, 30, 30, 'D'); // Top-right
+            $pdf->Rect(10, $size['height'] - 40, 30, 30, 'D'); // Bottom-left
+            $pdf->Rect($size['width'] - 40, $size['height'] - 40, 30, 30, 'D'); // Bottom-right
 
-            // Add text at those positions
-            $pdf->SetFont('helvetica', 'B', 14);
-            $pdf->SetTextColor(0, 0, 255); // Blue text
-            $pdf->SetXY(280, 140);
-            $pdf->Cell(0, 10, 'DEMO/001/2025', 0, 0, 'L');
-            $pdf->SetXY(280, 300);
-            $pdf->Cell(0, 10, 'Jan Kowalski', 0, 0, 'L');
-            $pdf->SetXY(280, 350);
-            $pdf->Cell(0, 10, 'Przykladowy kurs', 0, 0, 'L');
+            // Show page size
+            $pdf->SetFont('helvetica', 'B', 16);
+            $pdf->SetTextColor(255, 0, 0);
+            $pdf->SetXY(10, 50);
+            $pdf->Cell(0, 10, 'Size: ' . round($size['width']) . ' x ' . round($size['height']), 0, 0, 'L');
 
             // Generate filename
             $filename = 'demo_certificate_' . $template->id . '_' . time() . '.pdf';
