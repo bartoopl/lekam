@@ -50,9 +50,17 @@ class Quiz extends Model
 
     /**
      * Get the maximum possible score for this quiz
+     * If questions_to_draw is set, returns max score for that many questions
+     * Otherwise returns sum of all questions
      */
     public function getMaxScore(): int
     {
+        if ($this->questions_to_draw) {
+            // Return score for the number of questions that will be drawn
+            // Assuming each question is worth 1 point
+            return $this->questions_to_draw;
+        }
+
         return $this->questions()->sum('points');
     }
 
