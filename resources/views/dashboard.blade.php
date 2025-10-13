@@ -226,16 +226,23 @@
     .progress-bar {
         width: 100%;
         height: 6px;
-        background: rgba(255, 255, 255, 0.3);
         border-radius: 3px;
         margin-top: 0.5rem;
         overflow: hidden;
+        position: relative;
+        background: linear-gradient(to right, #21235F 0%, #3B82F6 50%, #22C55E 100%);
+    }
+
+    .progress-bar-gradient {
+        display: none;
     }
 
     .progress-fill {
+        position: absolute;
+        top: 0;
+        right: 0;
         height: 100%;
-        background: linear-gradient(90deg, #21235F 0%, #3B82F6 50%, #22C55E 100%);
-        border-radius: 3px;
+        background: rgba(255, 255, 255, 0.3);
         transition: width 0.3s ease;
     }
 
@@ -476,7 +483,7 @@
                             <div class="course-name">{{ $course->title }}</div>
                             <div class="course-progress">{{ $progressPercentage }}% ukończone</div>
                             <div class="progress-bar">
-                                <div class="progress-fill" style="width: {{ $progressPercentage }}%"></div>
+                                <div class="progress-fill" style="width: {{ 100 - $progressPercentage }}%"></div>
                             </div>
                         </div>
                     </a>
