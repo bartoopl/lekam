@@ -102,8 +102,14 @@ class Quiz extends Model
             return $this->questions;
         }
 
-        // Randomly select questions
-        return $this->questions()->inRandomOrder()->limit($questionsToTake)->get();
+        // Get all question IDs, shuffle them, and take the required amount
+        // This ensures no duplicates even if inRandomOrder() has issues
+        $allQuestionIds = $this->questions()->pluck('id')->toArray();
+        shuffle($allQuestionIds);
+        $selectedIds = array_slice($allQuestionIds, 0, $questionsToTake);
+
+        // Return questions in their original order
+        return $this->questions()->whereIn('id', $selectedIds)->get();
     }
 
     /**
