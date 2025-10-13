@@ -219,15 +219,13 @@
                                                 <a href="{{ route('admin.users.edit', $user) }}" class="table-button view">
                                                     Edytuj
                                                 </a>
-                                                @if($user->id != auth()->user()->id)
                                                 <form action="{{ route('admin.users.destroy', $user) }}" method="POST" style="display: inline-block;" onsubmit="return confirm('Czy na pewno chcesz usunąć użytkownika {{ addslashes($user->name) }}? Ta operacja jest nieodwracalna.');">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="table-button delete">
+                                                    <button type="submit" class="table-button delete" @if($user->id == auth()->user()->id) disabled title="Nie możesz usunąć swojego konta" @endif>
                                                         Usuń
                                                     </button>
                                                 </form>
-                                                @endif
                                             </td>
                                         </tr>
                                     @endforeach
