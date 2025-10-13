@@ -71,8 +71,8 @@ class CertificateService
         // Generate filename
         $filename = 'certificates/' . $certificate->certificate_number . '.pdf';
 
-        // Save PDF
-        $output = $pdf->Output('S'); // Output as string
+        // Save PDF (TCPDF Output syntax: Output(name, destination))
+        $output = $pdf->Output('certificate.pdf', 'S'); // Output as string
         Storage::disk('public')->put($filename, $output);
 
         return $filename;

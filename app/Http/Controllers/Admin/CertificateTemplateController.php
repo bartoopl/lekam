@@ -241,8 +241,11 @@ class CertificateTemplateController extends Controller
             // Generate filename
             $filename = 'demo_certificate_' . $template->id . '_' . time() . '.pdf';
 
-            // Output PDF to browser
-            return response($pdf->Output('S', $filename), 200, [
+            // Output PDF as string for response
+            $pdfContent = $pdf->Output($filename, 'S');
+
+            // Return PDF to browser
+            return response($pdfContent, 200, [
                 'Content-Type' => 'application/pdf',
                 'Content-Disposition' => 'inline; filename="' . $filename . '"',
             ]);
