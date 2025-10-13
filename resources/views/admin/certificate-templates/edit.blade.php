@@ -184,8 +184,8 @@ use Illuminate\Support\Facades\Storage;
                         </div>
                     @endif
                 </div>
-                <div class="bg-gray-100 rounded-lg p-4" style="overflow-x: auto;">
-                    <div id="preview-container" class="relative bg-white mx-auto border-2 border-gray-300" style="width: 842px; height: 595px; background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDIiIGhlaWdodD0iNDIiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI0MiIgaGVpZ2h0PSI0MiIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAwIDQyIEwgNDIgNDIgTCA0MiAwIiBmaWxsPSJub25lIiBzdHJva2U9IiNlNWU3ZWIiIHN0cm9rZS13aWR0aD0iMSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNncmlkKSIgLz48L3N2Zz4='); background-size: 42px 42px;">
+                <div class="bg-gray-100 rounded-lg p-4 flex justify-center" style="max-height: 90vh; overflow: auto;">
+                    <div id="preview-container" class="relative bg-white border-2 border-gray-300" style="width: 595px; height: 842px; background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDIiIGhlaWdodD0iNDIiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI0MiIgaGVpZ2h0PSI0MiIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAwIDQyIEwgNDIgNDIgTCA0MiAwIiBmaWxsPSJub25lIiBzdHJva2U9IiNlNWU3ZWIiIHN0cm9rZS13aWR0aD0iMSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNncmlkKSIgLz48L3N2Zz4='); background-size: 42px 42px;">
 
                         <!-- PDF Preview (initially hidden) -->
                         @if($template->pdf_path && Storage::disk('public')->exists($template->pdf_path))
@@ -205,7 +205,7 @@ use Illuminate\Support\Facades\Storage;
 
                         <!-- Size indicator -->
                         <div class="absolute bottom-2 right-2 bg-gray-700 text-white px-3 py-1 rounded text-xs z-10">
-                            842 × 595 px (A4 Landscape)
+                            595 × 842 px (A4 Portrait)
                         </div>
 
                         <!-- Field markers -->

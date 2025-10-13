@@ -124,7 +124,7 @@ class CertificateTemplateController extends Controller
 
         $template->update($validated);
 
-        return redirect()->route('admin.certificate-templates.index')
+        return redirect()->route('admin.certificate-templates.edit', $template)
             ->with('success', 'Szablon certyfikatu został zaktualizowany pomyślnie.');
     }
 
