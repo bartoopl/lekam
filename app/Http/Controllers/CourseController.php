@@ -186,19 +186,23 @@ class CourseController extends Controller
                         if (file_exists($filePath)) {
                             // Mark file as downloaded
                             $lesson->markFileAsDownloaded($user);
-                            return response()->download($filePath, $fileName);
+                            // Use original_name to preserve file extension
+                            $downloadName = $material['original_name'] ?? $fileName . '.' . ($material['extension'] ?? 'pdf');
+                            return response()->download($filePath, $downloadName);
                         }
                     }
                 }
             }
-            
+
             // Fallback: return first available material
             if (!empty($materials) && isset($materials[0]['file'])) {
                 $filePath = storage_path('app/public/' . $materials[0]['file']);
                 if (file_exists($filePath)) {
                     // Mark file as downloaded
                     $lesson->markFileAsDownloaded($user);
-                    return response()->download($filePath, $materials[0]['name'] ?? 'download');
+                    // Use original_name to preserve file extension
+                    $downloadName = $materials[0]['original_name'] ?? ($materials[0]['name'] ?? 'download') . '.' . ($materials[0]['extension'] ?? 'pdf');
+                    return response()->download($filePath, $downloadName);
                 }
             }
         }
