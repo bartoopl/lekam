@@ -92,15 +92,30 @@ class CertificateTemplate extends Model
 
     /**
      * Get default field positions (if fields_config is empty)
+     *
+     * Available fields:
+     * - certificate_number: Position for "ZAŚWIADCZENIE nr [number]"
+     * - user_name: Position for user's full name
+     * - completion_date: Position for "odbył/odbyła w dniu [date] kurs szkoleniowy:"
+     * - course_subtitle: [OPTIONAL] Position for additional text before course title (for technik_farmacji)
+     * - course_title: Position for course title (supports multiline)
+     * - points: Position for "liczba punktów edukacyjnych: [X] pkt"
+     * - duration_hours: [OPTIONAL] Position for "liczba godzin szkoleniowych: [X] godz." (for technik_farmacji)
+     * - city: Position for city and date, e.g., "Warszawa, dnia [date]" (with 'value' key for city name)
+     * - expiry_date: [DEPRECATED] Use 'city' instead. Fallback for "Gdańsk, dnia [date]"
      */
     public function getDefaultFieldsConfig(): array
     {
         return [
-            'certificate_number' => ['x' => 400, 'y' => 50, 'font_size' => 10],
-            'user_name' => ['x' => 200, 'y' => 300, 'font_size' => 20, 'align' => 'center'],
-            'course_title' => ['x' => 200, 'y' => 350, 'font_size' => 14, 'align' => 'center'],
-            'completion_date' => ['x' => 150, 'y' => 450, 'font_size' => 12],
-            'points' => ['x' => 450, 'y' => 450, 'font_size' => 12],
+            'certificate_number' => ['y' => 50, 'font_size' => 10],
+            'user_name' => ['y' => 300, 'font_size' => 20],
+            'completion_date' => ['y' => 450, 'font_size' => 12],
+            'course_title' => ['y' => 350, 'font_size' => 14],
+            'points' => ['y' => 450, 'font_size' => 12],
+            // Optional fields (commented out - add to template config if needed):
+            // 'course_subtitle' => ['y' => 380, 'font_size' => 11],
+            // 'duration_hours' => ['y' => 480, 'font_size' => 12],
+            // 'city' => ['y' => 700, 'font_size' => 12, 'value' => 'Warszawa'],
         ];
     }
 

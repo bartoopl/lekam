@@ -91,12 +91,16 @@ class CertificateService
      */
     private function prepareDataFields(Certificate $certificate, User $user, Course $course): array
     {
+        // Calculate duration in hours (round up)
+        $durationHours = $course->duration_minutes ? ceil($course->duration_minutes / 60) : 0;
+
         return [
             'certificate_number' => $certificate->certificate_number,
             'user_name' => $user->name,
             'course_title' => $course->title,
             'completion_date' => $certificate->issued_at->format('d.m.Y'),
             'points' => $course->getPointsForUser($user), // Just the number, no "pkt"
+            'duration_hours' => $durationHours, // Duration in hours
             'user_type' => $user->user_type === 'farmaceuta' ? 'Farmaceuta' : 'Technik Farmacji',
             'expiry_date' => $certificate->expires_at ? $certificate->expires_at->format('d.m.Y') : 'bezterminowy',
         ];
@@ -158,6 +162,30 @@ class CertificateService
             $pdf->Cell($textWidth, 10, $text, 0, 0, 'L');
         }
 
+        // 4b. Course subtitle - optional additional text before course title (for technik_farmacji)
+        if (isset($fields['course_subtitle']) && isset($data['completion_date'])) {
+            $y = $fields['course_subtitle']['y'];
+            $fontSize = $fields['course_subtitle']['font_size'] ?? 11;
+            $pdf->SetFont('dejavusans', 'I', $fontSize); // Italic for subtitle
+            $pdf->SetTextColor(0, 0, 0);
+            $text = 'kurs szkoleniowy realizowany za pośrednictwem sieci internetowej z ograniczonym dostępem zakończony testem';
+
+            // Calculate maximum width (80% of page width)
+            $maxWidth = $size['width'] * 0.8;
+            $textWidth = $pdf->GetStringWidth($text);
+
+            if ($textWidth <= $maxWidth) {
+                // Single line
+                $pdf->SetXY($centerX - ($textWidth / 2), $y);
+                $pdf->Cell($textWidth, 10, $text, 0, 0, 'L');
+            } else {
+                // Multi-line with center alignment
+                $startX = $centerX - ($maxWidth / 2);
+                $pdf->SetXY($startX, $y);
+                $pdf->MultiCell($maxWidth, 12, $text, 0, 'C', false, 1);
+            }
+        }
+
         // 5. Course title - centered with multiline support
         if (isset($fields['course_title'])) {
             $y = $fields['course_title']['y'];
@@ -196,13 +224,37 @@ class CertificateService
             $pdf->Cell($textWidth, 10, $text, 0, 0, 'L');
         }
 
-        // 7. "Gdańsk, dnia [data]" (uses expiry_date Y position)
-        if (isset($fields['expiry_date']) && isset($data['completion_date'])) {
+        // 6b. Duration hours - optional (for technik_farmacji)
+        if (isset($fields['duration_hours']) && isset($data['duration_hours'])) {
+            $y = $fields['duration_hours']['y'];
+            $fontSize = $fields['duration_hours']['font_size'] ?? 12;
+            $pdf->SetFont('dejavusans', '', $fontSize);
+            $pdf->SetTextColor(0, 0, 0);
+            $text = 'liczba godzin szkoleniowych: ' . $data['duration_hours'] . ' godz.';
+            $textWidth = $pdf->GetStringWidth($text);
+            $pdf->SetXY($centerX - ($textWidth / 2), $y);
+            $pdf->Cell($textWidth, 10, $text, 0, 0, 'L');
+        }
+
+        // 7. City and date - uses city from template config or defaults to Gdańsk
+        if (isset($fields['city']) && isset($data['completion_date'])) {
+            $y = $fields['city']['y'];
+            $fontSize = $fields['city']['font_size'] ?? 12;
+            $pdf->SetFont('dejavusans', '', $fontSize);
+            $pdf->SetTextColor(0, 0, 0);
+            // Get city from config, default to Gdańsk
+            $city = $fields['city']['value'] ?? 'Gdańsk';
+            $text = $city . ', dnia ' . $data['completion_date'];
+            $textWidth = $pdf->GetStringWidth($text);
+            $pdf->SetXY($centerX - ($textWidth / 2), $y);
+            $pdf->Cell($textWidth, 10, $text, 0, 0, 'L');
+        } elseif (isset($fields['expiry_date']) && isset($data['completion_date'])) {
+            // Fallback to old field name for backward compatibility
             $y = $fields['expiry_date']['y'];
             $fontSize = $fields['expiry_date']['font_size'] ?? 12;
             $pdf->SetFont('dejavusans', '', $fontSize);
             $pdf->SetTextColor(0, 0, 0);
-            $text = 'Gdańsk, dnia ' . $data['completion_date']; // Use completion date here
+            $text = 'Gdańsk, dnia ' . $data['completion_date'];
             $textWidth = $pdf->GetStringWidth($text);
             $pdf->SetXY($centerX - ($textWidth / 2), $y);
             $pdf->Cell($textWidth, 10, $text, 0, 0, 'L');
