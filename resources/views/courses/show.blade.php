@@ -785,7 +785,7 @@
             <div class="progress-percentage">{{ $progressPercentage }}%</div>
         </div>
         <div class="progress-bar-container">
-            <svg class="sinusoidal-progress" viewBox="0 0 1000 10" preserveAspectRatio="xMinYMin slice">
+            <svg class="sinusoidal-progress" viewBox="0 0 1000 10" preserveAspectRatio="none">
                 <!-- Gradient definitions -->
                 <defs>
                     <linearGradient id="progressGradient" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -797,13 +797,11 @@
 
                 <!-- Background path (flat horizontal line) -->
                 <path id="progress-path-bg" class="progress-path-bg"
-                      d="M 0 5 L 1000 5"
-                      vector-effect="non-scaling-stroke" />
+                      d="M 0 5 L 1000 5" />
 
                 <!-- Progress path (flat horizontal line) -->
                 <path id="progress-path" class="progress-path"
-                      d="M 0 5 L 1000 5"
-                      vector-effect="non-scaling-stroke" />
+                      d="M 0 5 L 1000 5" />
             </svg>
             <!-- HTML dot that stays perfectly round -->
             <div class="progress-dot-wrapper" id="progress-dot-wrapper">
