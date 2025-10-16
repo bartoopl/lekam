@@ -785,7 +785,7 @@
             <div class="progress-percentage">{{ $progressPercentage }}%</div>
         </div>
         <div class="progress-bar-container">
-            <svg class="sinusoidal-progress" viewBox="0 0 1000 10" preserveAspectRatio="xMidYMid meet">
+            <svg class="sinusoidal-progress" viewBox="0 0 1000 10" preserveAspectRatio="xMinYMin slice">
                 <!-- Gradient definitions -->
                 <defs>
                     <linearGradient id="progressGradient" x1="0%" y1="0%" x2="100%" y2="0%">
