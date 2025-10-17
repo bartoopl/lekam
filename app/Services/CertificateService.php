@@ -156,7 +156,9 @@ class CertificateService
             // Use proper verb form based on gender
             $userName = $data['user_name'];
             $verb = (substr($userName, -1) === 'a') ? 'odbyła' : 'odbył';
-            $text = $verb . ' w dniu ' . $data['completion_date'] . ' kurs szkoleniowy:';
+            // Add colon only if there's no course_subtitle field (for farmaceuta)
+            $suffix = isset($fields['course_subtitle']) ? '' : ':';
+            $text = $verb . ' w dniu ' . $data['completion_date'] . ' kurs szkoleniowy' . $suffix;
             $textWidth = $pdf->GetStringWidth($text);
             $pdf->SetXY($centerX - ($textWidth / 2), $y);
             $pdf->Cell($textWidth, 10, $text, 0, 0, 'L');
