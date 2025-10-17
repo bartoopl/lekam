@@ -66,8 +66,8 @@
                             </span>
                         </div>
                         <div class="flex justify-between">
-                            <span class="text-gray-600">Maksymalny wynik:</span>
-                            <span class="font-medium">{{ $quiz->getMaxScore() }} punktów</span>
+                            <span class="text-gray-600">Maksymalny wynik w teście:</span>
+                            <span class="font-medium">{{ $quiz->getMaxScore() }} pkt</span>
                         </div>
                     </div>
                 </div>
