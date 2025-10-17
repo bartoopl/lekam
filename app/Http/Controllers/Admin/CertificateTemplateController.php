@@ -302,9 +302,13 @@ class CertificateTemplateController extends Controller
             // Use proper verb form based on gender
             $userName = $demoData['user_name'];
             $verb = (substr($userName, -1) === 'a') ? 'odbyła' : 'odbył';
-            // Add colon only if there's no course_subtitle field (for farmaceuta)
-            $suffix = isset($fields['course_subtitle']) ? '' : ':';
-            $text = $verb . ' w dniu ' . $demoData['completion_date'] . ' kurs szkoleniowy' . $suffix;
+            // For technik_farmacji (with course_subtitle), only show "odbył w dniu [data]"
+            // For farmaceuta (without course_subtitle), show full text with "kurs szkoleniowy:"
+            if (isset($fields['course_subtitle'])) {
+                $text = $verb . ' w dniu ' . $demoData['completion_date'];
+            } else {
+                $text = $verb . ' w dniu ' . $demoData['completion_date'] . ' kurs szkoleniowy:';
+            }
             $textWidth = $pdf->GetStringWidth($text);
             $pdf->SetXY($centerX - ($textWidth / 2), $y);
             $pdf->Cell($textWidth, 10, $text, 0, 0, 'L');
@@ -314,24 +318,18 @@ class CertificateTemplateController extends Controller
         if (isset($fields['course_subtitle']) && isset($demoData['completion_date'])) {
             $y = $fields['course_subtitle']['y'];
             $fontSize = $fields['course_subtitle']['font_size'] ?? 11;
-            $pdf->SetFont('dejavusans', 'I', $fontSize); // Italic for subtitle
+            $pdf->SetFont('dejavusans', '', $fontSize);
             $pdf->SetTextColor(0, 0, 0);
-            $text = 'kurs szkoleniowy realizowany za pośrednictwem sieci internetowej z ograniczonym dostępem zakończony testem';
+            // Two-line text with line break before "z ograniczonym dostępem"
+            $text = "kurs szkoleniowy realizowany za pośrednictwem sieci internetowej\nz ograniczonym dostępem zakończony testem";
 
             // Calculate maximum width (80% of page width)
             $maxWidth = $size['width'] * 0.8;
-            $textWidth = $pdf->GetStringWidth($text);
 
-            if ($textWidth <= $maxWidth) {
-                // Single line
-                $pdf->SetXY($centerX - ($textWidth / 2), $y);
-                $pdf->Cell($textWidth, 10, $text, 0, 0, 'L');
-            } else {
-                // Multi-line with center alignment
-                $startX = $centerX - ($maxWidth / 2);
-                $pdf->SetXY($startX, $y);
-                $pdf->MultiCell($maxWidth, 12, $text, 0, 'C', false, 1);
-            }
+            // Use MultiCell for multi-line text with center alignment
+            $startX = $centerX - ($maxWidth / 2);
+            $pdf->SetXY($startX, $y);
+            $pdf->MultiCell($maxWidth, 12, $text, 0, 'C', false, 1);
         }
 
         // 5. Course title - centered with multiline support
