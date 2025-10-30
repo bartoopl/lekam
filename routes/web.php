@@ -81,6 +81,7 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->name('admin.'
     Route::get('/users/{user}/edit', [AdminController::class, 'userEdit'])->name('users.edit');
     Route::put('/users/{user}', [AdminController::class, 'userUpdate'])->name('users.update');
     Route::delete('/users/{user}', [AdminController::class, 'userDestroy'])->name('users.destroy');
+    Route::get('/users/{user}/progress', [AdminController::class, 'userProgress'])->name('users.progress');
     Route::get('/courses', [AdminController::class, 'courses'])->name('courses');
     Route::get('/courses/create', [AdminController::class, 'courseCreate'])->name('courses.create');
     Route::post('/courses', [AdminController::class, 'courseStore'])->name('courses.store');

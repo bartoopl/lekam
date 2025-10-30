@@ -49,7 +49,9 @@ class AdminController extends Controller
      */
     public function usersExport()
     {
-        $users = User::all();
+        $users = User::with(['certificates' => function($query) {
+            $query->orderBy('issued_at', 'desc');
+        }])->get();
 
         $filename = 'uzytkownicy_' . date('Y-m-d_His') . '.csv';
 
@@ -79,6 +81,9 @@ class AdminController extends Controller
                 'Kod pocztowy apteki',
                 'Miasto apteki',
                 'Data rejestracji',
+                'Ostatnia aktywność',
+                'Liczba certyfikatów',
+                'Ostatni certyfikat',
                 'Email zweryfikowany',
                 'Administrator',
                 'Zgoda 1 (RODO - wymagana)',
@@ -88,6 +93,14 @@ class AdminController extends Controller
 
             // Data rows
             foreach ($users as $user) {
+                // Get last certificate info
+                $lastCertificate = $user->certificates->first();
+                $certificateCount = $user->certificates->count();
+                $lastCertificateDate = $lastCertificate ? $lastCertificate->issued_at->format('Y-m-d H:i:s') : '';
+
+                // Get last activity - fallback to updated_at if no better indicator
+                $lastActivity = $user->updated_at ? $user->updated_at->format('Y-m-d H:i:s') : '';
+
                 fputcsv($file, [
                     $user->id,
                     $user->name,
@@ -99,6 +112,9 @@ class AdminController extends Controller
                     $user->pharmacy_postal_code ?? '',
                     $user->pharmacy_city ?? '',
                     $user->created_at ? $user->created_at->format('Y-m-d H:i:s') : '',
+                    $lastActivity,
+                    $certificateCount,
+                    $lastCertificateDate,
                     $user->email_verified_at ? 'Tak' : 'Nie',
                     $user->is_admin ? 'Tak' : 'Nie',
                     $user->consent_1 ? 'Tak' : 'Nie',
@@ -171,6 +187,48 @@ class AdminController extends Controller
         $user->delete();
 
         return redirect()->route('admin.users')->with('success', "Użytkownik {$userName} został usunięty pomyślnie.");
+    }
+
+    /**
+     * Show user progress in courses
+     */
+    public function userProgress(User $user)
+    {
+        // Get user progress with course and lesson information
+        $userProgress = UserProgress::with(['course', 'lesson'])
+            ->where('user_id', $user->id)
+            ->get()
+            ->groupBy('course_id');
+
+        // Get all available courses
+        $courses = Course::with(['lessons', 'quiz'])
+            ->orderBy('title')
+            ->get();
+
+        // Get user certificates
+        $certificates = Certificate::with('course')
+            ->where('user_id', $user->id)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        // Calculate overall progress stats
+        $totalCourses = $courses->count();
+        $completedCourses = $certificates->where('is_valid', true)->count();
+        $inProgressCourses = $userProgress->filter(function($progress) {
+            return $progress->contains(function($item) {
+                return $item->is_completed;
+            });
+        })->count();
+
+        return view('admin.users.progress', compact(
+            'user',
+            'userProgress',
+            'courses',
+            'certificates',
+            'totalCourses',
+            'completedCourses',
+            'inProgressCourses'
+        ));
     }
 
     /**

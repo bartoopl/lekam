@@ -444,6 +444,9 @@
                                                 {{ $user->created_at->format('d.m.Y') }}
                                             </td>
                                             <td class="px-2 py-4 text-sm font-medium text-center">
+                                                <a href="{{ route('admin.users.progress', $user) }}" class="table-button view" title="Zobacz postępy">
+                                                    Postępy
+                                                </a>
                                                 <a href="{{ route('admin.users.edit', $user) }}" class="table-button view">
                                                     Edytuj
                                                 </a>
