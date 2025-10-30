@@ -265,6 +265,37 @@
         color: #9CA3AF;
         cursor: not-allowed;
     }
+
+    /* Ensure pagination is visible */
+    .pagination-container {
+        display: flex !important;
+        justify-content: center !important;
+        margin-top: 2rem !important;
+    }
+
+    .pagination {
+        display: flex !important;
+        gap: 0.5rem !important;
+        list-style: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    .pagination li {
+        display: inline-block !important;
+    }
+
+    .pagination a,
+    .pagination span {
+        display: inline-block !important;
+        padding: 0.5rem 0.75rem !important;
+        border-radius: 0.5rem !important;
+        text-decoration: none !important;
+        transition: all 0.2s ease !important;
+        font-weight: 500 !important;
+        min-width: 44px !important;
+        text-align: center !important;
+    }
 </style>
 
 <div class="admin-container">
@@ -377,7 +408,7 @@
                             </div>
                         </div>
 
-                        <div class="mt-6">
+                        <div class="pagination-container">
                             {{ $users->links() }}
                         </div>
                     @else
