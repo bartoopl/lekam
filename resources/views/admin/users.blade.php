@@ -470,7 +470,7 @@
                         </div>
 
                         <div class="pagination-container">
-                            {{ $users->links() }}
+                            {{ $users->links('pagination::simple-default') }}
                         </div>
                     @else
                         <div class="text-center py-12">
