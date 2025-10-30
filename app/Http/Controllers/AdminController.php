@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Course;
 use App\Models\User;
+use App\Models\UserProgress;
 use App\Models\Lesson;
 use App\Models\Quiz;
 use App\Models\QuizQuestion;
