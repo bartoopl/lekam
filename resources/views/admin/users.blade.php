@@ -12,9 +12,9 @@
     }
 
     .admin-container {
-        max-width: 1200px;
+        max-width: 1400px;
         margin: 0 auto;
-        padding: 2rem;
+        padding: 1.5rem;
     }
 
     .admin-header {
@@ -62,8 +62,9 @@
         backdrop-filter: blur(20px);
         border: 1px solid rgba(255, 255, 255, 0.3);
         border-radius: 15px;
-        padding: 2rem;
+        padding: 1.5rem;
         box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        overflow-x: hidden;
     }
 
     /* Table button styles */
@@ -109,6 +110,82 @@
         border-radius: 0.75rem;
         overflow: hidden;
         box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        table-layout: fixed;
+    }
+
+    .admin-table th,
+    .admin-table td {
+        padding: 0.75rem 0.5rem;
+        text-align: left;
+        border-bottom: 1px solid #f3f4f6;
+    }
+
+    .admin-table th:nth-child(1),
+    .admin-table td:nth-child(1) {
+        width: 25%;
+    }
+
+    .admin-table th:nth-child(2),
+    .admin-table td:nth-child(2) {
+        width: 12%;
+    }
+
+    .admin-table th:nth-child(3),
+    .admin-table td:nth-child(3) {
+        width: 12%;
+    }
+
+    .admin-table th:nth-child(4),
+    .admin-table td:nth-child(4) {
+        width: 10%;
+        text-align: center;
+    }
+
+    .admin-table th:nth-child(5),
+    .admin-table td:nth-child(5) {
+        width: 15%;
+    }
+
+    .admin-table th:nth-child(6),
+    .admin-table td:nth-child(6) {
+        width: 26%;
+        text-align: center;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 1200px) {
+        .admin-table th:nth-child(1),
+        .admin-table td:nth-child(1) {
+            width: 22%;
+        }
+
+        .admin-table th:nth-child(6),
+        .admin-table td:nth-child(6) {
+            width: 29%;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .admin-container {
+            padding: 1rem;
+        }
+
+        .users-container {
+            padding: 1rem;
+        }
+
+        .admin-table th,
+        .admin-table td {
+            padding: 0.5rem 0.25rem;
+            font-size: 0.875rem;
+        }
+
+        .table-button {
+            padding: 0.375rem 0.75rem;
+            font-size: 0.75rem;
+            margin: 0 0.125rem;
+        }
     }
 
     .admin-table thead {
@@ -208,8 +285,7 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6">
                     @if($users->count() > 0)
-                        <div class="overflow-x-auto">
-                            <table class="min-w-full divide-y divide-gray-200 admin-table">
+                            <table class="w-full divide-y divide-gray-200 admin-table">
                                 <thead class="bg-gray-50">
                                     <tr>
                                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -235,51 +311,51 @@
                                 <tbody class="bg-white divide-y divide-gray-200">
                                     @foreach($users as $user)
                                         <tr>
-                                            <td class="px-6 py-4 whitespace-nowrap">
+                                            <td class="px-2 py-4">
                                                 <div class="flex items-center">
-                                                    <div class="flex-shrink-0 h-10 w-10">
-                                                        <div class="h-10 w-10 rounded-full bg-gray-300 flex items-center justify-center">
-                                                            <span class="text-sm font-medium text-gray-700">
+                                                    <div class="flex-shrink-0 h-8 w-8">
+                                                        <div class="h-8 w-8 rounded-full bg-gray-300 flex items-center justify-center">
+                                                            <span class="text-xs font-medium text-gray-700">
                                                                 {{ strtoupper(substr($user->name, 0, 1)) }}
                                                             </span>
                                                         </div>
                                                     </div>
-                                                    <div class="ml-4">
-                                                        <div class="text-sm font-medium text-gray-900">{{ $user->name }}</div>
-                                                        <div class="text-sm text-gray-500">{{ $user->email }}</div>
+                                                    <div class="ml-2">
+                                                        <div class="text-sm font-medium text-gray-900 truncate">{{ $user->name }}</div>
+                                                        <div class="text-xs text-gray-500 truncate">{{ $user->email }}</div>
                                                     </div>
                                                 </div>
                                             </td>
-                                            <td class="px-6 py-4 whitespace-nowrap">
+                                            <td class="px-2 py-4">
                                                 <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full
                                                     @if($user->user_type === 'farmaceuta') bg-blue-100 text-blue-800
                                                     @else bg-green-100 text-green-800
                                                     @endif">
-                                                    {{ $user->user_type === 'farmaceuta' ? 'Farmaceuta' : 'Technik farmacji' }}
+                                                    {{ $user->user_type === 'farmaceuta' ? 'Farmaceuta' : 'Technik' }}
                                                 </span>
                                             </td>
-                                            <td class="px-6 py-4 whitespace-nowrap">
+                                            <td class="px-2 py-4">
                                                 @if($user->is_admin)
                                                     <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
-                                                        Administrator
+                                                        Admin
                                                     </span>
                                                 @else
                                                     <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">
-                                                        Użytkownik
+                                                        Użytk.
                                                     </span>
                                                 @endif
                                             </td>
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                            <td class="px-2 py-4 text-center text-sm text-gray-900">
                                                 {{ $user->certificates->count() }}
                                             </td>
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                {{ $user->created_at->format('d.m.Y H:i') }}
+                                            <td class="px-2 py-4 text-sm text-gray-500">
+                                                {{ $user->created_at->format('d.m.Y') }}
                                             </td>
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                            <td class="px-2 py-4 text-sm font-medium text-center">
                                                 <a href="{{ route('admin.users.edit', $user) }}" class="table-button view">
                                                     Edytuj
                                                 </a>
-                                                <form action="{{ route('admin.users.destroy', $user) }}" method="POST" style="display: inline-block;" onsubmit="return confirm('Czy na pewno chcesz usunąć użytkownika {{ addslashes($user->name) }}? Ta operacja jest nieodwracalna.');">
+                                                <form action="{{ route('admin.users.destroy', $user) }}" method="POST" style="display: inline-block;" onsubmit="return confirm('Czy na pewno chcesz usunąć użytkownika {{ addslashes($user->name) }}?');">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="table-button delete" @if($user->id == auth()->user()->id) disabled title="Nie możesz usunąć swojego konta" @endif>
