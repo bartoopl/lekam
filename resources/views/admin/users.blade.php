@@ -296,6 +296,67 @@
         min-width: 44px !important;
         text-align: center !important;
     }
+
+    /* Tailwind pagination overrides */
+    nav[role="navigation"] {
+        display: flex !important;
+        justify-content: center !important;
+        margin-top: 1rem !important;
+    }
+
+    nav[role="navigation"] .relative.z-0 {
+        display: flex !important;
+        gap: 0.25rem !important;
+    }
+
+    nav[role="navigation"] a,
+    nav[role="navigation"] span[aria-current="page"],
+    nav[role="navigation"] span[aria-disabled="true"] {
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        padding: 0.5rem 0.75rem !important;
+        border-radius: 0.375rem !important;
+        font-weight: 500 !important;
+        text-decoration: none !important;
+        min-width: 44px !important;
+        border: 1px solid #d1d5db !important;
+        background-color: #ffffff !important;
+        color: #374151 !important;
+        transition: all 0.15s ease-in-out !important;
+    }
+
+    nav[role="navigation"] a:hover {
+        background-color: #f9fafb !important;
+        color: #6b7280 !important;
+        border-color: #9ca3af !important;
+    }
+
+    nav[role="navigation"] span[aria-current="page"] {
+        background-color: #3b82f6 !important;
+        color: #ffffff !important;
+        border-color: #3b82f6 !important;
+    }
+
+    nav[role="navigation"] span[aria-disabled="true"] {
+        background-color: #f9fafb !important;
+        color: #d1d5db !important;
+        cursor: not-allowed !important;
+        opacity: 0.5 !important;
+    }
+
+    /* Mobile responsive */
+    @media (max-width: 640px) {
+        nav[role="navigation"] .flex.justify-between {
+            display: flex !important;
+            justify-content: space-between !important;
+            width: 100% !important;
+        }
+
+        nav[role="navigation"] .hidden.sm\\:flex-1 {
+            display: none !important;
+        }
+    }
 </style>
 
 <div class="admin-container">
