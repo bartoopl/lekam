@@ -22,7 +22,26 @@
                 @auth
                     <div class="auth-buttons">
                         @if(auth()->user()->isAdmin() || auth()->user()->email === 'admin@admin.com' || auth()->user()->user_type === 'admin')
-                            <a href="{{ route('admin.dashboard') }}" class="btn btn-danger">Panel Admin</a>
+                            <div class="dropdown" style="position: relative; display: inline-block;">
+                                <a href="{{ route('admin.dashboard') }}" class="btn btn-danger">Panel Admin</a>
+                                <div class="dropdown-content" style="display:none; position:absolute; right:0; background:#fff; min-width:220px; box-shadow:0 8px 16px rgba(0,0,0,0.1); border-radius:10px; overflow:hidden; border:1px solid #eee;">
+                                    <a href="{{ route('admin.courses') }}" class="nav-link" style="display:block; padding:10px 14px;">📚 Kursy</a>
+                                    <a href="{{ route('admin.users') }}" class="nav-link" style="display:block; padding:10px 14px;">👥 Użytkownicy</a>
+                                    <a href="{{ route('admin.certificate-templates.index') }}" class="nav-link" style="display:block; padding:10px 14px;">🎓 Szablony certyfikatów</a>
+                                    <a href="{{ route('admin.certificates') }}" class="nav-link" style="display:block; padding:10px 14px;">🧾 Certyfikaty</a>
+                                    <a href="{{ route('admin.certificates.send-logs') }}" class="nav-link" style="display:block; padding:10px 14px;">✉️ Wysłane do podpisu</a>
+                                </div>
+                            </div>
+                            <script>
+                                (function(){
+                                    const dropdown = document.currentScript.previousElementSibling;
+                                    const button = dropdown.querySelector('a.btn.btn-danger');
+                                    const menu = dropdown.querySelector('.dropdown-content');
+                                    button.addEventListener('mouseenter', ()=> menu.style.display='block');
+                                    button.addEventListener('focus', ()=> menu.style.display='block');
+                                    dropdown.addEventListener('mouseleave', ()=> menu.style.display='none');
+                                })();
+                            </script>
                         @endif
                         <a href="{{ route('dashboard') }}" class="btn btn-primary">
                             Moje konto
@@ -79,6 +98,11 @@
                     @auth
                         @if(auth()->user()->isAdmin() || auth()->user()->email === 'admin@admin.com' || auth()->user()->user_type === 'admin')
                             <a href="{{ route('admin.dashboard') }}" class="btn btn-danger" onclick="closeMobileMenu()">Panel Admin</a>
+                            <a href="{{ route('admin.courses') }}" class="mobile-nav-link" onclick="closeMobileMenu()">📚 Kursy</a>
+                            <a href="{{ route('admin.users') }}" class="mobile-nav-link" onclick="closeMobileMenu()">👥 Użytkownicy</a>
+                            <a href="{{ route('admin.certificate-templates.index') }}" class="mobile-nav-link" onclick="closeMobileMenu()">🎓 Szablony certyfikatów</a>
+                            <a href="{{ route('admin.certificates') }}" class="mobile-nav-link" onclick="closeMobileMenu()">🧾 Certyfikaty</a>
+                            <a href="{{ route('admin.certificates.send-logs') }}" class="mobile-nav-link" onclick="closeMobileMenu()">✉️ Wysłane do podpisu</a>
                         @endif
                         <a href="{{ route('dashboard') }}" class="btn btn-primary" onclick="closeMobileMenu()">
                             Moje konto

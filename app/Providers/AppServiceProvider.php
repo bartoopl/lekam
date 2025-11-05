@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\URL;
+use App\Console\Commands\SimulateLessonsComplete;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -28,6 +29,11 @@ class AppServiceProvider extends ServiceProvider
         // Trust Heroku proxies for HTTPS detection
         if (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') {
             request()->server->set('HTTPS', 'on');
+        }
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                SimulateLessonsComplete::class,
+            ]);
         }
     }
 }
