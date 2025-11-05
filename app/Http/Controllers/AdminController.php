@@ -11,6 +11,7 @@ use App\Models\QuizQuestion;
 use App\Models\Certificate;
 use App\Models\Representative;
 use App\Models\Content;
+use App\Models\CertificateSendLog;
 use Illuminate\Http\Request;
 
 class AdminController extends Controller
@@ -614,6 +615,18 @@ class AdminController extends Controller
             ->paginate(20);
 
         return view('admin.certificates', compact('certificates'));
+    }
+
+    /**
+     * Show logs of certificates sent for signing
+     */
+    public function certificateSendLogs()
+    {
+        $logs = CertificateSendLog::with(['certificate.user', 'certificate.course'])
+            ->orderBy('created_at', 'desc')
+            ->paginate(25);
+
+        return view('admin.certificates-send-logs', compact('logs'));
     }
 
     /**

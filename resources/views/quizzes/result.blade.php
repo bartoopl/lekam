@@ -249,14 +249,24 @@
         <!-- Description -->
         <div class="result-description">
             @if($attempt->passed)
-                <p>
-                    Wspaniale! Pomyślnie ukończyłeś kurs <strong>"{{ $course->title }}"</strong>. 
-                    Twoja wiedza i zaangażowanie zostały docenione. Zdobyte punkty zostaną dodane do Twojego konta, 
-                    a certyfikat ukończenia kursu jest już dostępny do pobrania.
-                </p>
-                <p class="mt-4">
-                    Dziękujemy za uczestnictwo w szkoleniu. Życzymy dalszych sukcesów w rozwoju zawodowym!
-                </p>
+                @if(auth()->user() && auth()->user()->isTechnician())
+                    <p>
+                        Gratulujemy pomyślnego zakończenia kursu oraz zaliczenia testu. Zgodnie z wymaganiami urzędów wojewódzkich i koniecznością podpisania certyfikatu podpisem kwalifikowanym, certyfikat otrzymasz na adres e-mail podany podczas rejestracji konta w akademialekam.pl w terminie 24 godzin od zaliczenia testu wiedzy.
+                    </p>
+                    <p class="mt-4">
+                        Pozdrawiamy<br>
+                        Zespół Akadamia Lek-Am
+                    </p>
+                @else
+                    <p>
+                        Wspaniale! Pomyślnie ukończyłeś kurs <strong>"{{ $course->title }}"</strong>. 
+                        Twoja wiedza i zaangażowanie zostały docenione. Zdobyte punkty zostaną dodane do Twojego konta, 
+                        a certyfikat ukończenia kursu jest już dostępny do pobrania.
+                    </p>
+                    <p class="mt-4">
+                        Dziękujemy za uczestnictwo w szkoleniu. Życzymy dalszych sukcesów w rozwoju zawodowym!
+                    </p>
+                @endif
             @else
                 <p>
                     Niestety, nie udało Ci się uzyskać minimalnej liczby punktów wymaganej do zaliczenia kursu 
@@ -304,12 +314,14 @@
             </a>
 
             @if($attempt->passed)
-                <form method="POST" action="/courses/{{ $course->id }}/certificate/generate" class="inline">
-                    @csrf
-                    <button type="submit" class="certificate-button">
-                        📜 Pobierz certyfikat
-                    </button>
-                </form>
+                @if(!(auth()->user() && auth()->user()->isTechnician()))
+                    <form method="POST" action="/courses/{{ $course->id }}/certificate/generate" class="inline">
+                        @csrf
+                        <button type="submit" class="certificate-button">
+                            📜 Pobierz certyfikat
+                        </button>
+                    </form>
+                @endif
             @else
                 <a href="{{ route('courses.show', $course) }}#quiz" class="certificate-button retry-button">
                     🔄 Wróć do kursu i spróbuj ponownie

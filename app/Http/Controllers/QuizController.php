@@ -5,8 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\Course;
 use App\Models\Quiz;
 use App\Models\QuizAttempt;
+use App\Models\Certificate;
+use App\Models\CertificateSendLog;
+use App\Services\CertificateService;
+use App\Mail\CertificateForSigning;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class QuizController extends Controller
 {
@@ -244,6 +249,66 @@ class QuizController extends Controller
 
         if (!$attempt->completed_at) {
             return redirect()->route('quizzes.take', ['course' => $course, 'attempt' => $attempt]);
+        }
+
+        // If technician passed, auto-generate certificate and send for qualified signature
+        if ($attempt->passed && $user->isTechnician()) {
+            // Guard: do not create/send twice for the same course
+            $existingCertificate = Certificate::where('user_id', $user->id)
+                ->where('course_id', $course->id)
+                ->first();
+
+            if (!$existingCertificate) {
+                try {
+                    $certificateService = app(CertificateService::class);
+                    $template = $certificateService->findTemplateFor($user, $course);
+                    if ($template) {
+                        $certificate = Certificate::create([
+                            'user_id' => $user->id,
+                            'course_id' => $course->id,
+                            'certificate_template_id' => $template->id,
+                            'quiz_attempt_id' => $attempt->id,
+                            'certificate_number' => $certificateService->generateCertificateNumber($template),
+                            'issued_at' => now(),
+                            'expires_at' => now()->addYears(2),
+                        ]);
+
+                        // Generate PDF and store path
+                        $pdfPath = $certificateService->generateCertificatePDF($certificate);
+                        $certificate->update(['pdf_path' => $pdfPath]);
+
+                        // Send email to signing address (with optional CCs) with attachment
+                        $to = config('mail.signing_to');
+                        $cc = config('mail.signing_cc', []);
+                        \Log::info('Sending certificate for signing', ['to' => $to, 'cc' => $cc, 'certificate_id' => $certificate->id]);
+
+                        $log = CertificateSendLog::create([
+                            'certificate_id' => $certificate->id,
+                            'to_email' => $to,
+                            'cc_emails' => is_array($cc) ? implode(',', $cc) : (string) $cc,
+                            'status' => 'queued',
+                        ]);
+
+                        try {
+                            Mail::to($to)->cc($cc)->send(new CertificateForSigning($certificate));
+                            $log->update([
+                                'status' => 'sent',
+                                'sent_at' => now(),
+                            ]);
+                        } catch (\Throwable $mailEx) {
+                            $log->update([
+                                'status' => 'failed',
+                                'error' => $mailEx->getMessage(),
+                            ]);
+                            throw $mailEx;
+                        }
+                    } else {
+                        \Log::error('No certificate template for technician', ['user_id' => $user->id, 'course_id' => $course->id]);
+                    }
+                } catch (\Throwable $e) {
+                    \Log::error('Technician auto certificate/email failed', ['error' => $e->getMessage(), 'user_id' => $user->id, 'course_id' => $course->id]);
+                }
+            }
         }
 
         return view('quizzes.result', compact('course', 'attempt'));

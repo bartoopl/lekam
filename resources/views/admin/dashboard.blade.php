@@ -309,6 +309,12 @@
                 <a href="{{ route('admin.certificate-templates.index') }}" class="action-button green">
                     🎓 Szablony certyfikatów
                 </a>
+                <a href="{{ route('admin.certificates') }}" class="action-button">
+                    🧾 Lista certyfikatów
+                </a>
+                <a href="{{ route('admin.certificates.send-logs') }}" class="action-button">
+                    ✉️ Wysłane do podpisu
+                </a>
             </div>
         </div>
 

@@ -138,6 +138,7 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->name('admin.'
     Route::get('/certificate-templates/{template}/demo', [\App\Http\Controllers\Admin\CertificateTemplateController::class, 'generateDemo'])->name('certificate-templates.demo');
 
     Route::get('/certificates', [AdminController::class, 'certificates'])->name('certificates');
+    Route::get('/certificates/send-logs', [AdminController::class, 'certificateSendLogs'])->name('certificates.send-logs');
     Route::get('/statistics', [AdminController::class, 'statistics'])->name('statistics');
 
     // Content management

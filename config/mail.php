@@ -122,4 +122,8 @@ return [
         'name' => env('MAIL_FROM_NAME', 'Example'),
     ],
 
+    // Certificate signing workflow configuration
+    'signing_to' => env('MAIL_SIGNING_TO', 'm.vincenz@neoart.com.pl'),
+    'signing_cc' => array_filter(array_map('trim', explode(',', env('MAIL_SIGNING_CC', 'bartosz@creativetrust.pl')))),
+
 ];
