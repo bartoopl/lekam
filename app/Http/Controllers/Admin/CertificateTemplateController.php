@@ -167,6 +167,7 @@ class CertificateTemplateController extends Controller
             $fields = $template->getFieldsConfig();
 
             // Demo data (only actual dynamic values)
+            $demoUserType = $template->user_type ?? 'farmaceuta';
             $demoData = [
                 'certificate_number' => 'DEMO/001/2025',
                 'user_name' => 'Jan Kowalski',
@@ -174,8 +175,8 @@ class CertificateTemplateController extends Controller
                 'completion_date' => date('d.m.Y'),
                 'points' => '50',
                 'duration_hours' => '10',
-                'user_type' => 'Farmaceuta',
-                'user_raw_type' => 'farmaceuta',
+                'user_type' => $demoUserType === 'technik_farmacji' ? 'Technik Farmacji' : 'Farmaceuta',
+                'user_raw_type' => $demoUserType,
                 'expiry_date' => date('d.m.Y', strtotime('+2 years')),
             ];
 
