@@ -78,7 +78,7 @@ class CertificateService
         $this->renderCertificateContent($pdf, $fields, $data, $centerX, $size);
 
         // Generate filename
-        $filename = 'certificates/' . $certificate->certificate_number . '.pdf';
+        $filename = 'certificates/' . $this->buildCertificateFilename($certificate);
 
         // Save PDF (TCPDF Output syntax: Output(name, destination))
         $output = $pdf->Output('certificate.pdf', 'S'); // Output as string
@@ -104,7 +104,7 @@ class CertificateService
         $pdf = Pdf::loadView('certificates.pdf', $data);
         $pdf->setPaper('A4', 'landscape');
 
-        $filename = 'certificates/' . $certificate->certificate_number . '.pdf';
+        $filename = 'certificates/' . $this->buildCertificateFilename($certificate);
 
         Storage::disk('public')->put($filename, $pdf->output());
 
@@ -148,6 +148,13 @@ class CertificateService
         }
 
         return str_ends_with(mb_strtolower($user->name), 'a') ? 'odbyła' : 'odbył';
+    }
+
+    private function buildCertificateFilename(Certificate $certificate): string
+    {
+        $baseName = preg_replace('/[^A-Za-z0-9_-]+/', '_', $certificate->certificate_number);
+
+        return trim($baseName, '_') . '.pdf';
     }
 
     /**
