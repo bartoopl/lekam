@@ -102,6 +102,7 @@ class CertificateService
             'points' => $course->getPointsForUser($user), // Just the number, no "pkt"
             'duration_hours' => $durationHours, // Duration in hours
             'user_type' => $user->user_type === 'farmaceuta' ? 'Farmaceuta' : 'Technik Farmacji',
+            'user_raw_type' => $user->user_type,
             'expiry_date' => $certificate->expires_at ? $certificate->expires_at->format('d.m.Y') : 'bezterminowy',
         ];
     }
@@ -127,9 +128,9 @@ class CertificateService
             $y = $fields['user_name']['y'] - 20; // 20 points above name
             $pdf->SetFont('dejavusans', '', 14);
             $pdf->SetTextColor(0, 0, 0);
-            // Simple gender detection based on name ending
             $userName = $data['user_name'];
-            $prefix = (substr($userName, -1) === 'a') ? 'Pani' : 'Pan';
+            $isTechnician = ($data['user_raw_type'] ?? null) === 'technik_farmacji';
+            $prefix = $isTechnician ? 'Pan/Pani' : ((substr($userName, -1) === 'a') ? 'Pani' : 'Pan');
             $textWidth = $pdf->GetStringWidth($prefix);
             $pdf->SetXY($centerX - ($textWidth / 2), $y);
             $pdf->Cell($textWidth, 10, $prefix, 0, 0, 'L');
@@ -155,7 +156,8 @@ class CertificateService
             $pdf->SetTextColor(0, 0, 0);
             // Use proper verb form based on gender
             $userName = $data['user_name'];
-            $verb = (substr($userName, -1) === 'a') ? 'odbyła' : 'odbył';
+            $isTechnician = ($data['user_raw_type'] ?? null) === 'technik_farmacji';
+            $verb = $isTechnician ? 'odbył/a' : ((substr($userName, -1) === 'a') ? 'odbyła' : 'odbył');
             // For technik_farmacji (with course_subtitle), only show "odbył w dniu [data]"
             // For farmaceuta (without course_subtitle), show full text with "kurs szkoleniowy:"
             if (isset($fields['course_subtitle'])) {

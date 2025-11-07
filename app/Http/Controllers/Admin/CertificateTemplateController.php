@@ -175,6 +175,7 @@ class CertificateTemplateController extends Controller
                 'points' => '50',
                 'duration_hours' => '10',
                 'user_type' => 'Farmaceuta',
+                'user_raw_type' => 'farmaceuta',
                 'expiry_date' => date('d.m.Y', strtotime('+2 years')),
             ];
 
@@ -273,9 +274,9 @@ class CertificateTemplateController extends Controller
             $y = $fields['user_name']['y'] - 20; // 20 points above name
             $pdf->SetFont('dejavusans', '', 14);
             $pdf->SetTextColor(0, 0, 0);
-            // Simple gender detection based on name ending
             $userName = $demoData['user_name'];
-            $prefix = (substr($userName, -1) === 'a') ? 'Pani' : 'Pan';
+            $isTechnician = ($demoData['user_raw_type'] ?? null) === 'technik_farmacji';
+            $prefix = $isTechnician ? 'Pan/Pani' : ((substr($userName, -1) === 'a') ? 'Pani' : 'Pan');
             $textWidth = $pdf->GetStringWidth($prefix);
             $pdf->SetXY($centerX - ($textWidth / 2), $y);
             $pdf->Cell($textWidth, 10, $prefix, 0, 0, 'L');
@@ -301,7 +302,8 @@ class CertificateTemplateController extends Controller
             $pdf->SetTextColor(0, 0, 0);
             // Use proper verb form based on gender
             $userName = $demoData['user_name'];
-            $verb = (substr($userName, -1) === 'a') ? 'odbyła' : 'odbył';
+            $isTechnician = ($demoData['user_raw_type'] ?? null) === 'technik_farmacji';
+            $verb = $isTechnician ? 'odbył/a' : ((substr($userName, -1) === 'a') ? 'odbyła' : 'odbył');
             // For technik_farmacji (with course_subtitle), only show "odbył w dniu [data]"
             // For farmaceuta (without course_subtitle), show full text with "kurs szkoleniowy:"
             if (isset($fields['course_subtitle'])) {
