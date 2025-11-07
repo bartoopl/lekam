@@ -156,6 +156,14 @@
     </style>
 </head>
 <body>
+    @php
+        $subjectUser = $user ?? $certificate->user;
+        $userName = $subjectUser->name ?? '';
+        $userType = $subjectUser->user_type ?? ($certificate->user->user_type ?? null);
+        $isTechnician = method_exists($subjectUser, 'isTechnician') ? $subjectUser->isTechnician() : ($userType === 'technik_farmacji');
+        $computedPrefix = $fallback_prefix ?? ($isTechnician ? 'Pan/Pani' : (str_ends_with(mb_strtolower($userName), 'a') ? 'Pani' : 'Pan'));
+        $computedVerb = $fallback_verb ?? ($isTechnician ? 'odbył/a' : (str_ends_with(mb_strtolower($userName), 'a') ? 'odbyła' : 'odbył'));
+    @endphp
     <div class="certificate-container">
         <div class="stamp">CERTYFIKAT</div>
         
@@ -175,10 +183,15 @@
             Niniejszym zaświadcza się, że
         </div>
 
+        <div class="certificate-text" style="font-size: 22px; margin-top: 5px;">{{ $computedPrefix }}</div>
         <div class="user-name">{{ $user->name }}</div>
 
         <div class="certificate-text">
-            pomyślnie ukończył(a) szkolenie online i uzyskał(a) wymagane kompetencje w zakresie przedstawionym w programie kursu.
+            @if($isTechnician)
+                {{ ucfirst($computedVerb) }} w dniu {{ $certificate->issued_at->format('d.m.Y') }} kurs szkoleniowy:
+            @else
+                {{ $computedPrefix }} {{ $user->name }} {{ $computedVerb }} w dniu {{ $certificate->issued_at->format('d.m.Y') }} kurs szkoleniowy i uzyskał{{ str_contains($computedVerb, 'a') ? 'a' : '' }} wymagane kompetencje w zakresie przedstawionym w programie kursu.
+            @endif
         </div>
 
         <div class="details">

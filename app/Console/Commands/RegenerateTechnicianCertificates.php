@@ -5,7 +5,6 @@ namespace App\Console\Commands;
 use App\Models\Certificate;
 use App\Services\CertificateService;
 use Illuminate\Console\Command;
-use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Log;
 
 class RegenerateTechnicianCertificates extends Command

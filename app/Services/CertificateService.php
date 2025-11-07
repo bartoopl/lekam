@@ -6,6 +6,7 @@ use App\Models\Certificate;
 use App\Models\CertificateTemplate;
 use App\Models\User;
 use App\Models\Course;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Storage;
 use setasign\Fpdi\Tcpdf\Fpdi;
 
@@ -21,12 +22,12 @@ class CertificateService
         $template = $certificate->template;
 
         if (!$template) {
-            throw new \Exception('No certificate template assigned');
+            return $this->generateFallbackPdf($certificate);
         }
 
         // Check if template PDF exists
         if (!Storage::disk('public')->exists($template->pdf_path)) {
-            throw new \Exception('Template PDF not found: ' . $template->pdf_path);
+            return $this->generateFallbackPdf($certificate);
         }
 
         // Initialize FPDI with TCPDF in POINT units (not mm)
@@ -87,6 +88,30 @@ class CertificateService
     }
 
     /**
+     * Fallback generator when template PDF is not available
+     */
+    private function generateFallbackPdf(Certificate $certificate): string
+    {
+        $data = [
+            'certificate' => $certificate,
+            'user' => $certificate->user,
+            'course' => $certificate->course,
+            'quizAttempt' => $certificate->quizAttempt,
+            'fallback_prefix' => $this->getPersonPrefix($certificate->user),
+            'fallback_verb' => $this->getCompletionVerb($certificate->user),
+        ];
+
+        $pdf = Pdf::loadView('certificates.pdf', $data);
+        $pdf->setPaper('A4', 'landscape');
+
+        $filename = 'certificates/' . $certificate->certificate_number . '.pdf';
+
+        Storage::disk('public')->put($filename, $pdf->output());
+
+        return $filename;
+    }
+
+    /**
      * Prepare data fields for certificate
      */
     private function prepareDataFields(Certificate $certificate, User $user, Course $course): array
@@ -105,6 +130,24 @@ class CertificateService
             'user_raw_type' => $user->user_type,
             'expiry_date' => $certificate->expires_at ? $certificate->expires_at->format('d.m.Y') : 'bezterminowy',
         ];
+    }
+
+    private function getPersonPrefix(User $user): string
+    {
+        if ($user->isTechnician()) {
+            return 'Pan/Pani';
+        }
+
+        return str_ends_with(mb_strtolower($user->name), 'a') ? 'Pani' : 'Pan';
+    }
+
+    private function getCompletionVerb(User $user): string
+    {
+        if ($user->isTechnician()) {
+            return 'odbył/a';
+        }
+
+        return str_ends_with(mb_strtolower($user->name), 'a') ? 'odbyła' : 'odbył';
     }
 
     /**
