@@ -6,7 +6,6 @@ use App\Models\Certificate;
 use App\Models\Course;
 use App\Models\QuizAttempt;
 use App\Services\CertificateService;
-use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -105,7 +104,7 @@ class CertificateController extends Controller
     {
         $user = Auth::user();
         
-        if (!$user || $certificate->user_id !== $user->id) {
+        if (!$user || ($certificate->user_id !== $user->id && !$user->isAdmin())) {
             return redirect()->route('home');
         }
 
@@ -119,7 +118,7 @@ class CertificateController extends Controller
     {
         $user = Auth::user();
         
-        if (!$user || $certificate->user_id !== $user->id) {
+        if (!$user || ($certificate->user_id !== $user->id && !$user->isAdmin())) {
             return redirect()->route('home');
         }
 
@@ -136,26 +135,12 @@ class CertificateController extends Controller
      */
     private function generateCertificatePDF(Certificate $certificate)
     {
-        $data = [
-            'certificate' => $certificate,
-            'user' => $certificate->user,
-            'course' => $certificate->course,
-            'quizAttempt' => $certificate->quizAttempt,
-        ];
+        /** @var CertificateService $certificateService */
+        $certificateService = app(CertificateService::class);
 
-        $pdf = PDF::loadView('certificates.pdf', $data);
-        
-        // Set paper size and orientation
-        $pdf->setPaper('A4', 'landscape');
-        
-        // Generate filename
-        $filename = 'certificates/' . $certificate->certificate_number . '.pdf';
-        
-        // Save PDF
-        Storage::disk('public')->put($filename, $pdf->output());
-        
-        // Update certificate with PDF path
-        $certificate->update(['pdf_path' => $filename]);
+        $pdfPath = $certificateService->generateCertificatePDF($certificate);
+
+        $certificate->update(['pdf_path' => $pdfPath]);
     }
 
     /**
