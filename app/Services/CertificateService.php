@@ -180,7 +180,7 @@ class CertificateService
             $pdf->SetTextColor(0, 0, 0);
             $userName = $data['user_name'];
             $isTechnician = ($data['user_raw_type'] ?? null) === 'technik_farmacji';
-            $prefix = $isTechnician ? 'Pan/Pani' : ((substr($userName, -1) === 'a') ? 'Pani' : 'Pan');
+            $prefix = $isTechnician ? 'Pan/Pani' : (str_ends_with(mb_strtolower($userName), 'a') ? 'Pani' : 'Pan');
             $textWidth = $pdf->GetStringWidth($prefix);
             $pdf->SetXY($centerX - ($textWidth / 2), $y);
             $pdf->Cell($textWidth, 10, $prefix, 0, 0, 'L');
@@ -207,7 +207,7 @@ class CertificateService
             // Use proper verb form based on gender
             $userName = $data['user_name'];
             $isTechnician = ($data['user_raw_type'] ?? null) === 'technik_farmacji';
-            $verb = $isTechnician ? 'odbył/a' : ((substr($userName, -1) === 'a') ? 'odbyła' : 'odbył');
+            $verb = $isTechnician ? 'odbył/a' : (str_ends_with(mb_strtolower($userName), 'a') ? 'odbyła' : 'odbył');
             // For technik_farmacji (with course_subtitle), only show "odbył w dniu [data]"
             // For farmaceuta (without course_subtitle), show full text with "kurs szkoleniowy:"
             if (isset($fields['course_subtitle'])) {
