@@ -51,6 +51,9 @@ class AdminController extends Controller
      */
     public function usersExport()
     {
+        // Debug: Write to file to confirm method is called
+        file_put_contents(storage_path('logs/export_debug.txt'), date('Y-m-d H:i:s') . " - usersExport called\n", FILE_APPEND);
+        
         error_log('=== usersExport METHOD CALLED ===');
         \Log::info('usersExport called - generating CSV with representative columns');
         
@@ -102,6 +105,10 @@ class AdminController extends Controller
                 'Email Przedstawiciela',
                 'Kod Przedstawiciela'
             ];
+            // Debug: Write headers info to file
+            file_put_contents(storage_path('logs/export_debug.txt'), date('Y-m-d H:i:s') . " - CSV Headers count: " . count($csvHeaders) . ", Last: " . end($csvHeaders) . "\n", FILE_APPEND);
+            file_put_contents(storage_path('logs/export_debug.txt'), date('Y-m-d H:i:s') . " - All headers: " . implode(', ', $csvHeaders) . "\n", FILE_APPEND);
+            
             error_log('=== CSV EXPORT: Headers count: ' . count($csvHeaders) . ', Last header: ' . end($csvHeaders) . ' ===');
             \Log::info('CSV EXPORT: Headers count: ' . count($csvHeaders) . ', Last header: ' . end($csvHeaders));
             \Log::info('CSV EXPORT: All headers: ' . implode(', ', $csvHeaders));
