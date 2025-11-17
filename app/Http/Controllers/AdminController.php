@@ -51,6 +51,8 @@ class AdminController extends Controller
      */
     public function usersExport()
     {
+        \Log::info('usersExport called - generating CSV with representative columns');
+        
         $users = User::with(['certificates' => function($query) {
             $query->orderBy('issued_at', 'desc');
         }, 'representative'])->get();
@@ -73,7 +75,7 @@ class AdminController extends Controller
             fprintf($file, chr(0xEF).chr(0xBB).chr(0xBF));
 
             // Header row
-            fputcsv($file, [
+            $headers = [
                 'ID',
                 'Imię i Nazwisko',
                 'Email',
@@ -96,7 +98,9 @@ class AdminController extends Controller
                 'Nazwa Przedstawiciela',
                 'Email Przedstawiciela',
                 'Kod Przedstawiciela'
-            ], ';');
+            ];
+            \Log::info('CSV headers count: ' . count($headers) . ', last header: ' . end($headers));
+            fputcsv($file, $headers, ';');
 
             // Data rows
             foreach ($users as $user) {
