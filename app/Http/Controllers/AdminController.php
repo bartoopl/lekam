@@ -51,17 +51,9 @@ class AdminController extends Controller
      */
     public function usersExport()
     {
-        // Debug: Write to file to confirm method is called
-        file_put_contents(storage_path('logs/export_debug.txt'), date('Y-m-d H:i:s') . " - usersExport called\n", FILE_APPEND);
-        
-        error_log('=== usersExport METHOD CALLED ===');
-        \Log::info('usersExport called - generating CSV with representative columns');
-        
         $users = User::with(['certificates' => function($query) {
             $query->orderBy('issued_at', 'desc');
         }, 'representative'])->get();
-        
-        error_log('=== usersExport: Loaded ' . $users->count() . ' users ===');
 
         $filename = 'uzytkownicy_' . date('Y-m-d_His') . '.csv';
 
@@ -75,9 +67,6 @@ class AdminController extends Controller
         ];
 
         $callback = function() use ($users) {
-            // Debug: Confirm closure is executed
-            file_put_contents(storage_path('logs/export_debug.txt'), date('Y-m-d H:i:s') . " - Closure executed, users count: " . $users->count() . "\n", FILE_APPEND);
-            
             $file = fopen('php://output', 'w');
 
             // Add BOM for UTF-8
@@ -93,7 +82,7 @@ class AdminController extends Controller
                 'Numer PWZ',
                 'Adres apteki',
                 'Kod pocztowy apteki',
-                'Miasto apteki użytkownika',
+                'Miasto apteki',
                 'Data rejestracji',
                 'Ostatnia aktywność',
                 'Liczba certyfikatów',
@@ -108,15 +97,7 @@ class AdminController extends Controller
                 'Email Przedstawiciela',
                 'Kod Przedstawiciela'
             ];
-            // Debug: Write headers info to file
-            file_put_contents(storage_path('logs/export_debug.txt'), date('Y-m-d H:i:s') . " - CSV Headers count: " . count($csvHeaders) . ", Last: " . end($csvHeaders) . "\n", FILE_APPEND);
-            file_put_contents(storage_path('logs/export_debug.txt'), date('Y-m-d H:i:s') . " - All headers: " . implode(', ', $csvHeaders) . "\n", FILE_APPEND);
-            
-            error_log('=== CSV EXPORT: Headers count: ' . count($csvHeaders) . ', Last header: ' . end($csvHeaders) . ' ===');
-            \Log::info('CSV EXPORT: Headers count: ' . count($csvHeaders) . ', Last header: ' . end($csvHeaders));
-            \Log::info('CSV EXPORT: All headers: ' . implode(', ', $csvHeaders));
             fputcsv($file, $csvHeaders, ';');
-            error_log('=== CSV EXPORT: Headers written to file ===');
 
             // Data rows
             foreach ($users as $user) {
