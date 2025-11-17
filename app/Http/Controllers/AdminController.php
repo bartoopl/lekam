@@ -93,7 +93,7 @@ class AdminController extends Controller
                 'Numer PWZ',
                 'Adres apteki',
                 'Kod pocztowy apteki',
-                'Miasto apteki',
+                'Miasto apteki użytkownika',
                 'Data rejestracji',
                 'Ostatnia aktywność',
                 'Liczba certyfikatów',
