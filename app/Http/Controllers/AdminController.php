@@ -53,7 +53,7 @@ class AdminController extends Controller
     {
         $users = User::with(['certificates' => function($query) {
             $query->orderBy('issued_at', 'desc');
-        }])->get();
+        }, 'representative'])->get();
 
         $filename = 'uzytkownicy_' . date('Y-m-d_His') . '.csv';
 
@@ -90,7 +90,11 @@ class AdminController extends Controller
                 'Administrator',
                 'Zgoda 1 (RODO - wymagana)',
                 'Zgoda 2 (Marketing LEK-AM)',
-                'Zgoda 3 (Marketing NeoArt)'
+                'Zgoda 3 (Marketing NeoArt)',
+                'ID Przedstawiciela',
+                'Nazwa Przedstawiciela',
+                'Email Przedstawiciela',
+                'Kod Przedstawiciela'
             ], ';');
 
             // Data rows
@@ -122,6 +126,10 @@ class AdminController extends Controller
                     $user->consent_1 ? 'Tak' : 'Nie',
                     $user->consent_2 ? 'Tak' : 'Nie',
                     $user->consent_3 ? 'Tak' : 'Nie',
+                    $user->representative_id ?? '',
+                    $user->representative ? $user->representative->name : '',
+                    $user->representative ? ($user->representative->email ?? '') : '',
+                    $user->representative ? ($user->representative->code ?? '') : '',
                 ], ';');
             }
 
