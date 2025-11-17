@@ -61,8 +61,9 @@ class AdminController extends Controller
             'Content-Type' => 'text/csv; charset=UTF-8',
             'Content-Disposition' => 'attachment; filename="' . $filename . '"',
             'Pragma' => 'no-cache',
-            'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
-            'Expires' => '0'
+            'Cache-Control' => 'no-cache, no-store, must-revalidate, max-age=0',
+            'Expires' => '0',
+            'Last-Modified' => gmdate('D, d M Y H:i:s') . ' GMT',
         ];
 
         $callback = function() use ($users) {
