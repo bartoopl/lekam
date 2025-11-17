@@ -75,6 +75,9 @@ class AdminController extends Controller
         ];
 
         $callback = function() use ($users) {
+            // Debug: Confirm closure is executed
+            file_put_contents(storage_path('logs/export_debug.txt'), date('Y-m-d H:i:s') . " - Closure executed, users count: " . $users->count() . "\n", FILE_APPEND);
+            
             $file = fopen('php://output', 'w');
 
             // Add BOM for UTF-8
