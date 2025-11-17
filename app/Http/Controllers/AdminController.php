@@ -75,7 +75,7 @@ class AdminController extends Controller
             fprintf($file, chr(0xEF).chr(0xBB).chr(0xBF));
 
             // Header row
-            $headers = [
+            $csvHeaders = [
                 'ID',
                 'Imię i Nazwisko',
                 'Email',
@@ -99,8 +99,9 @@ class AdminController extends Controller
                 'Email Przedstawiciela',
                 'Kod Przedstawiciela'
             ];
-            \Log::info('CSV headers count: ' . count($headers) . ', last header: ' . end($headers));
-            fputcsv($file, $headers, ';');
+            \Log::info('CSV EXPORT: Headers count: ' . count($csvHeaders) . ', Last header: ' . end($csvHeaders));
+            \Log::info('CSV EXPORT: All headers: ' . implode(', ', $csvHeaders));
+            fputcsv($file, $csvHeaders, ';');
 
             // Data rows
             foreach ($users as $user) {
