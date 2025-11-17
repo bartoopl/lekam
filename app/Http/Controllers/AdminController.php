@@ -51,11 +51,14 @@ class AdminController extends Controller
      */
     public function usersExport()
     {
+        error_log('=== usersExport METHOD CALLED ===');
         \Log::info('usersExport called - generating CSV with representative columns');
         
         $users = User::with(['certificates' => function($query) {
             $query->orderBy('issued_at', 'desc');
         }, 'representative'])->get();
+        
+        error_log('=== usersExport: Loaded ' . $users->count() . ' users ===');
 
         $filename = 'uzytkownicy_' . date('Y-m-d_His') . '.csv';
 
@@ -99,9 +102,11 @@ class AdminController extends Controller
                 'Email Przedstawiciela',
                 'Kod Przedstawiciela'
             ];
+            error_log('=== CSV EXPORT: Headers count: ' . count($csvHeaders) . ', Last header: ' . end($csvHeaders) . ' ===');
             \Log::info('CSV EXPORT: Headers count: ' . count($csvHeaders) . ', Last header: ' . end($csvHeaders));
             \Log::info('CSV EXPORT: All headers: ' . implode(', ', $csvHeaders));
             fputcsv($file, $csvHeaders, ';');
+            error_log('=== CSV EXPORT: Headers written to file ===');
 
             // Data rows
             foreach ($users as $user) {
