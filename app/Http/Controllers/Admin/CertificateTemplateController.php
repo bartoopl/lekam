@@ -177,6 +177,7 @@ class CertificateTemplateController extends Controller
                 'duration_hours' => '10',
                 'user_type' => $demoUserType === 'technik_farmacji' ? 'Technik Farmacji' : 'Farmaceuta',
                 'user_raw_type' => $demoUserType,
+                'pwz_number' => $demoUserType === 'technik_farmacji' ? '12345' : null, // Demo PWZ dla technika
                 'expiry_date' => date('d.m.Y', strtotime('+2 years')),
             ];
 
@@ -260,11 +261,23 @@ class CertificateTemplateController extends Controller
     private function renderCertificateContent($pdf, array $fields, array $demoData, float $centerX, array $size): void
     {
         // 1. ZAŚWIADCZENIE nr [numer] - BOLD
+        // Dla technika farmacji: "Numer PWZ: [pwz] ZAŚWIADCZENIE nr [numer]"
         if (isset($fields['certificate_number'])) {
             $y = $fields['certificate_number']['y'];
             $pdf->SetFont('dejavusans', 'B', $fields['certificate_number']['font_size'] ?? 12);
             $pdf->SetTextColor(0, 0, 0);
-            $text = 'ZAŚWIADCZENIE nr ' . $demoData['certificate_number'];
+            
+            $isTechnician = ($demoData['user_raw_type'] ?? null) === 'technik_farmacji';
+            $pwzNumber = $demoData['pwz_number'] ?? null;
+            
+            if ($isTechnician && $pwzNumber) {
+                // Dla technika farmacji z numerem PWZ
+                $text = 'Numer PWZ: ' . $pwzNumber . ' ZAŚWIADCZENIE nr ' . $demoData['certificate_number'];
+            } else {
+                // Dla farmaceuty lub technika bez PWZ - standardowy format
+                $text = 'ZAŚWIADCZENIE nr ' . $demoData['certificate_number'];
+            }
+            
             $textWidth = $pdf->GetStringWidth($text);
             $pdf->SetXY($centerX - ($textWidth / 2), $y);
             $pdf->Cell($textWidth, 10, $text, 0, 0, 'L');

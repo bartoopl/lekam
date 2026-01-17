@@ -128,6 +128,7 @@ class CertificateService
             'duration_hours' => $durationHours, // Duration in hours
             'user_type' => $user->user_type === 'farmaceuta' ? 'Farmaceuta' : 'Technik Farmacji',
             'user_raw_type' => $user->user_type,
+            'pwz_number' => $user->pwz_number,
             'expiry_date' => $certificate->expires_at ? $certificate->expires_at->format('d.m.Y') : 'bezterminowy',
         ];
     }
@@ -163,11 +164,23 @@ class CertificateService
     private function renderCertificateContent($pdf, array $fields, array $data, float $centerX, array $size): void
     {
         // 1. ZAŚWIADCZENIE nr [numer] - BOLD
+        // Dla technika farmacji: "Numer PWZ: [pwz] ZAŚWIADCZENIE nr [numer]"
         if (isset($fields['certificate_number'])) {
             $y = $fields['certificate_number']['y'];
             $pdf->SetFont('dejavusans', 'B', $fields['certificate_number']['font_size'] ?? 12);
             $pdf->SetTextColor(0, 0, 0);
-            $text = 'ZAŚWIADCZENIE nr ' . $data['certificate_number'];
+            
+            $isTechnician = ($data['user_raw_type'] ?? null) === 'technik_farmacji';
+            $pwzNumber = $data['pwz_number'] ?? null;
+            
+            if ($isTechnician && $pwzNumber) {
+                // Dla technika farmacji z numerem PWZ
+                $text = 'Numer PWZ: ' . $pwzNumber . ' ZAŚWIADCZENIE nr ' . $data['certificate_number'];
+            } else {
+                // Dla farmaceuty lub technika bez PWZ - standardowy format
+                $text = 'ZAŚWIADCZENIE nr ' . $data['certificate_number'];
+            }
+            
             $textWidth = $pdf->GetStringWidth($text);
             $pdf->SetXY($centerX - ($textWidth / 2), $y);
             $pdf->Cell($textWidth, 10, $text, 0, 0, 'L');
