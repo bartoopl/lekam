@@ -26,5 +26,11 @@
     "Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.": "Zapomniałeś hasła? Nie ma problemu. Podaj nam swój adres email, a wyślemy Ci link do resetowania hasła.",
     "Email Password Reset Link": "Wyślij link resetowania hasła",
     "This is a secure area of the application. Please confirm your password before continuing.": "To jest bezpieczny obszar aplikacji. Potwierdź swoje hasło przed kontynuowaniem.",
-    "Confirm": "Potwierdź"
+    "Confirm": "Potwierdź",
+    "Update Password": "Zmień hasło",
+    "Ensure your account is using a long, random password to stay secure.": "Upewnij się, że Twoje konto używa długiego, losowego hasła, aby pozostać bezpiecznym.",
+    "Current Password": "Obecne hasło",
+    "New Password": "Nowe hasło",
+    "Save": "Zapisz",
+    "Saved.": "Zapisano."
 }

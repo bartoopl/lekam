@@ -366,6 +366,9 @@
             <div class="user-header">
                 <h1 class="user-name">{{ $user->name }}</h1>
                 <p class="user-type">{{ $user->user_type === 'farmaceuta' ? 'Farmaceuta' : 'Technik Farmacji' }}</p>
+                <a href="{{ route('profile.edit') }}" style="display: inline-block; margin-top: 1rem; color: #21235F; text-decoration: none; font-size: 0.9rem; font-weight: 500; padding: 0.5rem 1rem; border: 1px solid #21235F; border-radius: 8px; transition: all 0.3s ease;">
+                    Ustawienia konta
+                </a>
             </div>
             <div class="stats-grid">
                 <!-- Completed Courses -->
