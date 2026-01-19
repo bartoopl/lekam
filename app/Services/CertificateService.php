@@ -164,7 +164,7 @@ class CertificateService
     private function renderCertificateContent($pdf, array $fields, array $data, float $centerX, array $size): void
     {
         // 1. ZAŚWIADCZENIE nr [numer] - BOLD
-        // Dla technika farmacji: "Numer PWZ: [pwz] ZAŚWIADCZENIE nr [numer]"
+        // Dla technika farmacji: "NPWZ: [pwz] ZAŚWIADCZENIE nr [numer]"
         if (isset($fields['certificate_number'])) {
             $y = $fields['certificate_number']['y'];
             $pdf->SetFont('dejavusans', 'B', $fields['certificate_number']['font_size'] ?? 12);
@@ -175,7 +175,7 @@ class CertificateService
             
             if ($isTechnician && $pwzNumber) {
                 // Dla technika farmacji z numerem PWZ
-                $text = 'Numer PWZ: ' . $pwzNumber . ' ZAŚWIADCZENIE nr ' . $data['certificate_number'];
+                $text = 'NPWZ: ' . $pwzNumber . ' ZAŚWIADCZENIE nr ' . $data['certificate_number'];
             } else {
                 // Dla farmaceuty lub technika bez PWZ - standardowy format
                 $text = 'ZAŚWIADCZENIE nr ' . $data['certificate_number'];
