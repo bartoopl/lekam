@@ -97,7 +97,7 @@
             @include('layouts.navigation')
 
             <!-- Page Heading -->
-            @if (isset($header))
+            @if (isset($header) && $header)
                 <header class="shadow" style="background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(20px); margin-top: 120px;">
                     <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
                         {{ $header }}
@@ -132,7 +132,11 @@
 
             <!-- Page Content -->
             <main style="margin-top: 120px;">
-                @yield('content')
+                @hasSection('content')
+                    @yield('content')
+                @else
+                    {{ $slot ?? '' }}
+                @endif
             </main>
         </div>
 
