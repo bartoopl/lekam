@@ -32,5 +32,11 @@
     "Current Password": "Obecne hasło",
     "New Password": "Nowe hasło",
     "Save": "Zapisz",
-    "Saved.": "Zapisano."
+    "Saved.": "Zapisano.",
+    "Profile Information": "Informacje o profilu",
+    "Update your account's profile information and email address.": "Zaktualizuj informacje o swoim koncie i adres email.",
+    "Your email address is unverified.": "Twój adres email nie został zweryfikowany.",
+    "Click here to re-send the verification email.": "Kliknij tutaj, aby ponownie wysłać email weryfikacyjny.",
+    "A new verification link has been sent to your email address.": "Nowy link weryfikacyjny został wysłany na Twój adres email.",
+    "Email": "Email"
 }
