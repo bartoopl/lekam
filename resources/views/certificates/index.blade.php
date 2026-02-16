@@ -76,10 +76,16 @@
                     @endforeach
                 </div>
 
-                <!-- Pagination -->
-                <div class="mt-8">
-                    {{ $certificates->links() }}
-                </div>
+                @if($certificates->hasPages())
+                    <div class="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+                        <p class="text-sm text-gray-600">
+                            Wyświetlanie {{ $certificates->firstItem() }}-{{ $certificates->lastItem() }} z {{ $certificates->total() }} certyfikatów
+                        </p>
+                        <div>
+                            {{ $certificates->links('pagination::simple-default') }}
+                        </div>
+                    </div>
+                @endif
             @else
                 <div class="text-center py-12">
                     <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
