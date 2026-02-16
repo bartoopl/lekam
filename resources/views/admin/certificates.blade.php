@@ -141,8 +141,15 @@
                             </table>
                         </div>
 
-                        <div class="mt-6">
-                            {{ $certificates->links() }}
+                        <div class="mt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+                            <p class="text-sm text-gray-600">
+                                Wyświetlanie {{ $certificates->firstItem() }}-{{ $certificates->lastItem() }} z {{ $certificates->total() }} certyfikatów
+                            </p>
+                            @if($certificates->hasPages())
+                                <div>
+                                    {{ $certificates->links('pagination::simple-default') }}
+                                </div>
+                            @endif
                         </div>
                     @else
                         <div class="text-center py-12">
