@@ -113,11 +113,12 @@ videojs.registerPlugin('positionSaver', function(options = {}) {
 
     console.log('🔍 DEBUG positionSaver plugin initialized with options:', options);
     
-    function savePosition() {
+    function savePosition(useBeacon = false) {
         const currentTime = Math.floor(player.currentTime());
         console.log('🔍 DEBUG savePosition called', {
             currentTime: currentTime,
             saveUrl: saveUrl,
+            useBeacon: useBeacon,
             hasToken: !!document.querySelector('meta[name="csrf-token"]')
         });
 
@@ -125,8 +126,17 @@ videojs.registerPlugin('positionSaver', function(options = {}) {
             const csrfToken = document.querySelector('meta[name="csrf-token"]');
             const csrfValue = csrfToken ? csrfToken.getAttribute('content') : 'NO_TOKEN';
 
-            console.log('🔍 DEBUG sending AJAX request to save position');
-            console.log('🔍 DEBUG CSRF token:', csrfValue);
+            // sendBeacon - niezawodny przy zamykaniu strony (brak custom headers, więc używamy FormData z _token)
+            if (useBeacon && navigator.sendBeacon) {
+                const formData = new FormData();
+                formData.append('position', currentTime);
+                formData.append('_token', csrfValue);
+                const sent = navigator.sendBeacon(saveUrl, formData);
+                console.log('🔍 DEBUG sendBeacon result:', sent);
+                return;
+            }
+
+            console.log('🔍 DEBUG sending fetch request to save position');
 
             fetch(saveUrl, {
                 method: 'POST',
@@ -220,18 +230,18 @@ videojs.registerPlugin('positionSaver', function(options = {}) {
     
     // Save position events
     player.on('play', function() {
-        saveInterval = setInterval(savePosition, 5000);
+        saveInterval = setInterval(() => savePosition(false), 3000); // co 3 sekundy (częściej = lepszy zapis)
     });
     
     player.on('pause', function() {
         clearInterval(saveInterval);
-        savePosition();
+        savePosition(false);
     });
     
     player.on('ended', function() {
         console.log('VIDEO.JS ENDED EVENT FIRED!');
         clearInterval(saveInterval);
-        savePosition();
+        savePosition(false);
         
         // Auto-complete lesson
         const completeUrl = options.completeUrl;
@@ -318,9 +328,19 @@ videojs.registerPlugin('positionSaver', function(options = {}) {
         }
     });
     
-    // Save on page unload
+    // Zapis przy zamykaniu/opuszczaniu strony - sendBeacon jest niezawodniejszy niż fetch
     window.addEventListener('beforeunload', function() {
-        savePosition();
+        savePosition(true);
+    });
+    window.addEventListener('pagehide', function() {
+        savePosition(true); // fallback dla mobile (Safari iOS)
+    });
+
+    // Zapis przy przełączeniu zakładki - ważne gdy użytkownik zatrzymuje i wraca później
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            savePosition(false);
+        }
     });
 });
 

@@ -22,3 +22,6 @@
 Homestead.json
 Homestead.yaml
 Thumbs.db
+
+# SSH scripts with credentials - do not commit
+scripts/ssh-check-progress.exp
