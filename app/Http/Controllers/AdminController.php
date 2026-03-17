@@ -114,7 +114,7 @@ class AdminController extends Controller
                     $user->name,
                     $user->email,
                     $user->phone ?? '',
-                    $user->user_type === 'farmaceuta' ? 'Farmaceuta' : 'Technik farmacji',
+                    $user->user_type === 'farmaceuta' ? 'Farmaceuta' : 'Technik farmaceutyczny',
                     $user->pwz_number ?? '',
                     $user->pharmacy_address ?? '',
                     $user->pharmacy_postal_code ?? '',

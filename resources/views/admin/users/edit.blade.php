@@ -305,7 +305,7 @@
                         Farmaceuta
                     </option>
                     <option value="technik_farmacji" {{ old('user_type', $user->user_type) === 'technik_farmacji' ? 'selected' : '' }}>
-                        Technik farmacji
+                        Technik farmaceutyczny
                     </option>
                 </select>
                 @error('user_type')

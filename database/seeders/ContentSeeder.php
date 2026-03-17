@@ -34,7 +34,7 @@ class ContentSeeder extends Seeder
             [
                 'key' => 'home.hero.description',
                 'title' => 'Opis w sekcji hero',
-                'content' => '<b>Witaj w serwisie stworzonym z myślą o farmaceutach i technikach farmacji.</b> To wymagające zawody – nie tylko ze względu na codzienną pracę w aptece, ale także przez wpisaną w nie potrzebę stałego rozwoju. Akademia LEK-AM wspiera Cię w tym procesie. Zarejestruj konto, aby zyskać dostęp do bezpłatnych szkoleń, zdobywać punkty edukacyjne i poszerzać wiedzę – bez wychodzenia z domu.',
+                'content' => '<b>Witaj w serwisie stworzonym z myślą o farmaceutach i technikach farmaceutycznych.</b> To wymagające zawody – nie tylko ze względu na codzienną pracę w aptece, ale także przez wpisaną w nie potrzebę stałego rozwoju. Akademia LEK-AM wspiera Cię w tym procesie. Zarejestruj konto, aby zyskać dostęp do bezpłatnych szkoleń, zdobywać punkty edukacyjne i poszerzać wiedzę – bez wychodzenia z domu.',
                 'type' => 'html',
                 'page' => 'home',
                 'section' => 'hero',
@@ -106,7 +106,7 @@ class ContentSeeder extends Seeder
             [
                 'key' => 'home.trainings.description',
                 'title' => 'Opis sekcji Szkolenia',
-                'content' => 'W Akademii LEK-AM szkolisz się wtedy, gdy Ci wygodnie – bez grafiku, dojazdów i formalności. Wybierasz interesujący Cię temat, oglądasz wykład prowadzony przez eksperta, rozwiązujesz test i pobierasz certyfikat – wszystko w intuicyjnym systemie online.\nTreści są merytoryczne, zawsze zgodne z aktualną wiedzą, a zajęcia prowadzone przez renomowanych wykładowców, specjalistów w danej dziedzinie. To rozwiązanie stworzone z myślą o farmaceutach i technikach farmacji, którzy cenią jakość, prostotę i efektywność.',
+                'content' => 'W Akademii LEK-AM szkolisz się wtedy, gdy Ci wygodnie – bez grafiku, dojazdów i formalności. Wybierasz interesujący Cię temat, oglądasz wykład prowadzony przez eksperta, rozwiązujesz test i pobierasz certyfikat – wszystko w intuicyjnym systemie online.\nTreści są merytoryczne, zawsze zgodne z aktualną wiedzą, a zajęcia prowadzone przez renomowanych wykładowców, specjalistów w danej dziedzinie. To rozwiązanie stworzone z myślą o farmaceutach i technikach farmaceutycznych, którzy cenią jakość, prostotę i efektywność.',
                 'type' => 'html',
                 'page' => 'home',
                 'section' => 'trainings',
@@ -124,7 +124,7 @@ class ContentSeeder extends Seeder
             [
                 'key' => 'courses.hero.description',
                 'title' => 'Opis strony Szkolenia',
-                'content' => 'Szkolenia Akademii Lek‑am zostały przygotowane z najwyższą dbałością jeśli chodzi o wartość merytoryczną, są zawsze zgodne z aktualnymi standardami i wymaganiami współczesnej farmacji. Prowadzą je renomowani wykładowcy i eksperci z wieloletnim doświadczeniem. Nasza oferta obejmuje starannie opracowane kursy, które wspierają rozwój zawodowy farmaceutów i techników farmacji, łącząc rzetelną wiedzę z praktycznym podejściem do codziennej pracy.',
+                'content' => 'Szkolenia Akademii Lek‑am zostały przygotowane z najwyższą dbałością jeśli chodzi o wartość merytoryczną, są zawsze zgodne z aktualnymi standardami i wymaganiami współczesnej farmacji. Prowadzą je renomowani wykładowcy i eksperci z wieloletnim doświadczeniem. Nasza oferta obejmuje starannie opracowane kursy, które wspierają rozwój zawodowy farmaceutów i techników farmaceutycznych, łącząc rzetelną wiedzę z praktycznym podejściem do codziennej pracy.',
                 'type' => 'html',
                 'page' => 'courses',
                 'section' => 'hero',

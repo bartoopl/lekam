@@ -96,10 +96,10 @@
                                     </div>
 
                                     <div>
-                                        <label for="technician_points" class="block text-sm font-medium text-gray-700">Punkty dla techników farmacji</label>
+                                        <label for="technician_points" class="block text-sm font-medium text-gray-700">Punkty dla techników farmaceutycznych</label>
                                         <input type="number" name="technician_points" id="technician_points" value="{{ old('technician_points', $course->technician_points) }}" min="0"
                                             class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                                        <p class="mt-1 text-sm text-gray-500">Liczba punktów przyznawanych technikom farmacji po ukończeniu kursu</p>
+                                        <p class="mt-1 text-sm text-gray-500">Liczba punktów przyznawanych technikom farmaceutycznym po ukończeniu kursu</p>
                                         @error('technician_points')
                                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                         @enderror

@@ -195,10 +195,10 @@
                             </div>
 
                             <div>
-                                <label for="technician_points" class="block form-label">Punkty dla techników farmacji</label>
+                                <label for="technician_points" class="block form-label">Punkty dla techników farmaceutycznych</label>
                                 <input type="number" name="technician_points" id="technician_points" value="{{ old('technician_points', 0) }}" min="0"
                                     class="mt-1 block w-full form-input">
-                                <p class="form-help-text">Liczba punktów przyznawanych technikom farmacji po ukończeniu kursu</p>
+                                <p class="form-help-text">Liczba punktów przyznawanych technikom farmaceutycznym po ukończeniu kursu</p>
                                 @error('technician_points')
                                     <p class="form-error">{{ $message }}</p>
                                 @enderror

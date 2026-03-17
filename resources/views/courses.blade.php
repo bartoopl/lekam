@@ -434,7 +434,7 @@ ob_start();
             </div>
             <div class="hero-right">
                 <h1 class="hero-title">{{ $contents['courses.hero.title']->content ?? 'Szkolenia' }}</h1>
-                <p class="hero-description">{{ $contents['courses.hero.description']->content ?? 'Szkolenia Akademii Lek‑am zostały przygotowane z najwyższą dbałością jeśli chodzi o wartość merytoryczną, są zawsze zgodne z aktualnymi standardami i wymaganiami współczesnej farmacji. Prowadzą je renomowani wykładowcy i eksperci z wieloletnim doświadczeniem. Nasza oferta obejmuje starannie opracowane kursy, które wspierają rozwój zawodowy farmaceutów i techników farmacji, łącząc rzetelną wiedzę z praktycznym podejściem do codziennej pracy.' }}</p>
+                <p class="hero-description">{{ $contents['courses.hero.description']->content ?? 'Szkolenia Akademii Lek‑am zostały przygotowane z najwyższą dbałością jeśli chodzi o wartość merytoryczną, są zawsze zgodne z aktualnymi standardami i wymaganiami współczesnej farmacji. Prowadzą je renomowani wykładowcy i eksperci z wieloletnim doświadczeniem. Nasza oferta obejmuje starannie opracowane kursy, które wspierają rozwój zawodowy farmaceutów i techników farmaceutycznych, łącząc rzetelną wiedzę z praktycznym podejściem do codziennej pracy.' }}</p>
             </div>
         </div>
     </section>
@@ -464,7 +464,7 @@ ob_start();
                             @auth
                                 @php
                                     $userPoints = $course->getPointsForUser(auth()->user());
-                                    $userTypeText = auth()->user()->user_type === 'farmaceuta' ? 'farmaceuta' : 'technik farmacji';
+                                    $userTypeText = auth()->user()->user_type === 'farmaceuta' ? 'farmaceuta' : 'technik farmaceutyczny';
                                 @endphp
                                 @if($userPoints > 0)
                                     <div class="course-points">{{ $userPoints }} pkt ({{ $userTypeText }})</div>

@@ -126,7 +126,7 @@ class CertificateService
             'completion_date' => $certificate->issued_at->format('d.m.Y'),
             'points' => $course->getPointsForUser($user), // Just the number, no "pkt"
             'duration_hours' => $durationHours, // Duration in hours
-            'user_type' => $user->user_type === 'farmaceuta' ? 'Farmaceuta' : 'Technik Farmacji',
+            'user_type' => $user->user_type === 'farmaceuta' ? 'Farmaceuta' : 'Technik farmaceutyczny',
             'user_raw_type' => $user->user_type,
             'pwz_number' => $user->pwz_number,
             'expiry_date' => $certificate->expires_at ? $certificate->expires_at->format('d.m.Y') : 'bezterminowy',

@@ -508,7 +508,7 @@ ob_start();
                         <select id="user_type" name="user_type" required class="form-select">
                             <option value="">Wybierz funkcję</option>
                             <option value="farmaceuta" {{ old('user_type') == 'farmaceuta' ? 'selected' : '' }}>Farmaceuta</option>
-                            <option value="technik_farmacji" {{ old('user_type') == 'technik_farmacji' ? 'selected' : '' }}>Technik farmacji</option>
+                            <option value="technik_farmacji" {{ old('user_type') == 'technik_farmacji' ? 'selected' : '' }}>Technik farmaceutyczny</option>
                         </select>
                     </div>
                     

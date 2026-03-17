@@ -36,7 +36,7 @@ use Illuminate\Support\Facades\Storage;
                                 <select name="user_type" id="user_type" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
                                     <option value="">Wszystkie typy</option>
                                     <option value="farmaceuta" {{ $template->user_type === 'farmaceuta' ? 'selected' : '' }}>Farmaceuta</option>
-                                    <option value="technik_farmacji" {{ $template->user_type === 'technik_farmacji' ? 'selected' : '' }}>Technik farmacji</option>
+                                    <option value="technik_farmacji" {{ $template->user_type === 'technik_farmacji' ? 'selected' : '' }}>Technik farmaceutyczny</option>
                                 </select>
                             </div>
 

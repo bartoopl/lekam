@@ -175,7 +175,7 @@ class CertificateTemplateController extends Controller
                 'completion_date' => date('d.m.Y'),
                 'points' => '50',
                 'duration_hours' => '10',
-                'user_type' => $demoUserType === 'technik_farmacji' ? 'Technik Farmacji' : 'Farmaceuta',
+                'user_type' => $demoUserType === 'technik_farmacji' ? 'Technik farmaceutyczny' : 'Farmaceuta',
                 'user_raw_type' => $demoUserType,
                 'pwz_number' => $demoUserType === 'technik_farmacji' ? '12345' : null, // Demo PWZ dla technika
                 'expiry_date' => date('d.m.Y', strtotime('+2 years')),

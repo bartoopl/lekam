@@ -11,7 +11,7 @@
             <div class="text-center mb-12">
                 <h1 class="text-4xl font-bold text-gray-900 mb-6">{{ $contents['about.hero.title']->content ?? 'O Platformie Szkoleń Farmaceutycznych' }}</h1>
                 <p class="text-xl text-gray-600 max-w-3xl mx-auto">
-                    {{ $contents['about.hero.description']->content ?? 'Jesteśmy dedykowaną platformą e-learningową stworzoną specjalnie dla branży farmaceutycznej. Naszym celem jest wspieranie rozwoju zawodowego techników farmacji i farmaceutów.' }}
+                    {{ $contents['about.hero.description']->content ?? 'Jesteśmy dedykowaną platformą e-learningową stworzoną specjalnie dla branży farmaceutycznej. Naszym celem jest wspieranie rozwoju zawodowego techników farmaceutycznych i farmaceutów.' }}
                 </p>
             </div>
 
@@ -99,7 +99,7 @@
                             <h3 class="text-xl font-semibold mb-2">Mgr Piotr Nowak</h3>
                             <p class="text-gray-600 mb-2">Kierownik ds. Technicznych</p>
                             <p class="text-sm text-gray-500">
-                                Technik farmacji z pasją do nowoczesnych technologii i e-learningu.
+                                Technik farmaceutyczny z pasją do nowoczesnych technologii i e-learningu.
                             </p>
                         </div>
 

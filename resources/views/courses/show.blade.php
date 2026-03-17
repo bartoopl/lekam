@@ -881,8 +881,11 @@
                             <div class="chapter-description">Sprawdź swoją wiedzę po ukończeniu wszystkich lekcji</div>
                         </div>
                         <div class="lessons-list expanded">
-                            <div class="lesson-item {{ ($quizAttempt && $quizAttempt->passed) ? 'completed' : '' }}" 
-                                 onclick="navigateToQuiz()">
+                            @if($canTakeQuiz)
+                                <a href="{{ route('quizzes.show', $course) }}" class="lesson-item {{ ($quizAttempt && $quizAttempt->passed) ? 'completed' : '' }} quiz-link" style="text-decoration: none; color: inherit; display: block;">
+                            @else
+                                <div class="lesson-item {{ ($quizAttempt && $quizAttempt->passed) ? 'completed' : '' }} locked">
+                            @endif
                                 <div class="lesson-title">{{ $quiz->title }}</div>
                                 <div class="lesson-status">
                                     @if($quizAttempt && $quizAttempt->passed)
@@ -895,7 +898,11 @@
                                         🔒 Zablokowany
                                     @endif
                                 </div>
-                            </div>
+                            @if($canTakeQuiz)
+                                </a>
+                            @else
+                                </div>
+                            @endif
                         </div>
                     </div>
                 @endif
@@ -1132,28 +1139,8 @@ function navigateToQuiz() {
     console.log('navigateToQuiz called, canTakeQuiz:', canTakeQuiz);
     
     if(canTakeQuiz) {
-        // Update active state - remove active from all lessons
-        document.querySelectorAll('.lesson-item').forEach(item => {
-            item.classList.remove('active');
-        });
-        
-        // Find quiz lesson item and activate it (if it exists)
-        const quizLessonItem = document.querySelector('.lesson-item[onclick*="navigateToQuiz"]');
-        if (quizLessonItem) {
-            quizLessonItem.classList.add('active');
-        }
-        
-        // Load quiz content via AJAX
-        fetch(`/courses/{{ $course->id }}/quiz/content`)
-            .then(response => response.text())
-            .then(html => {
-                document.getElementById('lesson-content').innerHTML = html;
-            })
-            .catch(error => {
-                console.error('Error loading quiz:', error);
-                // Fallback to regular navigation
-                window.location.href = '{{ route("quizzes.show", $course) }}';
-            });
+        // Bezpośrednie przekierowanie – niezawodniejsze niż AJAX (rozwiązuje problem „klik nie działa”)
+        window.location.href = '{{ route("quizzes.show", $course) }}';
     } else {
         console.log('Quiz not available, showing alert');
         alert('Test jest niedostępny. Ukończ wszystkie lekcje aby przystąpić do testu.');
@@ -1165,7 +1152,7 @@ function updateQuizStatus() {
     canTakeQuiz = true;
     
     // Update quiz lesson item status
-    const quizItem = document.querySelector('.lesson-item[onclick="navigateToQuiz()"]');
+    const quizItem = document.querySelector('.lesson-item.quiz-link, .lesson-item[onclick*="navigateToQuiz"]');
     if (quizItem) {
         const statusElement = quizItem.querySelector('.lesson-status');
         if (statusElement && statusElement.textContent.includes('🔒 Zablokowany')) {
@@ -1408,34 +1395,38 @@ function updateNavigationButtons() {
     // Find next lesson
     const nextLesson = findNextAccessibleLesson(activeLesson);
     if (nextLesson) {
-        const nextOnClick = nextLesson.getAttribute('onclick');
-        if (nextOnClick) {
-            const nextIdMatch = nextOnClick.match(/loadLesson\((\d+),/);
-            const nextTitleMatch = nextOnClick.match(/loadLesson\(\d+,\s*['"]([^'"]+)['"]/);
-            
-            if (nextIdMatch && nextTitleMatch) {
-                nextBtn.disabled = false;
-                nextBtn.className = 'btn btn-primary flex items-center justify-center';
-                nextBtn.style.cssText = 'min-width: 150px; height: 50px;';
+        // Quiz (link bez onclick)
+        if (nextLesson.classList.contains('quiz-link') || nextLesson.getAttribute('href')) {
+            nextBtn.disabled = false;
+            nextBtn.className = 'btn btn-primary flex items-center justify-center';
+            nextBtn.style.cssText = 'min-width: 200px; height: 50px;';
+            nextBtn.innerHTML = 'Przejdź do testu końcowego →';
+            nextBtn.onclick = () => navigateToQuiz();
+        } else {
+            const nextOnClick = nextLesson.getAttribute('onclick');
+            if (nextOnClick) {
+                const nextIdMatch = nextOnClick.match(/loadLesson\((\d+),/);
+                const nextTitleMatch = nextOnClick.match(/loadLesson\(\d+,\s*['"]([^'"]+)['"]/);
                 
-                // Check if current lesson has materials (suggests next is test)
-                const hasDownloadMaterials = document.querySelector('.material-download') || 
-                                           document.querySelector('[data-download-timer]') ||
-                                           document.querySelector('#timer-display') ||
-                                           document.querySelector('#countdown-timer');
-                
-                // Check if next lesson is test/quiz
-                const isTestLesson = nextTitleMatch[1] && (nextTitleMatch[1].toLowerCase().includes('test') || nextTitleMatch[1].toLowerCase().includes('quiz'));
-                
-                // If current lesson has materials OR next is test, show test button
-                if (hasDownloadMaterials || isTestLesson) {
-                    nextBtn.innerHTML = 'Przejdź do testu końcowego →';
-                } else {
-                    nextBtn.innerHTML = 'Następna →';
+                if (nextIdMatch && nextTitleMatch) {
+                    nextBtn.disabled = false;
+                    nextBtn.className = 'btn btn-primary flex items-center justify-center';
+                    nextBtn.style.cssText = 'min-width: 150px; height: 50px;';
+                    
+                    const hasDownloadMaterials = document.querySelector('.material-download') || 
+                                               document.querySelector('[data-download-timer]') ||
+                                               document.querySelector('#timer-display') ||
+                                               document.querySelector('#countdown-timer');
+                    const isTestLesson = nextTitleMatch[1] && (nextTitleMatch[1].toLowerCase().includes('test') || nextTitleMatch[1].toLowerCase().includes('quiz'));
+                    
+                    if (hasDownloadMaterials || isTestLesson) {
+                        nextBtn.innerHTML = 'Przejdź do testu końcowego →';
+                    } else {
+                        nextBtn.innerHTML = 'Następna →';
+                    }
+                    
+                    nextBtn.onclick = () => loadLesson(parseInt(nextIdMatch[1]), nextTitleMatch[1]);
                 }
-                
-                nextBtn.onclick = () => loadLesson(parseInt(nextIdMatch[1]), nextTitleMatch[1]);
-                console.log('Next lesson enabled:', nextTitleMatch[1], '| Has materials:', !!hasDownloadMaterials, '| Is test:', isTestLesson);
             }
         }
     } else {
@@ -1476,15 +1467,17 @@ function updateNavigationButtons() {
     }
 }
 
+function isLessonAccessible(lesson) {
+    if (lesson.classList.contains('locked')) return false;
+    return lesson.getAttribute('onclick') || lesson.classList.contains('quiz-link') || lesson.getAttribute('href');
+}
+
 function findPreviousAccessibleLesson(currentLesson) {
     const allLessons = Array.from(document.querySelectorAll('.lesson-item'));
     const currentIndex = allLessons.indexOf(currentLesson);
     
     for (let i = currentIndex - 1; i >= 0; i--) {
-        const lesson = allLessons[i];
-        if (!lesson.classList.contains('locked') && lesson.getAttribute('onclick')) {
-            return lesson;
-        }
+        if (isLessonAccessible(allLessons[i])) return allLessons[i];
     }
     return null;
 }
@@ -1494,10 +1487,7 @@ function findNextAccessibleLesson(currentLesson) {
     const currentIndex = allLessons.indexOf(currentLesson);
     
     for (let i = currentIndex + 1; i < allLessons.length; i++) {
-        const lesson = allLessons[i];
-        if (!lesson.classList.contains('locked') && lesson.getAttribute('onclick')) {
-            return lesson;
-        }
+        if (isLessonAccessible(allLessons[i])) return allLessons[i];
     }
     return null;
 }

@@ -693,7 +693,7 @@ ob_start();
                     <span class="mobile-title">{!! $contents['home.hero.title.mobile']->content ?? 'Akademia<br>LEK-AM<br>Lepsza strona farmacji.' !!}</span>
                 </h1>
                 <p class="hero-description">
-                {!! $contents['home.hero.description']->content ?? '<b>Witaj w serwisie stworzonym z myślą o farmaceutach i technikach farmacji.</b> To wymagające zawody – nie tylko ze względu na codzienną pracę w aptece, ale także przez wpisaną w nie potrzebę stałego rozwoju. Akademia LEK-AM wspiera Cię w tym procesie. Zarejestruj konto, aby zyskać dostęp do bezpłatnych szkoleń, zdobywać punkty edukacyjne i poszerzać wiedzę – bez wychodzenia z domu.' !!}
+                {!! $contents['home.hero.description']->content ?? '<b>Witaj w serwisie stworzonym z myślą o farmaceutach i technikach farmaceutycznych.</b> To wymagające zawody – nie tylko ze względu na codzienną pracę w aptece, ale także przez wpisaną w nie potrzebę stałego rozwoju. Akademia LEK-AM wspiera Cię w tym procesie. Zarejestruj konto, aby zyskać dostęp do bezpłatnych szkoleń, zdobywać punkty edukacyjne i poszerzać wiedzę – bez wychodzenia z domu.' !!}
                 </p>
                 <div class="hero-buttons">
                     <a href="{{ route('register') }}" class="hero-btn-primary">Zarejestruj się →</a>
@@ -732,7 +732,7 @@ ob_start();
                     </div>
                     <div class="feature-content">
                         <h3 class="feature-title">{!! $contents['home.features.feature1.title']->content ?? 'Z potrzeby - dla praktyki' !!}</h3>
-                        <p class="feature-text">{!! $contents['home.features.feature1.description']->content ?? 'Akademia Lek-am powstała z potrzeby – realnej, zauważonej w codziennym kontakcie z farmaceutami i technikami farmacji. To odpowiedź na wyzwania zawodów, wymagających ciągłego rozwoju i dostępu do aktualnej wiedzy.' !!}</p>
+                        <p class="feature-text">{!! $contents['home.features.feature1.description']->content ?? 'Akademia Lek-am powstała z potrzeby – realnej, zauważonej w codziennym kontakcie z farmaceutami i technikami farmaceutycznymi. To odpowiedź na wyzwania zawodów, wymagających ciągłego rozwoju i dostępu do aktualnej wiedzy.' !!}</p>
                     </div>
                 </div>
 
@@ -765,7 +765,7 @@ ob_start();
             <div class="trainings-left">
                 <div class="badge trainings-badge">Szkolenia</div>
                 <h2 class="trainings-title">{{ $contents['home.trainings.title']->content ?? 'Nowoczesna edukacja online. Profesjonalnie, wygodnie, skutecznie.' }}</h2>
-                <p class="trainings-description">{!! $contents['home.trainings.description'] ? nl2br(e($contents['home.trainings.description']->content)) : 'W Akademii LEK-AM szkolisz się wtedy, gdy Ci wygodnie – bez grafiku, dojazdów i formalności. Wybierasz interesujący Cię temat, oglądasz wykład prowadzony przez eksperta, rozwiązujesz test i pobierasz certyfikat – wszystko w intuicyjnym systemie online.<br>Treści są merytoryczne, zawsze zgodne z aktualną wiedzą, a zajęcia prowadzone przez renomowanych wykładowców, specjalistów w danej dziedzinie. To rozwiązanie stworzone z myślą o farmaceutach i technikach farmacji, którzy cenią jakość, prostotę i efektywność.' !!}
+                <p class="trainings-description">{!! $contents['home.trainings.description'] ? nl2br(e($contents['home.trainings.description']->content)) : 'W Akademii LEK-AM szkolisz się wtedy, gdy Ci wygodnie – bez grafiku, dojazdów i formalności. Wybierasz interesujący Cię temat, oglądasz wykład prowadzony przez eksperta, rozwiązujesz test i pobierasz certyfikat – wszystko w intuicyjnym systemie online.<br>Treści są merytoryczne, zawsze zgodne z aktualną wiedzą, a zajęcia prowadzone przez renomowanych wykładowców, specjalistów w danej dziedzinie. To rozwiązanie stworzone z myślą o farmaceutach i technikach farmaceutycznych, którzy cenią jakość, prostotę i efektywność.' !!}
 
 
             </div>

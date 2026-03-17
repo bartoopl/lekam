@@ -34,7 +34,7 @@
                                     class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
                                 <option value="">Wszystkie typy</option>
                                 <option value="farmaceuta" {{ old('user_type') === 'farmaceuta' ? 'selected' : '' }}>Farmaceuta</option>
-                                <option value="technik_farmacji" {{ old('user_type') === 'technik_farmacji' ? 'selected' : '' }}>Technik farmacji</option>
+                                <option value="technik_farmacji" {{ old('user_type') === 'technik_farmacji' ? 'selected' : '' }}>Technik farmaceutyczny</option>
                             </select>
                             <p class="mt-1 text-sm text-gray-500">Zostaw puste dla uniwersalnego szablonu</p>
                             @error('user_type')

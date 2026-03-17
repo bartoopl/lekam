@@ -13,7 +13,7 @@
                     {{ $contents['home.hero.title']->content ?? 'Platforma Szkoleń Farmaceutycznych' }}
                 </h1>
                 <p class="text-xl md:text-2xl mb-8 max-w-3xl mx-auto">
-                    {{ $contents['home.hero.subtitle']->content ?? 'Profesjonalne szkolenia online dla techników farmacji i farmaceutów. Rozwijaj swoje umiejętności i zdobywaj certyfikaty.' }}
+                    {{ $contents['home.hero.subtitle']->content ?? 'Profesjonalne szkolenia online dla techników farmaceutycznych i farmaceutów. Rozwijaj swoje umiejętności i zdobywaj certyfikaty.' }}
                 </p>
                 <div class="space-x-4">
                     <a href="{{ route('courses') }}" class="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition duration-300">

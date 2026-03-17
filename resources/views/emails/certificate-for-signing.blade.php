@@ -5,7 +5,7 @@
 <ul>
     <li><strong>Imię i nazwisko:</strong> {{ $user->name }}</li>
     <li><strong>E-mail użytkownika:</strong> {{ $user->email }}</li>
-    <li><strong>Typ użytkownika:</strong> {{ $user->isTechnician() ? 'Technik farmacji' : 'Farmaceuta' }}</li>
+    <li><strong>Typ użytkownika:</strong> {{ $user->isTechnician() ? 'Technik farmaceutyczny' : 'Farmaceuta' }}</li>
     <li><strong>Kurs:</strong> {{ $course->title }}</li>
     <li><strong>Numer certyfikatu:</strong> {{ $certificate->certificate_number }}</li>
     <li><strong>Data wystawienia:</strong> {{ optional($certificate->issued_at)->format('d.m.Y H:i') }}</li>

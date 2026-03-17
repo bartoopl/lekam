@@ -324,7 +324,7 @@
             <div class="user-details">
                 <h2>{{ $user->name }}</h2>
                 <p><strong>Email:</strong> {{ $user->email }}</p>
-                <p><strong>Typ:</strong> {{ $user->user_type === 'farmaceuta' ? 'Farmaceuta' : 'Technik farmacji' }}</p>
+                <p><strong>Typ:</strong> {{ $user->user_type === 'farmaceuta' ? 'Farmaceuta' : 'Technik farmaceutyczny' }}</p>
                 <p><strong>Rejestracja:</strong> {{ $user->created_at->format('d.m.Y H:i') }}</p>
                 @if($user->pwz_number)
                     <p><strong>PWZ:</strong> {{ $user->pwz_number }}</p>

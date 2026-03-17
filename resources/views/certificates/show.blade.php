@@ -91,7 +91,7 @@
                                 @if($certificate->user->isPharmacist())
                                     Farmaceuta
                                 @else
-                                    Technik farmacji
+                                    Technik farmaceutyczny
                                 @endif
                             </span>
                         </div>

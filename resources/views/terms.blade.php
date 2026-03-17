@@ -53,7 +53,7 @@
                         </p>
                         <ul>
                             <li>Farmaceuta - ma pełny dostęp do wszystkich funkcji platformy</li>
-                            <li>Technik farmacji - ma pełny dostęp do wszystkich funkcji platformy</li>
+                            <li>Technik farmaceutyczny - ma pełny dostęp do wszystkich funkcji platformy</li>
                         </ul>
 
                         <h2>§4. Zasady korzystania z kursów</h2>
@@ -89,7 +89,7 @@
                             6.1. Farmaceuci otrzymują 100% punktów za poprawne odpowiedzi.
                         </p>
                         <p>
-                            6.2. Technicy farmacji otrzymują 80% punktów za poprawne odpowiedzi.
+                            6.2. Technicy farmaceutyczni otrzymują 80% punktów za poprawne odpowiedzi.
                         </p>
                         <p>
                             6.3. System automatycznie przelicza punkty zgodnie z typem użytkownika.
