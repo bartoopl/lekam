@@ -25,7 +25,7 @@ return new class extends Migration
             $table->timestamps();
 
             $table->unique(['marketing_scenario_run_id', 'user_id', 'channel'], 'marketing_delivery_unique_per_run');
-            $table->index(['marketing_scenario_id', 'channel', 'status']);
+            $table->index(['marketing_scenario_id', 'channel', 'status'], 'mdl_scenario_channel_status_idx');
         });
     }
 

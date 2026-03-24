@@ -20,7 +20,7 @@ return new class extends Migration
             $table->text('notes')->nullable();
             $table->timestamps();
 
-            $table->index(['marketing_scenario_id', 'scheduled_for']);
+            $table->index(['marketing_scenario_id', 'scheduled_for'], 'ms_runs_scenario_scheduled_idx');
             $table->index('status');
         });
     }
