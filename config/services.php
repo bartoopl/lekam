@@ -42,4 +42,10 @@ return [
         ],
     ],
 
+    'smsapi' => [
+        'oauth_token' => env('SMSAPI_OAUTH_TOKEN'),
+        'base_url' => env('SMSAPI_BASE_URL', 'https://api.smsapi.pl'),
+        'sender' => env('SMSAPI_SENDER'),
+    ],
+
 ];

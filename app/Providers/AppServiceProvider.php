@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\URL;
+use App\Console\Commands\DispatchMarketingScenarios;
 use App\Console\Commands\SimulateLessonsComplete;
 
 class AppServiceProvider extends ServiceProvider
@@ -33,6 +34,7 @@ class AppServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             $this->commands([
                 SimulateLessonsComplete::class,
+                DispatchMarketingScenarios::class,
             ]);
         }
     }

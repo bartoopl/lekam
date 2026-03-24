@@ -87,6 +87,16 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Certificate::class);
     }
 
+    public function marketingDeliveryLogs()
+    {
+        return $this->hasMany(MarketingDeliveryLog::class);
+    }
+
+    public function marketingScenarios()
+    {
+        return $this->hasMany(MarketingScenario::class, 'created_by');
+    }
+
     /**
      * Get the representative that referred this user
      */

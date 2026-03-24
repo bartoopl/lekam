@@ -11,6 +11,7 @@ use App\Http\Controllers\InstructorController;
 use App\Http\Controllers\LessonController;
 use App\Http\Controllers\ChapterController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Admin\MarketingAutomationController;
 use App\Http\Controllers\Admin\RepresentativeController;
 use Illuminate\Support\Facades\Route;
 
@@ -139,6 +140,12 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->name('admin.'
 
     Route::get('/certificates', [AdminController::class, 'certificates'])->name('certificates');
     Route::get('/certificates/send-logs', [AdminController::class, 'certificateSendLogs'])->name('certificates.send-logs');
+    Route::get('/marketing-automation', [MarketingAutomationController::class, 'index'])->name('marketing-automation.index');
+    Route::get('/marketing-automation/create', [MarketingAutomationController::class, 'create'])->name('marketing-automation.create');
+    Route::post('/marketing-automation', [MarketingAutomationController::class, 'store'])->name('marketing-automation.store');
+    Route::get('/marketing-automation/{scenario}/edit', [MarketingAutomationController::class, 'edit'])->name('marketing-automation.edit');
+    Route::put('/marketing-automation/{scenario}', [MarketingAutomationController::class, 'update'])->name('marketing-automation.update');
+    Route::post('/marketing-automation/{scenario}/toggle', [MarketingAutomationController::class, 'toggle'])->name('marketing-automation.toggle');
     Route::get('/statistics', [AdminController::class, 'statistics'])->name('statistics');
 
     // Content management

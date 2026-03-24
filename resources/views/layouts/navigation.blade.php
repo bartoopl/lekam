@@ -29,6 +29,7 @@
                                     <a href="{{ route('admin.users') }}" class="nav-link" style="display:block; padding:10px 14px;">👥 Użytkownicy</a>
                                     <a href="{{ route('admin.certificate-templates.index') }}" class="nav-link" style="display:block; padding:10px 14px;">🎓 Szablony certyfikatów</a>
                                     <a href="{{ route('admin.certificates') }}" class="nav-link" style="display:block; padding:10px 14px;">🧾 Certyfikaty</a>
+                                    <a href="{{ route('admin.marketing-automation.index') }}" class="nav-link" style="display:block; padding:10px 14px;">📣 Marketing Automation</a>
                                     <a href="{{ route('admin.certificates.send-logs') }}" class="nav-link" style="display:block; padding:10px 14px;">✉️ Wysłane do podpisu</a>
                                 </div>
                             </div>
@@ -102,6 +103,7 @@
                             <a href="{{ route('admin.users') }}" class="mobile-nav-link" onclick="closeMobileMenu()">👥 Użytkownicy</a>
                             <a href="{{ route('admin.certificate-templates.index') }}" class="mobile-nav-link" onclick="closeMobileMenu()">🎓 Szablony certyfikatów</a>
                             <a href="{{ route('admin.certificates') }}" class="mobile-nav-link" onclick="closeMobileMenu()">🧾 Certyfikaty</a>
+                            <a href="{{ route('admin.marketing-automation.index') }}" class="mobile-nav-link" onclick="closeMobileMenu()">📣 Marketing Automation</a>
                             <a href="{{ route('admin.certificates.send-logs') }}" class="mobile-nav-link" onclick="closeMobileMenu()">✉️ Wysłane do podpisu</a>
                         @endif
                         <a href="{{ route('dashboard') }}" class="btn btn-primary" onclick="closeMobileMenu()">
