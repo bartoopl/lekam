@@ -145,6 +145,8 @@
 
         <script src="{{ asset('js/cookie-consent.js') }}"></script>
 
+        @stack('scripts')
+
         <!-- Ensure openCookieModal is available globally -->
         <script>
             // Define openCookieModal immediately to avoid ReferenceError
