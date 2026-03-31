@@ -884,7 +884,7 @@
                             @if($canTakeQuiz)
                                 <a href="{{ route('quizzes.show', $course) }}" class="lesson-item {{ ($quizAttempt && $quizAttempt->passed) ? 'completed' : '' }} quiz-link" style="text-decoration: none; color: inherit; display: block;">
                             @else
-                                <div class="lesson-item {{ ($quizAttempt && $quizAttempt->passed) ? 'completed' : '' }} locked">
+                                <div class="lesson-item {{ ($quizAttempt && $quizAttempt->passed) ? 'completed' : '' }} locked" id="quiz-locked-item" style="cursor: pointer;" onclick="navigateToQuiz()">
                             @endif
                                 <div class="lesson-title">{{ $quiz->title }}</div>
                                 <div class="lesson-status">
@@ -1151,12 +1151,28 @@ function navigateToQuiz() {
 function updateQuizStatus() {
     canTakeQuiz = true;
     
-    // Update quiz lesson item status
-    const quizItem = document.querySelector('.lesson-item.quiz-link, .lesson-item[onclick*="navigateToQuiz"]');
-    if (quizItem) {
-        const statusElement = quizItem.querySelector('.lesson-status');
-        if (statusElement && statusElement.textContent.includes('🔒 Zablokowany')) {
+    // Convert locked quiz div into a clickable link
+    const lockedQuizItem = document.getElementById('quiz-locked-item');
+    if (lockedQuizItem) {
+        const quizUrl = '{{ route("quizzes.show", $course) }}';
+        const link = document.createElement('a');
+        link.href = quizUrl;
+        link.className = lockedQuizItem.className.replace('locked', 'quiz-link');
+        link.style.cssText = 'text-decoration: none; color: inherit; display: block;';
+        link.innerHTML = lockedQuizItem.innerHTML;
+        lockedQuizItem.parentNode.replaceChild(link, lockedQuizItem);
+        const statusElement = link.querySelector('.lesson-status');
+        if (statusElement) {
             statusElement.textContent = '○ Dostępny';
+        }
+    } else {
+        // Fallback: just update the status text if element already converted
+        const quizItem = document.querySelector('.lesson-item.quiz-link');
+        if (quizItem) {
+            const statusElement = quizItem.querySelector('.lesson-status');
+            if (statusElement && statusElement.textContent.includes('🔒 Zablokowany')) {
+                statusElement.textContent = '○ Dostępny';
+            }
         }
     }
 }
