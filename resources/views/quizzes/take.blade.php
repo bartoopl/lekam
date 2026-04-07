@@ -149,19 +149,21 @@
         }
         
         document.getElementById('submitBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+
             if (answeredQuestions < totalQuestions) {
                 if (!confirm(`Odpowiedziałeś na ${answeredQuestions} z ${totalQuestions} pytań. Czy na pewno chcesz zakończyć test?`)) {
-                    e.preventDefault();
                     return;
                 }
             }
-            
-            if (confirm('Czy na pewno chcesz zakończyć test? Nie będziesz mógł go edytować.')) {
-                this.disabled = true;
-                this.textContent = 'Przetwarzanie...';
-            } else {
-                e.preventDefault();
+
+            if (!confirm('Czy na pewno chcesz zakończyć test? Nie będziesz mógł go edytować.')) {
+                return;
             }
+
+            this.disabled = true;
+            this.textContent = 'Przetwarzanie...';
+            document.getElementById('quizForm').submit();
         });
         
         // Initial progress update

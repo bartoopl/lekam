@@ -2,11 +2,16 @@
 
 namespace App\Services;
 
+use App\Mail\CertificateForSigning;
 use App\Models\Certificate;
+use App\Models\CertificateSendLog;
 use App\Models\CertificateTemplate;
-use App\Models\User;
 use App\Models\Course;
+use App\Models\QuizAttempt;
+use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use setasign\Fpdi\Tcpdf\Fpdi;
 
@@ -375,5 +380,72 @@ class CertificateService
     public function generateCertificateNumber(CertificateTemplate $template): string
     {
         return $template->generateNextCertificateNumber();
+    }
+
+    /**
+     * Technik po zaliczonym teście: utworzenie certyfikatu, PDF, wysyłka na adres podpisu (jak w wyniku quizu).
+     */
+    public function issueTechnicianCertificateForSigning(User $user, Course $course, QuizAttempt $attempt): ?Certificate
+    {
+        if (!$attempt->passed || !$user->isTechnician()) {
+            return null;
+        }
+
+        if (Certificate::where('user_id', $user->id)->where('course_id', $course->id)->exists()) {
+            return Certificate::where('user_id', $user->id)->where('course_id', $course->id)->first();
+        }
+
+        try {
+            $template = $this->findTemplateFor($user, $course);
+            if (!$template) {
+                Log::error('No certificate template for technician', ['user_id' => $user->id, 'course_id' => $course->id]);
+
+                return null;
+            }
+
+            $certificate = Certificate::create([
+                'user_id' => $user->id,
+                'course_id' => $course->id,
+                'certificate_template_id' => $template->id,
+                'quiz_attempt_id' => $attempt->id,
+                'certificate_number' => $this->generateCertificateNumber($template),
+                'issued_at' => now(),
+                'expires_at' => now()->addYears(2),
+            ]);
+
+            $pdfPath = $this->generateCertificatePDF($certificate);
+            $certificate->update(['pdf_path' => $pdfPath]);
+
+            $to = config('mail.signing_to');
+            $cc = config('mail.signing_cc', []);
+            Log::info('Sending certificate for signing', ['to' => $to, 'cc' => $cc, 'certificate_id' => $certificate->id]);
+
+            $log = CertificateSendLog::create([
+                'certificate_id' => $certificate->id,
+                'to_email' => $to,
+                'cc_emails' => is_array($cc) ? implode(',', $cc) : (string) $cc,
+                'status' => 'queued',
+            ]);
+
+            try {
+                Mail::to($to)->cc($cc)->send(new CertificateForSigning($certificate));
+                $log->update([
+                    'status' => 'sent',
+                    'sent_at' => now(),
+                ]);
+            } catch (\Throwable $mailEx) {
+                $log->update([
+                    'status' => 'failed',
+                    'error' => $mailEx->getMessage(),
+                ]);
+                Log::error('Certificate signing mail failed', ['error' => $mailEx->getMessage(), 'certificate_id' => $certificate->id]);
+            }
+
+            return $certificate;
+        } catch (\Throwable $e) {
+            Log::error('Technician auto certificate/email failed', ['error' => $e->getMessage(), 'user_id' => $user->id, 'course_id' => $course->id]);
+
+            return null;
+        }
     }
 }
