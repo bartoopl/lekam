@@ -45,22 +45,22 @@
 
                             <div class="space-y-3">
                                 @if($question->type === 'single_choice')
-                                    @foreach($question->options as $option)
+                                    @foreach($question->options as $optIndex => $option)
                                         <label class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
                                             <input type="radio" 
                                                    name="answers[{{ $question->id }}]" 
-                                                   value="{{ $option }}" 
+                                                   value="{{ $optIndex }}" 
                                                    class="mr-3 text-blue-600 focus:ring-blue-500"
                                                    onchange="updateProgress()">
                                             <span>{{ $option }}</span>
                                         </label>
                                     @endforeach
                                 @elseif($question->type === 'multiple_choice')
-                                    @foreach($question->options as $option)
+                                    @foreach($question->options as $optIndex => $option)
                                         <label class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
                                             <input type="checkbox" 
                                                    name="answers[{{ $question->id }}][]" 
-                                                   value="{{ $option }}" 
+                                                   value="{{ $optIndex }}" 
                                                    class="mr-3 text-blue-600 focus:ring-blue-500"
                                                    onchange="updateProgress()">
                                             <span>{{ $option }}</span>
@@ -122,7 +122,7 @@
                 
                 if (timeLeft <= 0) {
                     alert('Czas na test wygasł!');
-                    document.getElementById('quizForm').submit();
+                    submitQuizViaFetch(document.getElementById('submitBtn'));
                 } else {
                     timeLeft--;
                     setTimeout(updateTimer, 1000);
@@ -148,6 +148,39 @@
             document.getElementById('progressText').textContent = `${answeredQuestions}/${totalQuestions}`;
         }
         
+        function submitQuizViaFetch(submitBtn) {
+            const form = document.getElementById('quizForm');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Przetwarzanie...';
+
+            const formData = new FormData(form);
+            fetch(form.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json',
+                },
+                credentials: 'same-origin',
+            })
+                .then(async (response) => {
+                    const data = await response.json().catch(() => ({}));
+                    if (response.ok && data.success && data.redirect_url) {
+                        window.location.href = data.redirect_url;
+                        return;
+                    }
+                    if (response.status === 419) {
+                        throw new Error('Sesja wygasła. Odśwież stronę i zaloguj się ponownie.');
+                    }
+                    throw new Error(data.error || data.message || ('Serwer nie zapisał wyniku (kod ' + response.status + ').'));
+                })
+                .catch((err) => {
+                    alert(err.message || String(err));
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Zakończ test';
+                });
+        }
+
         document.getElementById('submitBtn').addEventListener('click', function(e) {
             e.preventDefault();
 
@@ -161,9 +194,7 @@
                 return;
             }
 
-            this.disabled = true;
-            this.textContent = 'Przetwarzanie...';
-            document.getElementById('quizForm').submit();
+            submitQuizViaFetch(this);
         });
         
         // Initial progress update

@@ -10,6 +10,8 @@ use App\Models\Certificate;
 use App\Services\CertificateService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Throwable;
 
 class QuizController extends Controller
 {
@@ -196,42 +198,68 @@ class QuizController extends Controller
     public function submit(Request $request, Course $course, QuizAttempt $attempt)
     {
         $user = Auth::user();
-        
+
+        $wantsJson = $request->expectsJson() || $request->ajax();
+
         if (!$user || $attempt->user_id !== $user->id) {
-            return response()->json(['error' => 'Unauthorized'], 401);
+            return $wantsJson
+                ? response()->json(['error' => 'Unauthorized'], 401)
+                : redirect()->route('courses.show', $course);
         }
 
         if ($attempt->completed_at) {
-            return response()->json(['error' => 'Quiz already completed'], 400);
+            return $wantsJson
+                ? response()->json(['error' => 'Quiz already completed'], 400)
+                : redirect()->route('quizzes.result', ['course' => $course, 'attempt' => $attempt]);
         }
 
         $answers = $request->input('answers', []);
-        
-        // Update attempt with answers and completion
-        $attempt->update([
-            'answers' => $answers,
-            'completed_at' => now(),
-        ]);
 
-        // Calculate results
-        $attempt->calculateScore();
-        $percentage = $attempt->calculatePercentage();
-        $attempt->percentage = $percentage;
-        $attempt->passed = $attempt->checkIfPassed();
-        $attempt->applyScoreMultiplier(); // This now calculates earned points based on course
+        try {
+            DB::transaction(function () use ($attempt, $answers) {
+                $locked = QuizAttempt::whereKey($attempt->id)->lockForUpdate()->firstOrFail();
 
-        $attempt->save();
+                if ($locked->completed_at) {
+                    return;
+                }
 
-        // Check if request is AJAX
-        if ($request->expectsJson()) {
-            return response()->json([
-                'success' => true,
-                'redirect_url' => route('quizzes.result', ['course' => $course, 'attempt' => $attempt])
+                $locked->answers = $answers;
+                $locked->calculateScore();
+                $locked->percentage = $locked->calculatePercentage();
+                $locked->passed = $locked->checkIfPassed();
+                $locked->applyScoreMultiplier();
+                $locked->completed_at = now();
+                $locked->save();
+            });
+
+            $attempt->refresh();
+
+            if ($wantsJson) {
+                return response()->json([
+                    'success' => true,
+                    'redirect_url' => route('quizzes.result', ['course' => $course, 'attempt' => $attempt]),
+                ]);
+            }
+
+            return redirect()->route('quizzes.result', ['course' => $course, 'attempt' => $attempt]);
+        } catch (Throwable $e) {
+            \Log::error('Quiz submit failed', [
+                'attempt_id' => $attempt->id,
+                'user_id' => $user->id,
+                'course_id' => $course->id,
+                'message' => $e->getMessage(),
             ]);
+
+            if ($wantsJson) {
+                return response()->json([
+                    'error' => 'Nie udało się zapisać wyniku testu. Spróbuj ponownie lub odśwież stronę.',
+                ], 500);
+            }
+
+            return redirect()
+                ->route('quizzes.take', ['course' => $course, 'attempt' => $attempt])
+                ->with('error', 'Nie udało się zapisać wyniku testu. Spróbuj ponownie.');
         }
-        
-        // Regular form submission - redirect
-        return redirect()->route('quizzes.result', ['course' => $course, 'attempt' => $attempt]);
     }
 
     /**

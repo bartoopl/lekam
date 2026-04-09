@@ -166,7 +166,7 @@
             
             if (timeLeft <= 0) {
                 alert('Czas na test wygasł!');
-                document.getElementById('quizForm').submit();
+                submitQuizViaFetch(document.getElementById('submitBtn'));
             } else {
                 timeLeft--;
                 setTimeout(updateTimer, 1000);
@@ -192,22 +192,53 @@
         document.getElementById('progressText').textContent = `${answeredQuestions}/${totalQuestions}`;
     }
     
+    function submitQuizViaFetch(submitBtn) {
+        const form = document.getElementById('quizForm');
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Przetwarzanie...';
+
+        const formData = new FormData(form);
+        fetch(form.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'Accept': 'application/json',
+            },
+            credentials: 'same-origin',
+        })
+            .then(async (response) => {
+                const data = await response.json().catch(() => ({}));
+                if (response.ok && data.success && data.redirect_url) {
+                    window.location.href = data.redirect_url;
+                    return;
+                }
+                if (response.status === 419) {
+                    throw new Error('Sesja wygasła. Odśwież stronę i zaloguj się ponownie.');
+                }
+                throw new Error(data.error || data.message || ('Serwer nie zapisał wyniku (kod ' + response.status + ').'));
+            })
+            .catch((err) => {
+                alert(err.message || String(err));
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Zakończ test';
+            });
+    }
+
     document.getElementById('submitBtn').addEventListener('click', function(e) {
         e.preventDefault();
-        
+
         if (answeredQuestions < totalQuestions) {
             if (!confirm(`Odpowiedziałeś na ${answeredQuestions} z ${totalQuestions} pytań. Czy na pewno chcesz zakończyć test?`)) {
                 return;
             }
         }
-        
-        if (confirm('Czy na pewno chcesz zakończyć test? Nie będziesz mógł go edytować.')) {
-            this.disabled = true;
-            this.textContent = 'Przetwarzanie...';
-            
-            // Use regular form submit instead of AJAX
-            document.getElementById('quizForm').submit();
+
+        if (!confirm('Czy na pewno chcesz zakończyć test? Nie będziesz mógł go edytować.')) {
+            return;
         }
+
+        submitQuizViaFetch(this);
     });
     
     // Initial progress update
