@@ -12,6 +12,39 @@
 
 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
     <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Typ scenariusza</label>
+        <select name="trigger_type" id="trigger_type" class="w-full border border-gray-300 rounded px-3 py-2">
+            <option value="incomplete_course" @selected(old('trigger_type', $scenario->trigger_type ?? 'incomplete_course') === 'incomplete_course')>
+                Użytkownik w trakcie kursu i nie kończy
+            </option>
+            <option value="inactive_users" @selected(old('trigger_type', $scenario->trigger_type ?? 'incomplete_course') === 'inactive_users')>
+                Użytkownik bez aktywności
+            </option>
+        </select>
+    </div>
+
+    <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Okres bezczynności (dni)</label>
+        <input type="number" min="1" max="365" name="inactivity_days"
+               value="{{ old('inactivity_days', $scenario->inactivity_days ?? 7) }}"
+               class="w-full border border-gray-300 rounded px-3 py-2">
+    </div>
+</div>
+
+<div id="target_course_wrapper">
+    <label class="block text-sm font-medium text-gray-700 mb-1">Kurs (dla scenariusza niedokończonego kursu)</label>
+    <select name="target_course_id" class="w-full border border-gray-300 rounded px-3 py-2">
+        <option value="">Wybierz kurs</option>
+        @foreach(($courses ?? collect()) as $courseOption)
+            <option value="{{ $courseOption->id }}" @selected((string) old('target_course_id', $scenario->target_course_id ?? '') === (string) $courseOption->id)>
+                {{ $courseOption->title }}
+            </option>
+        @endforeach
+    </select>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div>
         <label class="block text-sm font-medium text-gray-700 mb-1">Kanał</label>
         <select name="channel" class="w-full border border-gray-300 rounded px-3 py-2">
             @foreach(['email' => 'Email', 'sms' => 'SMS', 'both' => 'Email + SMS'] as $value => $label)
@@ -81,3 +114,21 @@
     <input id="is_active" type="checkbox" name="is_active" value="1" @checked(old('is_active', $scenario->is_active ?? false))>
     <label for="is_active" class="text-sm text-gray-700">Aktywny po zapisie</label>
 </div>
+
+<script>
+    (function () {
+        const triggerSelect = document.getElementById('trigger_type');
+        const targetCourseWrapper = document.getElementById('target_course_wrapper');
+
+        if (!triggerSelect || !targetCourseWrapper) {
+            return;
+        }
+
+        function toggleTargetCourse() {
+            targetCourseWrapper.style.display = triggerSelect.value === 'incomplete_course' ? 'block' : 'none';
+        }
+
+        triggerSelect.addEventListener('change', toggleTargetCourse);
+        toggleTargetCourse();
+    })();
+</script>

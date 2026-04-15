@@ -18,6 +18,7 @@
             <thead class="bg-gray-50">
             <tr>
                 <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Nazwa</th>
+                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Scenariusz</th>
                 <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Kanał</th>
                 <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Harmonogram</th>
                 <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Status</th>
@@ -30,6 +31,16 @@
                     <td class="px-4 py-3">
                         <div class="font-medium text-gray-900">{{ $scenario->name }}</div>
                         <div class="text-xs text-gray-500">Utworzył: {{ $scenario->creator?->name ?? 'system' }}</div>
+                    </td>
+                    <td class="px-4 py-3 text-sm text-gray-700">
+                        @if($scenario->trigger_type === 'inactive_users')
+                            Brak aktywności przez {{ $scenario->inactivity_days }} dni
+                        @else
+                            Niedokończony kurs przez {{ $scenario->inactivity_days }} dni
+                            @if($scenario->targetCourse)
+                                <div class="text-xs text-gray-500">{{ $scenario->targetCourse->title }}</div>
+                            @endif
+                        @endif
                     </td>
                     <td class="px-4 py-3 text-sm text-gray-700">{{ strtoupper($scenario->channel) }}</td>
                     <td class="px-4 py-3 text-sm text-gray-700">
@@ -59,7 +70,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="5" class="px-4 py-8 text-center text-gray-500">Brak scenariuszy.</td>
+                    <td colspan="6" class="px-4 py-8 text-center text-gray-500">Brak scenariuszy.</td>
                 </tr>
             @endforelse
             </tbody>

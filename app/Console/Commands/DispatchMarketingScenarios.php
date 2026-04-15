@@ -9,6 +9,7 @@ use App\Models\MarketingScenario;
 use App\Models\MarketingScenarioRun;
 use App\Models\User;
 use Illuminate\Console\Command;
+use Illuminate\Database\Eloquent\Collection;
 
 class DispatchMarketingScenarios extends Command
 {
@@ -42,15 +43,7 @@ class DispatchMarketingScenarios extends Command
                 'status' => 'processing',
             ]);
 
-            $recipients = User::query()
-                ->whereHas('progress', function ($query) {
-                    $query->where('is_completed', false);
-                })
-                ->where('consent_2', true)
-                ->whereNotNull('email')
-                ->select(['id', 'name', 'email', 'phone', 'consent_2'])
-                ->distinct()
-                ->get();
+            $recipients = $this->resolveRecipients($scenario);
 
             foreach ($recipients as $user) {
                 if (in_array($scenario->channel, ['email', 'both'], true)) {
@@ -101,5 +94,37 @@ class DispatchMarketingScenarios extends Command
 
         $this->info('Marketing scenarios dispatched.');
         return self::SUCCESS;
+    }
+
+    private function resolveRecipients(MarketingScenario $scenario): Collection
+    {
+        $inactiveSince = now()->subDays(max(1, (int) $scenario->inactivity_days));
+
+        $baseQuery = User::query()
+            ->where('consent_2', true)
+            ->whereNotNull('email')
+            ->select(['id', 'name', 'email', 'phone', 'consent_2'])
+            ->distinct();
+
+        if ($scenario->trigger_type === 'inactive_users') {
+            return $baseQuery
+                ->where('updated_at', '<=', $inactiveSince)
+                ->get();
+        }
+
+        if ((int) $scenario->target_course_id <= 0) {
+            return collect();
+        }
+
+        return $baseQuery
+            ->whereHas('progress', function ($query) use ($scenario, $inactiveSince) {
+                $query->where('course_id', $scenario->target_course_id)
+                    ->where('is_completed', false)
+                    ->where('updated_at', '<=', $inactiveSince);
+            })
+            ->whereDoesntHave('certificates', function ($query) use ($scenario) {
+                $query->where('course_id', $scenario->target_course_id);
+            })
+            ->get();
     }
 }

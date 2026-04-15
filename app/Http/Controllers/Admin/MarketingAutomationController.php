@@ -3,15 +3,17 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Course;
 use App\Models\MarketingDeliveryLog;
 use App\Models\MarketingScenario;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 
 class MarketingAutomationController extends Controller
 {
     public function index()
     {
-        $scenarios = MarketingScenario::with('creator')
+        $scenarios = MarketingScenario::with(['creator', 'targetCourse'])
             ->orderByDesc('created_at')
             ->paginate(15);
 
@@ -25,7 +27,9 @@ class MarketingAutomationController extends Controller
 
     public function create()
     {
-        return view('admin.marketing-automation.create');
+        $courses = Course::orderBy('title')->get(['id', 'title']);
+
+        return view('admin.marketing-automation.create', compact('courses'));
     }
 
     public function store(Request $request)
@@ -42,7 +46,9 @@ class MarketingAutomationController extends Controller
 
     public function edit(MarketingScenario $scenario)
     {
-        return view('admin.marketing-automation.edit', compact('scenario'));
+        $courses = Course::orderBy('title')->get(['id', 'title']);
+
+        return view('admin.marketing-automation.edit', compact('scenario', 'courses'));
     }
 
     public function update(Request $request, MarketingScenario $scenario)
@@ -70,6 +76,9 @@ class MarketingAutomationController extends Controller
         return $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
+            'trigger_type' => ['required', 'in:inactive_users,incomplete_course'],
+            'inactivity_days' => ['required', 'integer', 'min:1', 'max:365'],
+            'target_course_id' => ['nullable', 'integer', 'exists:courses,id'],
             'channel' => ['required', 'in:email,sms,both'],
             'email_subject' => ['nullable', 'string', 'max:255'],
             'email_body' => ['nullable', 'string'],
@@ -80,5 +89,17 @@ class MarketingAutomationController extends Controller
             'recurrence_pattern' => ['nullable', 'in:daily,weekly,monthly'],
             'recurrence_interval' => ['nullable', 'integer', 'min:1', 'max:365'],
         ]);
+
+        if (($validated['trigger_type'] ?? null) === 'incomplete_course' && empty($validated['target_course_id'])) {
+            throw ValidationException::withMessages([
+                'target_course_id' => 'Wybór kursu jest wymagany dla scenariusza niedokończonego kursu.',
+            ]);
+        }
+
+        if (($validated['trigger_type'] ?? null) === 'inactive_users') {
+            $validated['target_course_id'] = null;
+        }
+
+        return $validated;
     }
 }

@@ -15,6 +15,9 @@ class MarketingScenario extends Model
     protected $fillable = [
         'name',
         'description',
+        'trigger_type',
+        'inactivity_days',
+        'target_course_id',
         'channel',
         'email_subject',
         'email_body',
@@ -32,12 +35,19 @@ class MarketingScenario extends Model
     protected $casts = [
         'start_at' => 'datetime',
         'last_dispatched_at' => 'datetime',
+        'inactivity_days' => 'integer',
+        'target_course_id' => 'integer',
         'is_active' => 'boolean',
     ];
 
     public function creator(): BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function targetCourse(): BelongsTo
+    {
+        return $this->belongsTo(Course::class, 'target_course_id');
     }
 
     public function runs(): HasMany
