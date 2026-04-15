@@ -115,6 +115,11 @@
     <label for="is_active" class="text-sm text-gray-700">Aktywny po zapisie</label>
 </div>
 
+<div class="flex items-center gap-2">
+    <input id="dry_run" type="checkbox" name="dry_run" value="1" @checked(old('dry_run', $scenario->dry_run ?? true))>
+    <label for="dry_run" class="text-sm text-gray-700">Dry-run (bez realnej wysyłki, tylko logi testowe)</label>
+</div>
+
 <script>
     (function () {
         const triggerSelect = document.getElementById('trigger_type');

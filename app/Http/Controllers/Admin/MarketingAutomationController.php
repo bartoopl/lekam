@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Course;
 use App\Models\MarketingDeliveryLog;
 use App\Models\MarketingScenario;
+use App\Services\MarketingRecipientResolver;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 
@@ -16,6 +17,10 @@ class MarketingAutomationController extends Controller
         $scenarios = MarketingScenario::with(['creator', 'targetCourse'])
             ->orderByDesc('created_at')
             ->paginate(15);
+        $resolver = app(MarketingRecipientResolver::class);
+        foreach ($scenarios as $scenario) {
+            $scenario->estimated_recipients = $resolver->count($scenario);
+        }
 
         $recentLogs = MarketingDeliveryLog::with(['scenario', 'user'])
             ->orderByDesc('created_at')
@@ -37,6 +42,7 @@ class MarketingAutomationController extends Controller
         $data = $this->validateData($request);
         $data['created_by'] = auth()->id();
         $data['is_active'] = $request->boolean('is_active');
+        $data['dry_run'] = $request->boolean('dry_run', true);
 
         MarketingScenario::create($data);
 
@@ -55,6 +61,7 @@ class MarketingAutomationController extends Controller
     {
         $data = $this->validateData($request);
         $data['is_active'] = $request->boolean('is_active');
+        $data['dry_run'] = $request->boolean('dry_run', true);
 
         $scenario->update($data);
 
@@ -64,8 +71,16 @@ class MarketingAutomationController extends Controller
 
     public function toggle(MarketingScenario $scenario)
     {
+        $isActivating = !$scenario->is_active;
+        if ($isActivating) {
+            $estimatedRecipients = app(MarketingRecipientResolver::class)->count($scenario);
+            if ($estimatedRecipients === 0) {
+                return back()->with('error', 'Scenariusz nie został aktywowany: brak odbiorców dla aktualnych reguł.');
+            }
+        }
+
         $scenario->update([
-            'is_active' => !$scenario->is_active,
+            'is_active' => $isActivating,
         ]);
 
         return back()->with('success', 'Status scenariusza został zmieniony.');
@@ -73,7 +88,7 @@ class MarketingAutomationController extends Controller
 
     private function validateData(Request $request): array
     {
-        return $request->validate([
+        $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'trigger_type' => ['required', 'in:inactive_users,incomplete_course'],

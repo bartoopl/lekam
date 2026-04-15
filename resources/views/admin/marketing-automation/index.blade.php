@@ -12,6 +12,11 @@
             {{ session('success') }}
         </div>
     @endif
+    @if(session('error'))
+        <div class="mb-4 rounded border border-red-200 bg-red-50 px-4 py-3 text-red-700">
+            {{ session('error') }}
+        </div>
+    @endif
 
     <div class="bg-white rounded-lg shadow-sm overflow-hidden mb-8">
         <table class="min-w-full divide-y divide-gray-200">
@@ -20,6 +25,7 @@
                 <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Nazwa</th>
                 <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Scenariusz</th>
                 <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Kanał</th>
+                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Odbiorcy</th>
                 <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Harmonogram</th>
                 <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Status</th>
                 <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Akcje</th>
@@ -43,6 +49,7 @@
                         @endif
                     </td>
                     <td class="px-4 py-3 text-sm text-gray-700">{{ strtoupper($scenario->channel) }}</td>
+                    <td class="px-4 py-3 text-sm text-gray-700">{{ $scenario->estimated_recipients ?? 0 }}</td>
                     <td class="px-4 py-3 text-sm text-gray-700">
                         {{ $scenario->schedule_type === 'once' ? 'Jednorazowy' : 'Cykliczny' }}
                         @if($scenario->schedule_type === 'recurring')
@@ -54,6 +61,9 @@
                             <span class="px-2 py-1 text-xs font-semibold rounded bg-green-100 text-green-700">Aktywny</span>
                         @else
                             <span class="px-2 py-1 text-xs font-semibold rounded bg-gray-100 text-gray-700">Nieaktywny</span>
+                        @endif
+                        @if($scenario->dry_run)
+                            <span class="px-2 py-1 text-xs font-semibold rounded bg-yellow-100 text-yellow-700 ml-1">Dry-run</span>
                         @endif
                     </td>
                     <td class="px-4 py-3 text-sm">
@@ -70,7 +80,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="6" class="px-4 py-8 text-center text-gray-500">Brak scenariuszy.</td>
+                    <td colspan="7" class="px-4 py-8 text-center text-gray-500">Brak scenariuszy.</td>
                 </tr>
             @endforelse
             </tbody>

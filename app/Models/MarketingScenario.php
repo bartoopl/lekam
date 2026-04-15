@@ -29,6 +29,7 @@ class MarketingScenario extends Model
         'recurrence_interval',
         'last_dispatched_at',
         'is_active',
+        'dry_run',
         'created_by',
     ];
 
@@ -38,6 +39,7 @@ class MarketingScenario extends Model
         'inactivity_days' => 'integer',
         'target_course_id' => 'integer',
         'is_active' => 'boolean',
+        'dry_run' => 'boolean',
     ];
 
     public function creator(): BelongsTo
