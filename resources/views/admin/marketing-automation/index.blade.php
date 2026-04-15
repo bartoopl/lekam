@@ -17,6 +17,35 @@
             {{ session('error') }}
         </div>
     @endif
+    @if($errors->any())
+        <div class="mb-4 rounded border border-red-200 bg-red-50 px-4 py-3 text-red-700">
+            <ul class="list-disc pl-4">
+                @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
+    <div class="bg-white rounded-lg shadow-sm p-5 mb-8">
+        <h2 class="text-lg font-semibold text-gray-900 mb-3">Testowa wysyłka SMS</h2>
+        <form method="POST" action="{{ route('admin.marketing-automation.test-sms') }}" class="grid grid-cols-1 md:grid-cols-3 gap-3 items-end">
+            @csrf
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Numer telefonu</label>
+                <input type="text" name="phone" value="{{ old('phone') }}" placeholder="+48500100200"
+                       class="w-full border border-gray-300 rounded px-3 py-2">
+            </div>
+            <div class="md:col-span-2">
+                <label class="block text-sm font-medium text-gray-700 mb-1">Treść SMS</label>
+                <input type="text" name="message" value="{{ old('message', 'To jest test integracji SMSAPI z panelu admina.') }}"
+                       class="w-full border border-gray-300 rounded px-3 py-2">
+            </div>
+            <div class="md:col-span-3">
+                <button type="submit" class="btn btn-primary">Wyślij testowy SMS</button>
+            </div>
+        </form>
+    </div>
 
     <div class="bg-white rounded-lg shadow-sm overflow-hidden mb-8">
         <table class="min-w-full divide-y divide-gray-200">

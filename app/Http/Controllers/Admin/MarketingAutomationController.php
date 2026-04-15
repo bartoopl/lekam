@@ -7,8 +7,10 @@ use App\Models\Course;
 use App\Models\MarketingDeliveryLog;
 use App\Models\MarketingScenario;
 use App\Services\MarketingRecipientResolver;
+use App\Services\SmsApiService;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
+use Throwable;
 
 class MarketingAutomationController extends Controller
 {
@@ -86,6 +88,35 @@ class MarketingAutomationController extends Controller
         return back()->with('success', 'Status scenariusza został zmieniony.');
     }
 
+    public function sendTestSms(Request $request, SmsApiService $smsApiService)
+    {
+        $validated = $request->validate([
+            'phone' => ['required', 'string', 'max:32'],
+            'message' => ['required', 'string', 'max:1000'],
+        ]);
+
+        $phone = $this->normalizePhoneNumber($validated['phone']);
+        if ($phone === null) {
+            throw ValidationException::withMessages([
+                'phone' => 'Podaj poprawny numer telefonu (np. +48500100200 lub 500100200).',
+            ]);
+        }
+
+        try {
+            $response = $smsApiService->send($phone, $validated['message']);
+
+            return back()->with('success', 'Testowy SMS wysłany na ' . $phone . '. ID: ' . ($response['provider_message_id'] ?? 'brak'));
+        } catch (Throwable $e) {
+            \Log::error('SMS test send failed', [
+                'phone' => $phone,
+                'error' => $e->getMessage(),
+                'user_id' => auth()->id(),
+            ]);
+
+            return back()->withInput()->with('error', 'Nie udało się wysłać SMS testowego: ' . $e->getMessage());
+        }
+    }
+
     private function validateData(Request $request): array
     {
         $validated = $request->validate([
@@ -116,5 +147,27 @@ class MarketingAutomationController extends Controller
         }
 
         return $validated;
+    }
+
+    private function normalizePhoneNumber(string $phone): ?string
+    {
+        $clean = preg_replace('/[^\d+]/', '', trim($phone));
+        if (!$clean) {
+            return null;
+        }
+
+        if (str_starts_with($clean, '00')) {
+            $clean = '+' . substr($clean, 2);
+        }
+
+        if (!str_starts_with($clean, '+')) {
+            if (preg_match('/^\d{9}$/', $clean)) {
+                $clean = '+48' . $clean;
+            } else {
+                return null;
+            }
+        }
+
+        return preg_match('/^\+\d{8,15}$/', $clean) ? $clean : null;
     }
 }

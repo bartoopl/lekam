@@ -146,6 +146,7 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->name('admin.'
     Route::get('/marketing-automation/{scenario}/edit', [MarketingAutomationController::class, 'edit'])->name('marketing-automation.edit');
     Route::put('/marketing-automation/{scenario}', [MarketingAutomationController::class, 'update'])->name('marketing-automation.update');
     Route::post('/marketing-automation/{scenario}/toggle', [MarketingAutomationController::class, 'toggle'])->name('marketing-automation.toggle');
+    Route::post('/marketing-automation/test-sms', [MarketingAutomationController::class, 'sendTestSms'])->name('marketing-automation.test-sms');
     Route::get('/statistics', [AdminController::class, 'statistics'])->name('statistics');
 
     // Content management
