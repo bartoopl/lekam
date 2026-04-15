@@ -35,10 +35,19 @@ class SmsApiService
         }
 
         $payload = $response->json();
+        if (is_array($payload) && isset($payload['error'])) {
+            $code = $payload['error'];
+            $msg = $payload['message'] ?? 'Unknown SMSAPI error';
+            throw new \RuntimeException("SMSAPI error {$code}: {$msg}");
+        }
+
         $firstMessage = is_array($payload) && isset($payload['list'][0]) ? $payload['list'][0] : [];
+        if (!isset($firstMessage['id'])) {
+            throw new \RuntimeException('SMSAPI response does not contain message id.');
+        }
 
         return [
-            'provider_message_id' => $firstMessage['id'] ?? null,
+            'provider_message_id' => $firstMessage['id'],
             'raw' => $payload,
         ];
     }
