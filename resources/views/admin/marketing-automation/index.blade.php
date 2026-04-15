@@ -76,6 +76,9 @@
                                 <div class="text-xs text-gray-500">{{ $scenario->targetCourse->title }}</div>
                             @endif
                         @endif
+                        <div class="text-xs text-gray-500 mt-1">
+                            Wymagana zgoda: {{ strtoupper($scenario->required_consent ?? 'consent_2') }}
+                        </div>
                     </td>
                     <td class="px-4 py-3 text-sm text-gray-700">{{ strtoupper($scenario->channel) }}</td>
                     <td class="px-4 py-3 text-sm text-gray-700">{{ $scenario->estimated_recipients ?? 0 }}</td>

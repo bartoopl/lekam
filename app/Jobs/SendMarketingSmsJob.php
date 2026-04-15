@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Models\MarketingDeliveryLog;
+use App\Models\MarketingScenario;
 use App\Models\User;
 use App\Services\SmsApiService;
 use Illuminate\Bus\Queueable;
@@ -31,10 +32,19 @@ class SendMarketingSmsJob implements ShouldQueue
             return;
         }
 
-        if (empty($user->phone) || !$user->consent_2) {
+        $scenario = MarketingScenario::find($log->marketing_scenario_id);
+        if (!$scenario || !$this->hasRequiredConsent($user, $scenario)) {
             $log->update([
                 'status' => 'skipped',
-                'error_message' => 'Missing phone number or consent_2 is not granted.',
+                'error_message' => 'Required consent is not granted for this scenario.',
+            ]);
+            return;
+        }
+
+        if (empty($user->phone)) {
+            $log->update([
+                'status' => 'skipped',
+                'error_message' => 'Missing phone number.',
             ]);
             return;
         }
@@ -60,5 +70,14 @@ class SendMarketingSmsJob implements ShouldQueue
                 'error_message' => $e->getMessage(),
             ]);
         }
+    }
+
+    private function hasRequiredConsent(User $user, MarketingScenario $scenario): bool
+    {
+        return match ($scenario->requiredConsentColumn()) {
+            'consent_1' => (bool) $user->consent_1,
+            'consent_3' => (bool) $user->consent_3,
+            default => (bool) $user->consent_2,
+        };
     }
 }

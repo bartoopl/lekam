@@ -18,6 +18,7 @@ class MarketingScenario extends Model
         'trigger_type',
         'inactivity_days',
         'target_course_id',
+        'required_consent',
         'channel',
         'email_subject',
         'email_body',
@@ -87,5 +88,12 @@ class MarketingScenario extends Model
         };
 
         return $tzNow->greaterThanOrEqualTo($next);
+    }
+
+    public function requiredConsentColumn(): string
+    {
+        return in_array($this->required_consent, ['consent_1', 'consent_2', 'consent_3'], true)
+            ? $this->required_consent
+            : 'consent_2';
     }
 }

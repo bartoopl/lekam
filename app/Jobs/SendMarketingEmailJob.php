@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Mail\MarketingScenarioMail;
 use App\Models\MarketingDeliveryLog;
+use App\Models\MarketingScenario;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -33,6 +34,15 @@ class SendMarketingEmailJob implements ShouldQueue
             return;
         }
 
+        $scenario = MarketingScenario::find($log->marketing_scenario_id);
+        if (!$scenario || !$this->hasRequiredConsent($user, $scenario)) {
+            $log->update([
+                'status' => 'skipped',
+                'error_message' => 'Required consent is not granted for this scenario.',
+            ]);
+            return;
+        }
+
         $content = str_replace(
             ['{name}', '{email}'],
             [$user->name, $user->email],
@@ -51,5 +61,14 @@ class SendMarketingEmailJob implements ShouldQueue
                 'error_message' => $e->getMessage(),
             ]);
         }
+    }
+
+    private function hasRequiredConsent(User $user, MarketingScenario $scenario): bool
+    {
+        return match ($scenario->requiredConsentColumn()) {
+            'consent_1' => (bool) $user->consent_1,
+            'consent_3' => (bool) $user->consent_3,
+            default => (bool) $user->consent_2,
+        };
     }
 }

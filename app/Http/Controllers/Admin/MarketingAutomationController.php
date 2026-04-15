@@ -125,6 +125,7 @@ class MarketingAutomationController extends Controller
             'trigger_type' => ['required', 'in:inactive_users,incomplete_course'],
             'inactivity_days' => ['required', 'integer', 'min:1', 'max:365'],
             'target_course_id' => ['nullable', 'integer', 'exists:courses,id'],
+            'required_consent' => ['required', 'in:consent_1,consent_2,consent_3'],
             'channel' => ['required', 'in:email,sms,both'],
             'email_subject' => ['nullable', 'string', 'max:255'],
             'email_body' => ['nullable', 'string'],

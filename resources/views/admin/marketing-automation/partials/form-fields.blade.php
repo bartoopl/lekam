@@ -43,6 +43,21 @@
     </select>
 </div>
 
+<div>
+    <label class="block text-sm font-medium text-gray-700 mb-1">Wymagana zgoda</label>
+    <select name="required_consent" class="w-full border border-gray-300 rounded px-3 py-2">
+        <option value="consent_1" @selected(old('required_consent', $scenario->required_consent ?? 'consent_2') === 'consent_1')>
+            Zgoda 1 (RODO)
+        </option>
+        <option value="consent_2" @selected(old('required_consent', $scenario->required_consent ?? 'consent_2') === 'consent_2')>
+            Zgoda 2 (marketing LEK-AM)
+        </option>
+        <option value="consent_3" @selected(old('required_consent', $scenario->required_consent ?? 'consent_2') === 'consent_3')>
+            Zgoda 3 (marketing NeoArt)
+        </option>
+    </select>
+</div>
+
 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
     <div>
         <label class="block text-sm font-medium text-gray-700 mb-1">Kanał</label>

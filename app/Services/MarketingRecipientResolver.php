@@ -11,11 +11,12 @@ class MarketingRecipientResolver
     public function resolve(MarketingScenario $scenario): Collection
     {
         $inactiveSince = now()->subDays(max(1, (int) $scenario->inactivity_days));
+        $consentColumn = $scenario->requiredConsentColumn();
 
         $baseQuery = User::query()
-            ->where('consent_2', true)
+            ->where($consentColumn, true)
             ->whereNotNull('email')
-            ->select(['id', 'name', 'email', 'phone', 'consent_2'])
+            ->select(['id', 'name', 'email', 'phone', 'consent_1', 'consent_2', 'consent_3'])
             ->distinct();
 
         if ($scenario->trigger_type === 'inactive_users') {
