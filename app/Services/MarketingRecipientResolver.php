@@ -25,7 +25,7 @@ class MarketingRecipientResolver
         }
 
         if ((int) $scenario->target_course_id <= 0) {
-            return collect();
+            return new Collection();
         }
 
         return $baseQuery
