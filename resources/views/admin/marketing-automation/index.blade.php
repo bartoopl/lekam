@@ -125,8 +125,32 @@
 
     <div class="bg-white rounded-lg shadow-sm overflow-hidden">
         <div class="px-4 py-3 border-b border-gray-200">
-            <h2 class="font-semibold text-gray-900">Ostatnie logi wysyłek</h2>
+            <h2 class="font-semibold text-gray-900">Dziennik wysyłek</h2>
         </div>
+        <form method="GET" class="px-4 py-3 border-b border-gray-200 grid grid-cols-1 md:grid-cols-4 gap-3">
+            <select name="log_scenario_id" class="border border-gray-300 rounded px-3 py-2 text-sm">
+                <option value="">Wszystkie scenariusze</option>
+                @foreach($scenarioOptions as $option)
+                    <option value="{{ $option->id }}" @selected((string) request('log_scenario_id') === (string) $option->id)>{{ $option->name }}</option>
+                @endforeach
+            </select>
+            <select name="log_channel" class="border border-gray-300 rounded px-3 py-2 text-sm">
+                <option value="">Wszystkie kanały</option>
+                <option value="email" @selected(request('log_channel') === 'email')>EMAIL</option>
+                <option value="sms" @selected(request('log_channel') === 'sms')>SMS</option>
+            </select>
+            <select name="log_status" class="border border-gray-300 rounded px-3 py-2 text-sm">
+                <option value="">Wszystkie statusy</option>
+                @foreach(['queued','sent','failed','skipped'] as $status)
+                    <option value="{{ $status }}" @selected(request('log_status') === $status)>{{ strtoupper($status) }}</option>
+                @endforeach
+            </select>
+            <div class="flex gap-2">
+                <input type="text" name="log_email" value="{{ request('log_email') }}" placeholder="Szukaj email"
+                       class="w-full border border-gray-300 rounded px-3 py-2 text-sm">
+                <button type="submit" class="btn btn-primary">Filtruj</button>
+            </div>
+        </form>
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50">
@@ -136,24 +160,29 @@
                     <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Użytkownik</th>
                     <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Kanał</th>
                     <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Status</th>
+                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Błąd / Szczegóły</th>
                 </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
-                @forelse($recentLogs as $log)
+                @forelse($logs as $log)
                     <tr>
                         <td class="px-4 py-3 text-sm text-gray-700">{{ $log->created_at->format('d.m.Y H:i') }}</td>
                         <td class="px-4 py-3 text-sm text-gray-700">{{ $log->scenario?->name }}</td>
                         <td class="px-4 py-3 text-sm text-gray-700">{{ $log->user?->email }}</td>
                         <td class="px-4 py-3 text-sm text-gray-700">{{ strtoupper($log->channel) }}</td>
                         <td class="px-4 py-3 text-sm text-gray-700">{{ strtoupper($log->status) }}</td>
+                        <td class="px-4 py-3 text-sm text-gray-700">{{ $log->error_message ?: ($log->provider_message_id ? 'ID: '.$log->provider_message_id : '-') }}</td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="5" class="px-4 py-8 text-center text-gray-500">Brak logów.</td>
+                        <td colspan="6" class="px-4 py-8 text-center text-gray-500">Brak logów.</td>
                     </tr>
                 @endforelse
                 </tbody>
             </table>
+        </div>
+        <div class="px-4 py-3">
+            {{ $logs->links('pagination::simple-default') }}
         </div>
     </div>
 </div>

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use Carbon\CarbonInterface;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -88,6 +89,42 @@ class MarketingScenario extends Model
         };
 
         return $tzNow->greaterThanOrEqualTo($next);
+    }
+
+    public function nextDispatchAt(CarbonInterface $now): ?Carbon
+    {
+        $timezone = $this->timezone ?: 'Europe/Warsaw';
+        $tzNow = Carbon::instance($now)->setTimezone($timezone);
+        $start = $this->start_at->copy()->setTimezone($timezone);
+
+        if ($this->schedule_type === 'once') {
+            if ($this->last_dispatched_at !== null) {
+                return null;
+            }
+
+            return $start->greaterThan($tzNow) ? $start : $tzNow;
+        }
+
+        $interval = max(1, (int) $this->recurrence_interval);
+        $next = $this->last_dispatched_at
+            ? $this->last_dispatched_at->copy()->setTimezone($timezone)
+            : $start;
+
+        if ($next->greaterThan($tzNow)) {
+            return $next;
+        }
+
+        $safety = 0;
+        while ($next->lessThan($tzNow) && $safety < 1000) {
+            $next = match ($this->recurrence_pattern) {
+                'weekly' => $next->addWeeks($interval),
+                'monthly' => $next->addMonths($interval),
+                default => $next->addDays($interval),
+            };
+            $safety++;
+        }
+
+        return $next;
     }
 
     public function requiredConsentColumn(): string

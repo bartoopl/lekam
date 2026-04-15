@@ -143,6 +143,7 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->name('admin.'
     Route::get('/marketing-automation', [MarketingAutomationController::class, 'index'])->name('marketing-automation.index');
     Route::get('/marketing-automation/create', [MarketingAutomationController::class, 'create'])->name('marketing-automation.create');
     Route::post('/marketing-automation', [MarketingAutomationController::class, 'store'])->name('marketing-automation.store');
+    Route::post('/marketing-automation/preview', [MarketingAutomationController::class, 'previewRecipients'])->name('marketing-automation.preview');
     Route::get('/marketing-automation/{scenario}/edit', [MarketingAutomationController::class, 'edit'])->name('marketing-automation.edit');
     Route::put('/marketing-automation/{scenario}', [MarketingAutomationController::class, 'update'])->name('marketing-automation.update');
     Route::post('/marketing-automation/{scenario}/toggle', [MarketingAutomationController::class, 'toggle'])->name('marketing-automation.toggle');

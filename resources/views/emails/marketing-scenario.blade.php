@@ -5,6 +5,6 @@
     <title>Wiadomość</title>
 </head>
 <body style="font-family: Arial, sans-serif; color: #1f2937;">
-    {!! nl2br(e($body)) !!}
+    {!! $body !!}
 </body>
 </html>

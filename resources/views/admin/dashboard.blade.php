@@ -315,6 +315,9 @@
                 <a href="{{ route('admin.certificates.send-logs') }}" class="action-button">
                     ✉️ Wysłane do podpisu
                 </a>
+                <a href="{{ route('admin.marketing-automation.index') }}" class="action-button yellow">
+                    📣 Marketing Automation
+                </a>
             </div>
         </div>
 

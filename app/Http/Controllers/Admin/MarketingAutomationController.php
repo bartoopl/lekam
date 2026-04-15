@@ -8,6 +8,7 @@ use App\Models\MarketingDeliveryLog;
 use App\Models\MarketingScenario;
 use App\Services\MarketingRecipientResolver;
 use App\Services\SmsApiService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use Throwable;
@@ -22,14 +23,30 @@ class MarketingAutomationController extends Controller
         $resolver = app(MarketingRecipientResolver::class);
         foreach ($scenarios as $scenario) {
             $scenario->estimated_recipients = $resolver->count($scenario);
+            $scenario->next_dispatch_at = $scenario->nextDispatchAt(now());
         }
 
-        $recentLogs = MarketingDeliveryLog::with(['scenario', 'user'])
-            ->orderByDesc('created_at')
-            ->limit(50)
-            ->get();
+        $logQuery = MarketingDeliveryLog::with(['scenario', 'user'])->orderByDesc('created_at');
+        if (request()->filled('log_scenario_id')) {
+            $logQuery->where('marketing_scenario_id', (int) request('log_scenario_id'));
+        }
+        if (request()->filled('log_channel')) {
+            $logQuery->where('channel', request('log_channel'));
+        }
+        if (request()->filled('log_status')) {
+            $logQuery->where('status', request('log_status'));
+        }
+        if (request()->filled('log_email')) {
+            $email = (string) request('log_email');
+            $logQuery->whereHas('user', function ($query) use ($email) {
+                $query->where('email', 'like', '%' . $email . '%');
+            });
+        }
+        $logs = $logQuery->paginate(30)->withQueryString();
 
-        return view('admin.marketing-automation.index', compact('scenarios', 'recentLogs'));
+        $scenarioOptions = MarketingScenario::orderBy('name')->get(['id', 'name']);
+
+        return view('admin.marketing-automation.index', compact('scenarios', 'logs', 'scenarioOptions'));
     }
 
     public function create()
@@ -115,6 +132,29 @@ class MarketingAutomationController extends Controller
 
             return back()->withInput()->with('error', 'Nie udało się wysłać SMS testowego: ' . $e->getMessage());
         }
+    }
+
+    public function previewRecipients(Request $request, MarketingRecipientResolver $resolver)
+    {
+        $data = $this->validateData($request);
+        $scenario = new MarketingScenario($data);
+        $scenario->start_at = Carbon::parse($data['start_at']);
+
+        $recipients = $resolver->resolve($scenario);
+        $sample = $recipients->take(20)->map(function ($user) {
+            return [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'phone' => $user->phone,
+            ];
+        })->values();
+
+        return response()->json([
+            'count' => $recipients->count(),
+            'next_dispatch_at' => optional($scenario->nextDispatchAt(now()))?->format('d.m.Y H:i'),
+            'sample' => $sample,
+        ]);
     }
 
     private function validateData(Request $request): array

@@ -83,7 +83,8 @@
 
 <div>
     <label class="block text-sm font-medium text-gray-700 mb-1">Treść email</label>
-    <textarea name="email_body" rows="5" class="w-full border border-gray-300 rounded px-3 py-2">{{ old('email_body', $scenario->email_body ?? '') }}</textarea>
+    <textarea id="email_body_editor" name="email_body" rows="8" class="w-full border border-gray-300 rounded px-3 py-2">{{ old('email_body', $scenario->email_body ?? '') }}</textarea>
+    <p class="text-xs text-gray-500 mt-1">Obsługuje HTML (logo, obrazki, formatowanie). Możesz wstawić obraz przez URL.</p>
 </div>
 
 <div>
@@ -135,12 +136,26 @@
     <label for="dry_run" class="text-sm text-gray-700">Dry-run (bez realnej wysyłki, tylko logi testowe)</label>
 </div>
 
+<div class="rounded border border-blue-200 bg-blue-50 p-4">
+    <div class="flex items-center justify-between gap-3">
+        <div>
+            <h4 class="font-medium text-blue-900">Podgląd odbiorców i terminu wysyłki</h4>
+            <p class="text-sm text-blue-700">Sprawdź, kto aktualnie łapie się do scenariusza i kiedy będzie najbliższa wysyłka.</p>
+        </div>
+        <button type="button" id="previewRecipientsBtn" class="btn btn-primary">Pobierz podgląd</button>
+    </div>
+    <div id="previewResult" class="mt-3 text-sm text-gray-700"></div>
+</div>
+
 <script>
     (function () {
+        const form = document.querySelector('form[action*="marketing-automation"]');
         const triggerSelect = document.getElementById('trigger_type');
         const targetCourseWrapper = document.getElementById('target_course_wrapper');
+        const previewBtn = document.getElementById('previewRecipientsBtn');
+        const previewResult = document.getElementById('previewResult');
 
-        if (!triggerSelect || !targetCourseWrapper) {
+        if (!triggerSelect || !targetCourseWrapper || !form) {
             return;
         }
 
@@ -150,5 +165,67 @@
 
         triggerSelect.addEventListener('change', toggleTargetCourse);
         toggleTargetCourse();
+
+        if (previewBtn && previewResult) {
+            previewBtn.addEventListener('click', async function () {
+                previewBtn.disabled = true;
+                previewBtn.textContent = 'Pobieranie...';
+                previewResult.innerHTML = '';
+
+                try {
+                    if (window.tinymce && window.tinymce.get('email_body_editor')) {
+                        window.tinymce.get('email_body_editor').save();
+                    }
+
+                    const formData = new FormData(form);
+                    const response = await fetch('{{ route('admin.marketing-automation.preview') }}', {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'Accept': 'application/json',
+                        },
+                        body: formData,
+                        credentials: 'same-origin',
+                    });
+
+                    const data = await response.json();
+                    if (!response.ok) {
+                        throw new Error(data.message || 'Nie udało się pobrać podglądu.');
+                    }
+
+                    const rows = (data.sample || []).map((item) => {
+                        return `<li>${item.name} (${item.email}${item.phone ? ', ' + item.phone : ''})</li>`;
+                    }).join('');
+                    previewResult.innerHTML = `
+                        <div><strong>Liczba odbiorców teraz:</strong> ${data.count}</div>
+                        <div><strong>Najbliższa wysyłka:</strong> ${data.next_dispatch_at || 'brak'}</div>
+                        <div class="mt-2"><strong>Próbka odbiorców:</strong></div>
+                        <ul class="list-disc pl-5">${rows || '<li>Brak odbiorców</li>'}</ul>
+                    `;
+                } catch (error) {
+                    previewResult.innerHTML = `<div class="text-red-700">${error.message || error}</div>`;
+                } finally {
+                    previewBtn.disabled = false;
+                    previewBtn.textContent = 'Pobierz podgląd';
+                }
+            });
+        }
+
+        const initEditor = function () {
+            if (!window.tinymce || window.tinymce.get('email_body_editor')) {
+                return;
+            }
+            window.tinymce.init({
+                selector: '#email_body_editor',
+                menubar: false,
+                height: 320,
+                plugins: 'link image lists table code',
+                toolbar: 'undo redo | blocks | bold italic underline | alignleft aligncenter alignright | bullist numlist | link image table | code',
+            });
+        };
+        initEditor();
+        window.__initMarketingEditor = initEditor;
     })();
 </script>
+<script src="https://cdn.jsdelivr.net/npm/tinymce@7/tinymce.min.js" referrerpolicy="origin" onload="window.__initMarketingEditor && window.__initMarketingEditor()"></script>
