@@ -427,7 +427,7 @@
     <div class="footer-bottom">
         <div class="footer-bottom-left">
             <div style="display: flex; align-items: flex-end;">
-                <span>&copy; 2025 Wszelkie Prawa zastrzeżone</span>
+                <span>&copy; {{ date('Y') }} Wszelkie Prawa zastrzeżone</span>
                 <img src="/images/icons/lekam.png" alt="Lekam" style="height: 24px; margin-left: 8px; margin-bottom: 6px; vertical-align: bottom;">
             </div>
         </div>

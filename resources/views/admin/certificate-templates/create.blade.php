@@ -76,7 +76,7 @@
                             <label for="certificate_prefix" class="block text-sm font-medium text-gray-700">Prefix numeru certyfikatu</label>
                             <input type="text" name="certificate_prefix" id="certificate_prefix" value="{{ old('certificate_prefix', 'CERT') }}" required
                                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                            <p class="mt-1 text-sm text-gray-500">Np. FAR dla farmaceutów, TECH dla techników (generuje: FAR/001/2025)</p>
+                            <p class="mt-1 text-sm text-gray-500">Np. FAR dla farmaceutów, TECH dla techników (generuje: FAR/001/{{ date('Y') }})</p>
                             @error('certificate_prefix')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
